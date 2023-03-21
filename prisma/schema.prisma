@@ -92,11 +92,12 @@ model ProjectMember {
 }
 
 model Project {
-    id          String          @id @default(cuid())
-    createdAt   DateTime        @default(now())
-    updatedAt   DateTime        @updatedAt
-    name        String
-    description String?
-    goal        String          @default("No Goal")
-    members     ProjectMember[]
+    id             String          @id @default(cuid())
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
+    name           String
+    description    String?
+    goal           String
+    estimatedStart DateTime        @default(now())
+    members        ProjectMember[]
 }

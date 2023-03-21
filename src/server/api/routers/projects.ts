@@ -15,6 +15,7 @@ export const projectsRouter = createTRPCRouter({
           name: input.name,
           description: input.description,
           goal: input.goal,
+          estimatedStart: input.estimatedStart,
           members: {
             create: {
               userId: ctx.session.user.id,
