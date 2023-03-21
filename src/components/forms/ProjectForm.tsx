@@ -76,6 +76,19 @@ export default function ProjectForm() {
           )}
         </div>
 
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">Goal</Label>
+          <Textarea
+            {...methods.register("goal")}
+          />
+
+          {methods.formState.errors.goal?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.goal?.message}
+            </p>
+          )}
+        </div>
+
         <Button type="submit" variant={"outline"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Start Project"}
         </Button>

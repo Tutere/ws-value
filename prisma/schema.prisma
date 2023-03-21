@@ -97,5 +97,6 @@ model Project {
     updatedAt   DateTime        @updatedAt
     name        String
     description String?
+    goal        String          @default("No Goal")
     members     ProjectMember[]
 }
