@@ -13,6 +13,7 @@ export const projectsRouter = createTRPCRouter({
       return ctx.prisma.project.create({
         data: {
           name: input.name,
+          description: input.description,
           members: {
             create: {
               userId: ctx.session.user.id,

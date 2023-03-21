@@ -37,6 +37,7 @@ export default function ProjectForm() {
               className="overflow-hidden bg-white p-4 shadow sm:rounded-lg"
             >
               <h3 className="text-xl font-bold">{project.name}</h3>
+              <p>{project.description}</p>
             </article>
           ))}
       </div>
@@ -56,6 +57,17 @@ export default function ProjectForm() {
           {methods.formState.errors.name?.message && (
             <p className="text-red-700">
               {methods.formState.errors.name?.message}
+            </p>
+          )}
+        </div>
+
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">Description</Label>
+          <Input {...methods.register("description")} />
+
+          {methods.formState.errors.description?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.description?.message}
             </p>
           )}
         </div>
