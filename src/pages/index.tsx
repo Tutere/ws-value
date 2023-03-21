@@ -5,6 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "~/utils/api";
 import ProjectForm from "~/components/forms/ProjectForm";
+import { Button } from "~/components/ui/Button";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -16,12 +17,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <button
-          className="rounded-full px-10 py-3 font-semibold no-underline transition "
+        <Button
           onClick={sessionData ? () => void signOut() : () => void signIn()}
         >
           {sessionData ? "Sign out" : "Sign in"}
-        </button>
+        </Button>
         {sessionData && <ProjectForm />}
       </main>
     </>
