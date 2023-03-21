@@ -6,9 +6,6 @@ const config = {
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-      },
       keyframes: {
         "accordion-down": {
           // @ts-ignore
