@@ -22,7 +22,11 @@ const Home: NextPage = () => {
         >
           {sessionData ? "Sign out" : "Sign in"}
         </Button>
-        {sessionData && <ProjectForm />}
+        {sessionData && (
+          <div className="p-8">
+            <ProjectForm />
+          </div>
+        )}
       </main>
     </>
   );

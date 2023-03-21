@@ -1,6 +1,9 @@
+import { Label } from "@radix-ui/react-label";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -38,7 +41,7 @@ export default function ProjectForm() {
           ))}
       </div>
 
-      <h2 className="text-2xl font-bold">Add a Project</h2>
+      <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
           await mutation.mutateAsync(values);
@@ -46,12 +49,9 @@ export default function ProjectForm() {
         })}
         className="space-y-2"
       >
-        <div>
-          <label>
-            Name
-            <br />
-            <input {...methods.register("name")} className="border" />
-          </label>
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">Name</Label>
+          <Input {...methods.register("name")} />
 
           {methods.formState.errors.name?.message && (
             <p className="text-red-700">
@@ -60,13 +60,9 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={mutation.isLoading}
-          className="bg-primary-500 border p-2 font-bold"
-        >
-          {mutation.isLoading ? "Loading" : "Add Project"}
-        </button>
+        <Button type="submit" disabled={mutation.isLoading}>
+          {mutation.isLoading ? "Loading" : "Start Project"}
+        </Button>
       </form>
     </>
   );
