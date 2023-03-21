@@ -4,6 +4,7 @@ import { CreateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { Textarea } from "../ui/TextArea";
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -63,7 +64,10 @@ export default function ProjectForm() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Description</Label>
-          <Input {...methods.register("description")} />
+          <Textarea
+            placeholder="Optional"
+            {...methods.register("description")}
+          />
 
           {methods.formState.errors.description?.message && (
             <p className="text-red-700">
@@ -72,7 +76,7 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <Button type="submit" disabled={mutation.isLoading}>
+        <Button type="submit" variant={"outline"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Start Project"}
         </Button>
       </form>
