@@ -92,7 +92,7 @@ export default function ProjectForm() {
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Estimated Start Date</Label>
           {/* default to todays date if nothing selected */}
-          <Input {...methods.register("estimatedStart")} type="date" /> 
+          <Input {...methods.register("estimatedStart")} type="date"/> 
 
           {methods.formState.errors.estimatedStart?.message && (
             <p className="text-red-700">
@@ -164,8 +164,6 @@ export default function ProjectForm() {
             </p>
           )}
         </div>
-
-        {/* test comment to check commit email */}
         
         <Button type="submit" variant={"outline"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Start Project"}
