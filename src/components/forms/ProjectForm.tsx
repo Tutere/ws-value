@@ -1,4 +1,5 @@
 import { Label } from "@radix-ui/react-label";
+import Link from "next/link";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
@@ -33,13 +34,14 @@ export default function ProjectForm() {
       <div className="flex flex-col gap-2 py-2">
         {projects &&
           projects.map((project) => (
-            <article
+            <Link
+              href={'/' + project.id}
               key={project.id}
               className="overflow-hidden bg-white p-4 shadow sm:rounded-lg"
             >
               <h3 className="text-xl font-bold">{project.name}</h3>
               <p>{project.description}</p>
-            </article>
+            </Link>
           ))}
       </div>
 
