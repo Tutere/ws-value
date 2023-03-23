@@ -11,6 +11,9 @@ export default function ProjectForm() {
   const utils = api.useContext().projects;
   const query = api.projects.read.useQuery(undefined, {
     suspense: true,
+    onError: (error) => {
+      console.error(error);
+    },
   });
 
   const projects = query.data;
@@ -35,7 +38,7 @@ export default function ProjectForm() {
         {projects &&
           projects.map((project) => (
             <Link
-              href={'/' + project.id}
+              href={"/" + project.id}
               key={project.id}
               className="overflow-hidden bg-white p-4 shadow sm:rounded-lg"
             >
@@ -80,9 +83,7 @@ export default function ProjectForm() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Goal</Label>
-          <Textarea
-            {...methods.register("goal")}
-          />
+          <Textarea {...methods.register("goal")} />
 
           {methods.formState.errors.goal?.message && (
             <p className="text-red-700">
@@ -94,7 +95,7 @@ export default function ProjectForm() {
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Estimated Start Date</Label>
           {/* default to todays date if nothing selected */}
-          <Input {...methods.register("estimatedStart")} type="date"/> 
+          <Input {...methods.register("estimatedStart")} type="date" />
 
           {methods.formState.errors.estimatedStart?.message && (
             <p className="text-red-700">
@@ -106,7 +107,7 @@ export default function ProjectForm() {
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Estimated End Date</Label>
           {/* default to todays date if nothing selected */}
-          <Input {...methods.register("estimatedEnd")} type="date" /> 
+          <Input {...methods.register("estimatedEnd")} type="date" />
 
           {methods.formState.errors.estimatedEnd?.message && (
             <p className="text-red-700">
@@ -117,9 +118,7 @@ export default function ProjectForm() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Trigger</Label>
-          <Textarea
-            {...methods.register("trigger")}
-          />
+          <Textarea {...methods.register("trigger")} />
 
           {methods.formState.errors.trigger?.message && (
             <p className="text-red-700">
@@ -130,9 +129,7 @@ export default function ProjectForm() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Expected Movement</Label>
-          <Textarea
-            {...methods.register("expectedMovement")}
-          />
+          <Textarea {...methods.register("expectedMovement")} />
 
           {methods.formState.errors.expectedMovement?.message && (
             <p className="text-red-700">
@@ -142,10 +139,10 @@ export default function ProjectForm() {
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="name">Alternative Options or Solutions Considered</Label>
-          <Textarea
-            {...methods.register("expectedMovement")}
-          />
+          <Label htmlFor="name">
+            Alternative Options or Solutions Considered
+          </Label>
+          <Textarea {...methods.register("expectedMovement")} />
 
           {methods.formState.errors.alternativeOptions?.message && (
             <p className="text-red-700">
@@ -156,9 +153,7 @@ export default function ProjectForm() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Estimated Risks/Concerns/Bottleknecks</Label>
-          <Textarea
-            {...methods.register("estimatedRisk")}
-          />
+          <Textarea {...methods.register("estimatedRisk")} />
 
           {methods.formState.errors.estimatedRisk?.message && (
             <p className="text-red-700">
@@ -166,7 +161,7 @@ export default function ProjectForm() {
             </p>
           )}
         </div>
-        
+
         <Button type="submit" variant={"outline"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Start Project"}
         </Button>

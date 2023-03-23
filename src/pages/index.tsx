@@ -8,7 +8,6 @@ import ProjectForm from "~/components/forms/ProjectForm";
 import { Button } from "~/components/ui/Button";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
   return (
     <>
       <Head>
@@ -17,18 +16,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Button
-          onClick={sessionData ? () => void signOut() : () => void signIn()}
-        >
-          {sessionData ? "Sign out" : "Sign in"}
-        </Button>
-        {sessionData ? (
-          <div className="p-8">
-            <ProjectForm />
-          </div>
-        ) : (
-          <></>
-        )}
+        <div className="p-8">
+          <ProjectForm />
+        </div>
       </main>
     </>
   );
