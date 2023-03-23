@@ -11,8 +11,7 @@ import Link from "next/link";
 export default function Project () {
     const router = useRouter();
     const id = router.query.projectID;
-
-    const utils = api.useContext().projects;
+    const utils = api.useContext().activities;
     const query = api.projects.read.useQuery(undefined, {
         suspense: true,
     });
@@ -40,10 +39,20 @@ export default function Project () {
       });
 
     return (
-        <div>
+        <div className="p-8">
             <h2 className="text-3xl font-bold mb-5">Project Details</h2>
-            <p>{project?.goal}</p>
-            <p>{project?.estimatedStart.toLocaleDateString()}</p>
+            <div className="flex flex-row">
+                <Label className="font-medium">Project Name:</Label>
+                <p className="ml-1">{project?.name}</p>
+            </div>
+            <div className="flex flex-row">
+                <Label className="font-medium">Goal:</Label>
+                <p className="ml-1">{project?.goal}</p>
+            </div>
+            <div className="flex flex-row">
+                <Label className="font-medium">Start Date:</Label>
+                <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
+            </div>
 
             <h2 className="mt-5 text-2xl font-bold">Project Activities</h2>
             <div className="flex flex-col gap-2 py-2">
