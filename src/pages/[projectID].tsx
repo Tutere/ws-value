@@ -5,7 +5,7 @@ import { Input } from "../components/ui/Input";
 import { Textarea } from "../components/ui/TextArea";
 import { Label } from "@radix-ui/react-label";
 import { useZodForm } from "~/hooks/useZodForm";
-import { CreateProjectSchema } from "~/schemas/projects";
+import { CreateActivitySchema } from "~/schemas/activities";
 
 export default function Project () {
     const router = useRouter();
@@ -19,17 +19,16 @@ export default function Project () {
     const projects = query.data;
     const project = projects ? projects.find((p) => p.id === id): null;
 
-    // change to activities!!
-    const mutation = api.projects.create.useMutation({
+    const mutation = api.activities.create.useMutation({
         onSuccess: async () => {
           await utils.read.invalidate();
         },
       });
 
     const methods = useZodForm({
-        schema: CreateProjectSchema,
+        schema: CreateActivitySchema,
         defaultValues: {
-          name: "",
+        //   name: "",
         },
       });
 
@@ -63,7 +62,6 @@ export default function Project () {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                 <Label htmlFor="name">Description</Label>
                 <Textarea
-                    placeholder="Optional"
                     {...methods.register("description")}
                 />
 
@@ -73,22 +71,9 @@ export default function Project () {
                     </p>
                 )}
                 </div>
-
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="name">Goal</Label>
-                <Textarea
-                    {...methods.register("goal")}
-                />
-
-                {methods.formState.errors.goal?.message && (
-                    <p className="text-red-700">
-                    {methods.formState.errors.goal?.message}
-                    </p>
-                )}
-                </div>
                 
-                <Button type="submit" variant={"outline"} disabled={mutation.isLoading}>
-                {mutation.isLoading ? "Loading" : "Start Project"}
+                <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
+                {mutation.isLoading ? "Loading" : "Add Activity"}
                 </Button>
             </form>
         </div>

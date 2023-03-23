@@ -106,3 +106,11 @@ model Project {
     estimatedRisk      String?
     members            ProjectMember[]
 }
+
+model Activity {
+    id          String   @id @default(cuid())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    name        String
+    description String
+}
