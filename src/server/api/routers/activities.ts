@@ -1,4 +1,5 @@
 import { CreateActivitySchema } from "~/schemas/activities";
+import { ReadActivitySchema } from "~/schemas/activities";
 
 import {
   createTRPCRouter,
@@ -20,7 +21,15 @@ export const activitiesRouter = createTRPCRouter({
       });
     }),
 
-  read: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.activity.findMany();
+  read: protectedProcedure
+  .input(ReadActivitySchema)
+  .query(({ ctx, input }) => {
+    return ctx.prisma.activity.findMany(
+      {
+        where: {
+          projectId: input.projectId,
+        }
+      }
+    );
   }),
 });
