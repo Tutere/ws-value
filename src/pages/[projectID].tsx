@@ -58,14 +58,13 @@ export default function Project () {
             <div className="flex flex-col gap-2 py-2">
                 {activities &&
                 activities.map((activity) => (
-                    <Link
-                        href={'/' + activity.id}
+                    <article
                         key={activity.id}
                         className="overflow-hidden bg-white p-4 shadow sm:rounded-lg"
                         >
                         <h3 className="text-xl font-bold">{activity.name}</h3>
                         <p>{activity.description}</p>
-                    </Link>
+                    </article>
                 ))}
             </div>
 
