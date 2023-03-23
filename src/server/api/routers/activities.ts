@@ -15,6 +15,7 @@ export const activitiesRouter = createTRPCRouter({
           name: input.name,
           description: input.description,
           projectId:input.projectId,
+          engagementPattern: input.engagementPattern,
         },
       });
     }),
