@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function Project() {
   const router = useRouter();
-  const id = router.query.projectID;
+  const id = router.query.projectID as string;
   const utils = api.useContext().activities;
   const query = api.projects.read.useQuery(undefined, {
     suspense: true,
@@ -19,7 +19,7 @@ export default function Project() {
   const projects = query.data;
   const project = projects ? projects.find((p) => p.id === id) : null;
 
-  const { data: activities } = api.activities.read.useQuery(undefined, {
+  const { data: activities } = api.activities.read.useQuery({projectId: id}, {
     suspense: true,
   });
 
