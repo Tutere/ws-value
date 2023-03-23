@@ -28,7 +28,7 @@ export default function Project () {
     const methods = useZodForm({
         schema: CreateActivitySchema,
         defaultValues: {
-        //   name: "",
+          projectId: project?.id.toString(),
         },
       });
 
