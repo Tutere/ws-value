@@ -7,6 +7,8 @@ import { Label } from "@radix-ui/react-label";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function Project() {
   const router = useRouter();
@@ -36,7 +38,22 @@ export default function Project() {
     },
   });
 
+  const { data: sessionData } = useSession();
+  const isMemberFound = project?.members.some(member => {
+    return member.userId === sessionData?.user.id;
+  });
+
+  useEffect(() => {
+    if (!isMemberFound) {
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+    }
+  }, [isMemberFound, router]);
+
   return (
+    <>
+    {isMemberFound ? (
     <div className="p-8">
       <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
       <div className="flex flex-row">
@@ -112,5 +129,12 @@ export default function Project() {
         </Button>
       </form>
     </div>
+    ): (
+      <div className="p-8">
+        <p>You are not a member of this project. Redirecting to homepage...</p>
+      </div>
+      )
+    }
+    </>
   );
 }
