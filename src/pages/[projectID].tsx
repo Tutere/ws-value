@@ -68,6 +68,15 @@ export default function Project() {
         <Label className="font-medium">Start Date:</Label>
         <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
       </div>
+      <Link
+       href={"/projectCompletion/" + project?.id}
+       key={project?.id}
+      >
+        <Button type="submit" variant={"default"} disabled={mutation.isLoading}
+        className = "mt-5">
+            {mutation.isLoading ? "Loading" : "Complete Project"}
+        </Button>
+      </Link>
 
       <h2 className="mt-5 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-col gap-2 py-2">
