@@ -29,6 +29,7 @@ export default function ProjectForm() {
     schema: CreateProjectSchema,
     defaultValues: {
       name: "",
+      status: "Active",
     },
   });
 

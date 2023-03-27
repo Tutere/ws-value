@@ -104,6 +104,9 @@ model Project {
     expectedMovement   String?
     alternativeOptions String?
     estimatedRisk      String?
+    outcomeScore       Int?
+    effortScore        Int?
+    status             String
     members            ProjectMember[]
     Activity           Activity[]
 }

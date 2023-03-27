@@ -21,6 +21,9 @@ export const projectsRouter = createTRPCRouter({
           expectedMovement: input.expectedMovement,
           alternativeOptions: input.alternativeOptions,
           estimatedRisk: input.estimatedRisk,
+          outcomeScore: input.outcomeScore,
+          effortScore: input.effortScore,
+          status: input.status,
           members: {
             create: {
               userId: ctx.session.user.id,
