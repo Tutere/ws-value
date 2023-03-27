@@ -1,4 +1,5 @@
 import { Label } from "@radix-ui/react-label";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateProjectSchema } from "~/schemas/projects";
@@ -31,12 +32,15 @@ export default function ProjectForm() {
     },
   });
 
+  const { data: sessionData } = useSession();
+
   return (
     <>
       <h2 className="text-3xl font-bold">Projects</h2>
       <div className="flex flex-col gap-2 py-2">
         {projects &&
-          projects.map((project) => (
+          projects.map((project) => {
+          return (
             <Link
               href={"/" + project.id}
               key={project.id}
@@ -45,7 +49,8 @@ export default function ProjectForm() {
               <h3 className="text-xl font-bold">{project.name}</h3>
               <p>{project.description}</p>
             </Link>
-          ))}
+            )
+          })}
       </div>
 
       <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
