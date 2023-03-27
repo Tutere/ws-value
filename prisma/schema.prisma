@@ -107,6 +107,10 @@ model Project {
     outcomeScore       Int?
     effortScore        Int?
     status             String
+    actualStart        DateTime?
+    actualEnd          DateTime?
+    lessonsLearnt      String?
+    retrospective      String?
     members            ProjectMember[]
     Activity           Activity[]
 }

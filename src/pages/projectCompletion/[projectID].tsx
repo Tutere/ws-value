@@ -10,7 +10,7 @@ import { CreateProjectSchema } from "~/schemas/projects";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import {ReadProjectSchema} from "~/schemas/projects";
+import {CompleteProjectSchema} from "~/schemas/projects";
 
 export default function ProjectCompletion() {
   const router = useRouter();
@@ -24,17 +24,16 @@ export default function ProjectCompletion() {
   const project = projects ? projects.find((p) => p.id === id) : null;
 
 
-  const mutation = api.projects.update.useMutation({
+  const mutation = api.projects.complete.useMutation({
     onSuccess: async () => {
       await utils.read.invalidate();
     },
   });
 
   const methods = useZodForm({
-    schema: ReadProjectSchema,
+    schema: CompleteProjectSchema,
     defaultValues: {
-    //    outcomeScore:4,
-    //    effortScore:7,
+      status:"Complete"
     },
   });
 
@@ -67,49 +66,52 @@ export default function ProjectCompletion() {
         })}
         className="space-y-2"
       >
-        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="name">Overall Summary</Label>
-          <Input {...methods.register("name")} />
+        
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">Retrospective/Overall Summary</Label>
+          <Textarea {...methods.register("retrospective")} />
 
-          {methods.formState.errors.name?.message && (
+          {methods.formState.errors.retrospective?.message && (
             <p className="text-red-700">
-              {methods.formState.errors.name?.message}
+              {methods.formState.errors.retrospective?.message}
             </p>
           )}
-        </div> */}
+        </div>
 
-        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="name">Alternatives/Retrospective</Label>
-          <Textarea {...methods.register("description")} />
-
-          {methods.formState.errors.description?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.description?.message}
-            </p>
-          )}
-        </div> */}
-
-        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Lessons Learnt</Label>
-          <Textarea {...methods.register("engagementPattern")} />
+          <Textarea {...methods.register("lessonsLearnt")} />
 
-          {methods.formState.errors.engagementPattern?.message && (
+          {methods.formState.errors.lessonsLearnt?.message && (
             <p className="text-red-700">
-              {methods.formState.errors.engagementPattern?.message}
+              {methods.formState.errors.lessonsLearnt?.message}
             </p>
           )}
-        </div> */}
+        </div>
 
-        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="name">Effort Score</Label>
-          <Textarea {...methods.register("outcomeScore")} />
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">Actual Start Date</Label>
+          {/* default to todays date if nothing selected */}
+          <Input {...methods.register("actualStart")} type="date" />
 
-          {methods.formState.errors.outcomeScore?.message && (
+          {methods.formState.errors.actualStart?.message && (
             <p className="text-red-700">
-              {methods.formState.errors.outcomeScore?.message}
+              {methods.formState.errors.actualStart?.message}
             </p>
           )}
-        </div> */}
+        </div>
+
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">Actual End Date</Label>
+          {/* default to todays date if nothing selected */}
+          <Input {...methods.register("actualEnd")} type="date" />
+
+          {methods.formState.errors.actualEnd?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.actualEnd?.message}
+            </p>
+          )}
+        </div>
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
@@ -156,7 +158,7 @@ export default function ProjectCompletion() {
         </div>
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
-          {mutation.isLoading ? "Loading" : "Add Activity"}
+          {mutation.isLoading ? "Loading" : "Complete Project"}
         </Button>
       </form>
     </div>

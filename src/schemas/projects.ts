@@ -13,11 +13,20 @@ export const CreateProjectSchema = z.object({
   outcomeScore: z.number().int().optional(),
   effortScore: z.number().int().optional(),
   status: z.string(),
+  actualStart: z.string().transform((val) => new Date(val).toISOString()),
+  actualEnd: z.string().transform((val) => new Date(val).toISOString()),
+  lessonsLearnt: z.string().optional(),
+  retrospecive: z.string().optional(),
 });
 
 export type CreateProjectSchema = z.infer<typeof CreateProjectSchema>;
 
-export const ReadProjectSchema = z.object({
+export const CompleteProjectSchema = z.object({
   outcomeScore: z.preprocess((val) => Number(val), z.number()),
   effortScore: z.preprocess((val) => Number(val), z.number()),
+  status: z.string(),
+  actualStart: z.string().transform((val) => new Date(val).toISOString()),
+  actualEnd: z.string().transform((val) => new Date(val).toISOString()),
+  lessonsLearnt: z.string().optional(),
+  retrospective: z.string().optional(),
 });

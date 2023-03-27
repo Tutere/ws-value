@@ -1,5 +1,5 @@
 import { CreateProjectSchema } from "~/schemas/projects";
-import {ReadProjectSchema} from "~/schemas/projects";
+import {CompleteProjectSchema} from "~/schemas/projects";
 
 import {
   createTRPCRouter,
@@ -25,6 +25,10 @@ export const projectsRouter = createTRPCRouter({
           outcomeScore: input.outcomeScore,
           effortScore: input.effortScore,
           status: input.status,
+          actualStart: input.actualStart,
+          actualEnd: input.actualEnd,
+          lessonsLearnt: input.lessonsLearnt,
+          retrospective: input.retrospecive,
           members: {
             create: {
               userId: ctx.session.user.id,
@@ -50,8 +54,8 @@ export const projectsRouter = createTRPCRouter({
     });
   }),
 
-  update: protectedProcedure
-  .input(ReadProjectSchema)
+  complete: protectedProcedure
+  .input(CompleteProjectSchema)
   .mutation(({ ctx, input }) => {
     return ctx.prisma.project.update(
       {
@@ -61,6 +65,11 @@ export const projectsRouter = createTRPCRouter({
         data: {
           outcomeScore:input.outcomeScore,
           effortScore: input.effortScore,
+          actualStart: input.actualStart,
+          actualEnd: input.actualEnd,
+          lessonsLearnt: input.lessonsLearnt,
+          retrospective:input.retrospective,
+          status: input.status,
         }
       }
     );
