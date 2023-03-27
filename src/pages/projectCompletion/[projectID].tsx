@@ -62,7 +62,6 @@ export default function ProjectCompletion() {
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
-            console.log(values.outcomeScore);
           await mutation.mutateAsync(values);
           methods.reset();
         })}
