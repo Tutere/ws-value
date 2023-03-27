@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import AuthGuard from "~/components/AuthGuard";
+import { Navbar } from "~/components/ui/navbar";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -14,6 +15,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <AuthGuard>
+        <Navbar />
         <Component {...pageProps} />
       </AuthGuard>
     </SessionProvider>
