@@ -1,4 +1,5 @@
 import { CreateProjectSchema } from "~/schemas/projects";
+import {ReadProjectSchema} from "~/schemas/projects";
 
 import {
   createTRPCRouter,
@@ -47,5 +48,21 @@ export const projectsRouter = createTRPCRouter({
         members: true,
       },
     });
+  }),
+
+  update: protectedProcedure
+  .input(ReadProjectSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.project.update(
+      {
+        where: {
+          id: "clfq0alnz0006md08508eo25o",
+        },
+        data: {
+          outcomeScore:input.outcomeScore,
+          effortScore: input.effortScore,
+        }
+      }
+    );
   }),
 });

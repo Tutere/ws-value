@@ -6,14 +6,16 @@ import { Textarea } from "src/components/ui/TextArea";
 import { Label } from "@radix-ui/react-label";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
+import { CreateProjectSchema } from "~/schemas/projects";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import {ReadProjectSchema} from "~/schemas/projects";
 
 export default function ProjectCompletion() {
   const router = useRouter();
   const id = router.query.projectID as string;
-  const utils = api.useContext().activities;
+  const utils = api.useContext().projects;
   const query = api.projects.read.useQuery(undefined, {
     suspense: true,
   });
@@ -21,20 +23,18 @@ export default function ProjectCompletion() {
   const projects = query.data;
   const project = projects ? projects.find((p) => p.id === id) : null;
 
-  const { data: activities } = api.activities.read.useQuery({projectId: id}, {
-    suspense: true,
-  });
 
-  const mutation = api.activities.create.useMutation({
+  const mutation = api.projects.update.useMutation({
     onSuccess: async () => {
       await utils.read.invalidate();
     },
   });
 
   const methods = useZodForm({
-    schema: CreateActivitySchema,
+    schema: ReadProjectSchema,
     defaultValues: {
-      projectId: project?.id.toString(),
+    //    outcomeScore:4,
+    //    effortScore:7,
     },
   });
 
@@ -62,12 +62,13 @@ export default function ProjectCompletion() {
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
+            console.log(values.outcomeScore);
           await mutation.mutateAsync(values);
           methods.reset();
         })}
         className="space-y-2"
       >
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Overall Summary</Label>
           <Input {...methods.register("name")} />
 
@@ -76,9 +77,9 @@ export default function ProjectCompletion() {
               {methods.formState.errors.name?.message}
             </p>
           )}
-        </div>
+        </div> */}
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Alternatives/Retrospective</Label>
           <Textarea {...methods.register("description")} />
 
@@ -87,9 +88,9 @@ export default function ProjectCompletion() {
               {methods.formState.errors.description?.message}
             </p>
           )}
-        </div>
+        </div> */}
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Lessons Learnt</Label>
           <Textarea {...methods.register("engagementPattern")} />
 
@@ -98,36 +99,36 @@ export default function ProjectCompletion() {
               {methods.formState.errors.engagementPattern?.message}
             </p>
           )}
-        </div>
+        </div> */}
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Effort Score</Label>
-          <Textarea {...methods.register("engagementPattern")} />
+          <Textarea {...methods.register("outcomeScore")} />
 
-          {methods.formState.errors.engagementPattern?.message && (
+          {methods.formState.errors.outcomeScore?.message && (
             <p className="text-red-700">
-              {methods.formState.errors.engagementPattern?.message}
+              {methods.formState.errors.outcomeScore?.message}
             </p>
           )}
-        </div>
+        </div> */}
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
           <div className="rating rating-lg">
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="1"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="2"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="3"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="4"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="5"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="6"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="7"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="8"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="9"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="outcome" className="mask mask-star-2 bg-orange-400" value="10"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="1"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="2"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="3"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="4"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="5"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="6"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="7"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="8"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="9"/>
+            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="10"/>
 
-            {methods.formState.errors.engagementPattern?.message && (
+            {methods.formState.errors.outcomeScore?.message && (
             <p className="text-red-700">
-              {methods.formState.errors.engagementPattern?.message}
+              {methods.formState.errors.outcomeScore?.message}
             </p>
           )}
           </div>
@@ -136,20 +137,20 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Effort Score (1-10) </Label>
           <div className="rating rating-lg">
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="1"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="2"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="3"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="4"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="5"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="6"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="7"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="8"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="9"/>
-            <input {...methods.register("engagementPattern")} type="radio" name="effort" className="mask mask-star-2 bg-orange-400" value="10"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="1"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="2"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="3"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="4"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="5"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="6"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="7"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="8"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="9"/>
+            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="10"/>
             
-            {methods.formState.errors.engagementPattern?.message && (
+            {methods.formState.errors.effortScore?.message && (
             <p className="text-red-700">
-              {methods.formState.errors.engagementPattern?.message}
+              {methods.formState.errors.effortScore?.message}
             </p>
           )}
           </div>

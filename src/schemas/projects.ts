@@ -16,3 +16,8 @@ export const CreateProjectSchema = z.object({
 });
 
 export type CreateProjectSchema = z.infer<typeof CreateProjectSchema>;
+
+export const ReadProjectSchema = z.object({
+  outcomeScore: z.preprocess((val) => Number(val), z.number()),
+  effortScore: z.preprocess((val) => Number(val), z.number()),
+});
