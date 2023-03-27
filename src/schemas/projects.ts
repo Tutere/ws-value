@@ -29,4 +29,5 @@ export const CompleteProjectSchema = z.object({
   actualEnd: z.string().transform((val) => new Date(val).toISOString()),
   lessonsLearnt: z.string().optional(),
   retrospective: z.string().optional(),
+  id: z.string().cuid(),
 });

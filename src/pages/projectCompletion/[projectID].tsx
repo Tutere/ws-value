@@ -33,7 +33,8 @@ export default function ProjectCompletion() {
   const methods = useZodForm({
     schema: CompleteProjectSchema,
     defaultValues: {
-      status:"Complete"
+      status:"Complete",
+      id: project?.id.toString(),
     },
   });
 
@@ -66,7 +67,7 @@ export default function ProjectCompletion() {
         })}
         className="space-y-2"
       >
-        
+
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Retrospective/Overall Summary</Label>
           <Textarea {...methods.register("retrospective")} />

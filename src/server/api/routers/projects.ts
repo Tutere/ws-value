@@ -60,7 +60,7 @@ export const projectsRouter = createTRPCRouter({
     return ctx.prisma.project.update(
       {
         where: {
-          id: "clfq0alnz0006md08508eo25o",
+          id: input.id,
         },
         data: {
           outcomeScore:input.outcomeScore,
