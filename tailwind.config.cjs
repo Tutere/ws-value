@@ -26,7 +26,7 @@ const config = {
   },
 
   // @ts-ignore
-  plugins: [require("tailwindcss-animate"),require("daisyui")],
+  plugins: [require("tailwindcss-animate")],
 };
 
 module.exports = config;

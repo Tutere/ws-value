@@ -22,8 +22,8 @@ export const CreateProjectSchema = z.object({
 export type CreateProjectSchema = z.infer<typeof CreateProjectSchema>;
 
 export const CompleteProjectSchema = z.object({
-  outcomeScore: z.preprocess((val) => Number(val), z.number()),
-  effortScore: z.preprocess((val) => Number(val), z.number()),
+  outcomeScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
+  effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
   status: z.string(),
   actualStart: z.string().transform((val) => new Date(val).toISOString()),
   actualEnd: z.string().transform((val) => new Date(val).toISOString()),

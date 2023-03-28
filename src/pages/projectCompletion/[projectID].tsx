@@ -116,46 +116,24 @@ export default function ProjectCompletion() {
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
-          <div className="rating rating-lg">
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="1"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="2"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="3"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="4"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="5"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="6"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="7"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="8"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="9"/>
-            <input {...methods.register("outcomeScore")} type="radio" className="mask mask-star-2 bg-orange-400" value="10"/>
+          <Input {...methods.register("outcomeScore")} />
 
             {methods.formState.errors.outcomeScore?.message && (
             <p className="text-red-700">
               {methods.formState.errors.outcomeScore?.message}
             </p>
           )}
-          </div>
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Effort Score (1-10) </Label>
-          <div className="rating rating-lg">
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="1"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="2"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="3"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="4"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="5"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="6"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="7"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="8"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="9"/>
-            <input {...methods.register("effortScore")} type="radio"  className="mask mask-star-2 bg-orange-400" value="10"/>
-            
+          <Input {...methods.register("effortScore")} />
+
             {methods.formState.errors.effortScore?.message && (
             <p className="text-red-700">
               {methods.formState.errors.effortScore?.message}
             </p>
           )}
-          </div>
         </div>
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
