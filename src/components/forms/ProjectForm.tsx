@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Textarea } from "../ui/TextArea";
+import {InfoIcon} from "src/components/ui/infoIcon";
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -62,10 +63,12 @@ export default function ProjectForm() {
         })}
         className="space-y-2"
       >
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Name</Label>
-          <Input {...methods.register("name")} />
-
+          <div className="flex items-center">
+            <Input {...methods.register("name")} className="mr-4"/>
+            <InfoIcon content="name test tooltip"/>
+          </div>
           {methods.formState.errors.name?.message && (
             <p className="text-red-700">
               {methods.formState.errors.name?.message}
@@ -73,13 +76,17 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Description</Label>
-          <Textarea
+          <div className="flex items-center">
+             <Textarea
             placeholder="Optional"
             {...methods.register("description")}
-          />
-
+            className="mr-4"
+            />
+            <InfoIcon content="description test tooltip"/>
+          </div>
+         
           {methods.formState.errors.description?.message && (
             <p className="text-red-700">
               {methods.formState.errors.description?.message}
@@ -87,10 +94,12 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Goal</Label>
-          <Textarea {...methods.register("goal")} />
-
+          <div className="flex items-center">
+            <Textarea {...methods.register("goal")} className="mr-4"/>
+            <InfoIcon content="goal test tooltip"/>
+          </div>
           {methods.formState.errors.goal?.message && (
             <p className="text-red-700">
               {methods.formState.errors.goal?.message}
@@ -98,7 +107,7 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Estimated Start Date</Label>
           {/* default to todays date if nothing selected */}
           <Input {...methods.register("estimatedStart")} type="date" />
@@ -110,9 +119,8 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Estimated End Date</Label>
-          {/* default to todays date if nothing selected */}
           <Input {...methods.register("estimatedEnd")} type="date" />
 
           {methods.formState.errors.estimatedEnd?.message && (
@@ -122,10 +130,12 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Trigger</Label>
-          <Textarea {...methods.register("trigger")} />
-
+          <div className="flex items-center">
+            <Textarea {...methods.register("trigger")} className="mr-4"/>
+            <InfoIcon content="trigger test tooltip"/>
+          </div>
           {methods.formState.errors.trigger?.message && (
             <p className="text-red-700">
               {methods.formState.errors.trigger?.message}
@@ -133,9 +143,13 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Expected Movement</Label>
-          <Textarea {...methods.register("expectedMovement")} />
+          <div className="flex items-center">
+            <Textarea {...methods.register("expectedMovement")} className="mr-4"/>
+            <InfoIcon content="expected movement test tooltip"/>
+          </div>
+          
 
           {methods.formState.errors.expectedMovement?.message && (
             <p className="text-red-700">
@@ -144,11 +158,15 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">
             Alternative Options or Solutions Considered
           </Label>
-          <Textarea {...methods.register("expectedMovement")} />
+          <div className="flex items-center">
+            <Textarea {...methods.register("expectedMovement")} className="mr-4"/>
+            <InfoIcon content="alternative solutions test tooltip"/>
+          </div>
+          
 
           {methods.formState.errors.alternativeOptions?.message && (
             <p className="text-red-700">
@@ -157,9 +175,13 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Estimated Risks/Concerns/Bottleknecks</Label>
-          <Textarea {...methods.register("estimatedRisk")} />
+          <div className="flex items-center">
+            <Textarea {...methods.register("estimatedRisk")} className="mr-4"/>
+            <InfoIcon content="risks test tooltip"/>
+          </div>
+          
 
           {methods.formState.errors.estimatedRisk?.message && (
             <p className="text-red-700">
