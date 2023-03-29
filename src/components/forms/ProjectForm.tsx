@@ -58,7 +58,6 @@ export default function ProjectForm() {
       <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
-          console.log("on submit ran");
           await mutation.mutateAsync(values);
           methods.reset();
         })}

@@ -10,13 +10,7 @@ export const CreateProjectSchema = z.object({
   expectedMovement: z.string().optional(), 
   alternativeOptions: z.string().optional(),
   estimatedRisk: z.string().optional(),
-  outcomeScore: z.number().int().optional(),
-  effortScore: z.number().int().optional(),
   status: z.string(),
-  actualStart: z.string().transform((val) => new Date(val).toISOString()),
-  actualEnd: z.string().transform((val) => new Date(val).toISOString()),
-  lessonsLearnt: z.string().optional(),
-  retrospecive: z.string().optional(),
 });
 
 export type CreateProjectSchema = z.infer<typeof CreateProjectSchema>;
