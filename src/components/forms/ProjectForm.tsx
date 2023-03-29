@@ -35,18 +35,17 @@ export default function ProjectForm() {
   });
 
   const { data: sessionData } = useSession();
-
   return (
     <>
       <h2 className="text-3xl font-bold">Projects</h2>
-      <div className="flex flex-col gap-2 py-2">
+      <div className="flex flex-row flex-wrap gap-5 py-2">
         {projects &&
           projects.map((project) => {
           return (
             <Link
               href={"/" + project.id}
               key={project.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg"
+              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
             >
               <h3 className="text-xl font-bold">{project.name}</h3>
               <p>{project.description}</p>

@@ -80,12 +80,12 @@ export default function Project() {
       </Link>
 
       <h2 className="mt-5 text-2xl font-bold">Project Activities</h2>
-      <div className="flex flex-col gap-2 py-2">
+      <div className="flex flex-row flex-wrap gap-5 py-2">
         {activities &&
           activities.map((activity) => (
             <article
               key={activity.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg"
+              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
             >
               <h3 className="text-xl font-bold">{activity.name}</h3>
               <p>{activity.description}</p>
