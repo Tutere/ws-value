@@ -9,6 +9,7 @@ import { CreateActivitySchema } from "~/schemas/activities";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { InfoIcon } from "~/components/ui/infoIcon";
 
 export default function Project() {
   const router = useRouter();
@@ -100,9 +101,13 @@ export default function Project() {
         })}
         className="space-y-2"
       >
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Name</Label>
-          <Input {...methods.register("name")} />
+          <div className="flex items-center">
+             <Input {...methods.register("name")} className="mr-4"/>
+             <InfoIcon content="Name test tooltip"/>
+          </div>
+         
 
           {methods.formState.errors.name?.message && (
             <p className="text-red-700">
@@ -111,9 +116,13 @@ export default function Project() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Description</Label>
-          <Textarea {...methods.register("description")} />
+          <div className="flex items-center">
+            <Textarea {...methods.register("description")} className="mr-4"/>
+            <InfoIcon content="Description test tooltip"/>
+          </div>
+          
 
           {methods.formState.errors.description?.message && (
             <p className="text-red-700">
@@ -122,9 +131,13 @@ export default function Project() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Engagement Pattern</Label>
-          <Textarea {...methods.register("engagementPattern")} />
+          <div className="flex items-center">
+            <Textarea {...methods.register("engagementPattern")} className="mr-4"/>
+            <InfoIcon content="Engagement Pattern test tooltip"/>
+          </div>
+          
 
           {methods.formState.errors.engagementPattern?.message && (
             <p className="text-red-700">
