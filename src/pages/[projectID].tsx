@@ -9,6 +9,7 @@ import { CreateActivitySchema } from "~/schemas/activities";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { InfoIcon } from "~/components/ui/infoIcon";
 
 export default function Project() {
   const router = useRouter();
@@ -68,6 +69,15 @@ export default function Project() {
         <Label className="font-medium">Start Date:</Label>
         <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
       </div>
+      <Link
+       href={"/projectCompletion/" + project?.id}
+       key={project?.id}
+      >
+        <Button type="submit" variant={"default"} disabled={mutation.isLoading}
+        className = "mt-5">
+            {mutation.isLoading ? "Loading" : "Complete Project"}
+        </Button>
+      </Link>
 
       <h2 className="mt-5 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-col gap-2 py-2">
@@ -91,9 +101,13 @@ export default function Project() {
         })}
         className="space-y-2"
       >
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Name</Label>
-          <Input {...methods.register("name")} />
+          <div className="flex items-center">
+             <Input {...methods.register("name")} className="mr-4"/>
+             <InfoIcon content="Name test tooltip"/>
+          </div>
+         
 
           {methods.formState.errors.name?.message && (
             <p className="text-red-700">
@@ -102,9 +116,13 @@ export default function Project() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Description</Label>
-          <Textarea {...methods.register("description")} />
+          <div className="flex items-center">
+            <Textarea {...methods.register("description")} className="mr-4"/>
+            <InfoIcon content="Description test tooltip"/>
+          </div>
+          
 
           {methods.formState.errors.description?.message && (
             <p className="text-red-700">
@@ -113,16 +131,58 @@ export default function Project() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Engagement Pattern</Label>
-          <Textarea {...methods.register("engagementPattern")} />
-
+          <div className="flex items-center">
+            <Textarea {...methods.register("engagementPattern")} className="mr-4"/>
+            <InfoIcon content="Engagement Pattern test tooltip"/>
+          </div>
+          
           {methods.formState.errors.engagementPattern?.message && (
             <p className="text-red-700">
               {methods.formState.errors.engagementPattern?.message}
             </p>
           )}
         </div>
+        
+        <div className="grid w-full max-w-md items-center gap-1.5">
+          <Label htmlFor="name">Value Created (Outcome)</Label>
+          <div className="flex items-center">
+            <Textarea {...methods.register("valueCreated")} className="mr-4"/>
+            <InfoIcon content="Engagement Pattern test tooltip"/>
+          </div>
+          
+
+          {methods.formState.errors.valueCreated?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.valueCreated?.message}
+            </p>
+          )}
+        </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <Label htmlFor="name">Start Date</Label>
+          {/* default to todays date if nothing selected */}
+          <Input {...methods.register("startDate")} type="date" />
+
+          {methods.formState.errors.startDate?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.startDate?.message}
+            </p>
+          )}
+        </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <Label htmlFor="name">End Date</Label>
+          <Input {...methods.register("endDate")} type="date" />
+
+          {methods.formState.errors.endDate?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.endDate?.message}
+            </p>
+          )}
+        </div>
+
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Add Activity"}

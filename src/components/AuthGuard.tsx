@@ -10,11 +10,13 @@ const AuthGuard = ({ children }: { children: ReactNode }) => {
       return <div>⏳</div>;
     case "unauthenticated":
       return (
-        <Button
-          onClick={sessionData ? () => void signOut() : () => void signIn()}
-        >
-          {sessionData ? "Sign out" : "Sign in"}
-        </Button>
+        <div className="flex justify-center items-center h-screen">
+          <Button
+            onClick={sessionData ? () => void signOut() : () => void signIn()}
+          >
+            {sessionData ? "Sign out" : "Sign in"}
+          </Button>
+        </div>
       );
     case "authenticated":
       return <div>{children}</div>;
