@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import {CompleteProjectSchema} from "~/schemas/projects";
+import { InfoIcon } from "~/components/ui/infoIcon";
 
 export default function ProjectCompletion() {
   const router = useRouter();
@@ -68,10 +69,13 @@ export default function ProjectCompletion() {
         className="space-y-2"
       >
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Retrospective/Overall Summary</Label>
-          <Textarea {...methods.register("retrospective")} />
-
+          <div className="flex items-center">
+            <Textarea {...methods.register("retrospective")} className="mr-4" />
+            <InfoIcon content="Retrospective test tooltip"/>
+          </div>
+          
           {methods.formState.errors.retrospective?.message && (
             <p className="text-red-700">
               {methods.formState.errors.retrospective?.message}
@@ -79,9 +83,12 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Lessons Learnt</Label>
-          <Textarea {...methods.register("lessonsLearnt")} />
+          <div className="flex items-center">
+            <Textarea {...methods.register("lessonsLearnt")} className="mr-4"  />
+            <InfoIcon content="Lessons learnt test tooltip"/>
+          </div> 
 
           {methods.formState.errors.lessonsLearnt?.message && (
             <p className="text-red-700">
@@ -90,7 +97,7 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Actual Start Date</Label>
           {/* default to todays date if nothing selected */}
           <Input {...methods.register("actualStart")} type="date" />
@@ -102,7 +109,7 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Actual End Date</Label>
           {/* default to todays date if nothing selected */}
           <Input {...methods.register("actualEnd")} type="date" />
@@ -114,9 +121,13 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
-          <Input {...methods.register("outcomeScore")} />
+          <div className="flex items-center">
+            <Input {...methods.register("outcomeScore")} className="mr-4" />
+            <InfoIcon content="Outcome score test tooltip"/>
+          </div>
+          
 
             {methods.formState.errors.outcomeScore?.message && (
             <p className="text-red-700">
@@ -125,9 +136,13 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Effort Score (1-10) </Label>
-          <Input {...methods.register("effortScore")} />
+          <div className="flex items-center">
+            <Input {...methods.register("effortScore")} className="mr-4"/>
+            <InfoIcon content="Effort score test tooltip"/>
+          </div>
+          
 
             {methods.formState.errors.effortScore?.message && (
             <p className="text-red-700">

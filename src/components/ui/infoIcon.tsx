@@ -12,7 +12,8 @@ export function InfoIcon(props: { content: string }) {
     <TooltipProvider>
         <Tooltip>
             <TooltipTrigger> 
-            <svg className="flex-shrink-0 cursor-pointer" 
+            <svg className="flex-shrink-0 cursor-pointer rounded-full hover:bg-slate-200" 
+            onClick={(e) => {e.preventDefault()}}
             width="15" 
             height="15" 
             viewBox="0 0 15 15" 
