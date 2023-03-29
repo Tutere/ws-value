@@ -5,6 +5,9 @@ export const CreateActivitySchema = z.object({
   description: z.string(),
   projectId: z.string().cuid(),
   engagementPattern: z.string(),
+  valueCreated: z.string().optional(),
+  startDate: z.string().transform((val) => new Date(val).toISOString()),
+  endDate: z.string().transform((val) => new Date(val).toISOString()),
 });
 
 export type CreateActivitySchema = z.infer<typeof CreateActivitySchema>;

@@ -138,13 +138,51 @@ export default function Project() {
             <InfoIcon content="Engagement Pattern test tooltip"/>
           </div>
           
-
           {methods.formState.errors.engagementPattern?.message && (
             <p className="text-red-700">
               {methods.formState.errors.engagementPattern?.message}
             </p>
           )}
         </div>
+        
+        <div className="grid w-full max-w-md items-center gap-1.5">
+          <Label htmlFor="name">Value Created (Outcome)</Label>
+          <div className="flex items-center">
+            <Textarea {...methods.register("valueCreated")} className="mr-4"/>
+            <InfoIcon content="Engagement Pattern test tooltip"/>
+          </div>
+          
+
+          {methods.formState.errors.valueCreated?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.valueCreated?.message}
+            </p>
+          )}
+        </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <Label htmlFor="name">Start Date</Label>
+          {/* default to todays date if nothing selected */}
+          <Input {...methods.register("startDate")} type="date" />
+
+          {methods.formState.errors.startDate?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.startDate?.message}
+            </p>
+          )}
+        </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <Label htmlFor="name">End Date</Label>
+          <Input {...methods.register("endDate")} type="date" />
+
+          {methods.formState.errors.endDate?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.endDate?.message}
+            </p>
+          )}
+        </div>
+
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Add Activity"}

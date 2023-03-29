@@ -58,6 +58,7 @@ export default function ProjectForm() {
       <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
+          console.log("on submit ran");
           await mutation.mutateAsync(values);
           methods.reset();
         })}
@@ -150,7 +151,6 @@ export default function ProjectForm() {
             <InfoIcon content="expected movement test tooltip"/>
           </div>
           
-
           {methods.formState.errors.expectedMovement?.message && (
             <p className="text-red-700">
               {methods.formState.errors.expectedMovement?.message}
@@ -163,11 +163,10 @@ export default function ProjectForm() {
             Alternative Options or Solutions Considered
           </Label>
           <div className="flex items-center">
-            <Textarea {...methods.register("expectedMovement")} className="mr-4"/>
+            <Textarea {...methods.register("alternativeOptions")} className="mr-4"/>
             <InfoIcon content="alternative solutions test tooltip"/>
           </div>
           
-
           {methods.formState.errors.alternativeOptions?.message && (
             <p className="text-red-700">
               {methods.formState.errors.alternativeOptions?.message}
@@ -182,7 +181,6 @@ export default function ProjectForm() {
             <InfoIcon content="risks test tooltip"/>
           </div>
           
-
           {methods.formState.errors.estimatedRisk?.message && (
             <p className="text-red-700">
               {methods.formState.errors.estimatedRisk?.message}
