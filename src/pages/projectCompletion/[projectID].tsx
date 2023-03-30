@@ -65,6 +65,7 @@ export default function ProjectCompletion() {
         onSubmit={methods.handleSubmit(async (values) => {
           await mutation.mutateAsync(values);
           methods.reset();
+          router.push('/');
         })}
         className="space-y-2"
       >
