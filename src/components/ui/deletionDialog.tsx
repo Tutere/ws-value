@@ -13,6 +13,7 @@ import { DeleteProjectSchema } from "~/schemas/projects";
 import { ReadActivitySchema } from "~/schemas/activities";
 import { api } from "~/utils/api";
 import { Button } from "./Button";
+import { useState } from "react";
 
 
 
@@ -46,11 +47,13 @@ export function DeletionDialog(props: { object: string, id:string }) {
         },
       });
 
+      const [isOpen, setIsOpen] = useState(false);
+
     
     return (
-        <Dialog>
+        <Dialog open={isOpen}>
         <DialogTrigger>
-            <Button className="bg-red-600">
+            <Button className="bg-red-600" onClick={() => setIsOpen(true)}>
                 Delete {props.object}
             </Button>
         </DialogTrigger>
@@ -74,7 +77,9 @@ export function DeletionDialog(props: { object: string, id:string }) {
               })}
             > 
             Delete</Button>
-            <Button variant={"outline"}>Cancel</Button>
+            <Button variant={"outline"}
+            onClick={() => setIsOpen(false)}
+            >Cancel</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
