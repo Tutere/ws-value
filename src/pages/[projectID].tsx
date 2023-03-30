@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
+import { DeletionDialog } from "~/components/ui/deletionDialog";
 
 export default function Project() {
   const router = useRouter();
@@ -66,6 +67,9 @@ export default function Project() {
             Edit Project
         </Button>
       </Link>
+
+      <DeletionDialog object="Project" id={id}></DeletionDialog>
+      
 
       <h2 className="mt-5 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-row flex-wrap gap-5 py-2">

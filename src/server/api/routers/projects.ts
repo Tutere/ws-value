@@ -1,4 +1,4 @@
-import { CreateProjectSchema, EditProjectSchema, CompleteProjectSchema } from "~/schemas/projects";
+import { CreateProjectSchema, EditProjectSchema, CompleteProjectSchema, DeleteProjectSchema } from "~/schemas/projects";
 
 import {
   createTRPCRouter,
@@ -87,6 +87,18 @@ export const projectsRouter = createTRPCRouter({
           alternativeOptions: input.alternativeOptions,
           estimatedRisk: input.estimatedRisk,
         }
+      }
+    );
+  }),
+
+  delete: protectedProcedure
+  .input(DeleteProjectSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.project.delete(
+      {
+        where: {
+          id: input.id,
+        },
       }
     );
   }),

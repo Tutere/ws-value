@@ -38,3 +38,8 @@ export const EditProjectSchema = z.object({
   alternativeOptions: z.string().optional(),
   estimatedRisk: z.string().optional(),
 });
+
+export const DeleteProjectSchema = z.object({
+  id: z.string().cuid(),
+});
+

@@ -45,7 +45,7 @@ const Home: NextPage = () => {
               })}
             </div>
             <Link href={"/newProject"}>
-              <Button type="submit" variant={"default"} >
+              <Button type="submit" variant={"default"} className="bg-green-500">
                   Start New Project
               </Button>
             </Link>

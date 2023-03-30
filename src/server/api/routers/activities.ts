@@ -35,4 +35,17 @@ export const activitiesRouter = createTRPCRouter({
       }
     );
   }),
+
+  delete: protectedProcedure
+  .input(ReadActivitySchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.deleteMany(
+      {
+        where: {
+          projectId: input.projectId,
+        }
+      }
+    );
+  }),
+
 });
