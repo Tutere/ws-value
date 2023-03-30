@@ -1,5 +1,4 @@
-import { CreateProjectSchema } from "~/schemas/projects";
-import {CompleteProjectSchema} from "~/schemas/projects";
+import { CreateProjectSchema, EditProjectSchema, CompleteProjectSchema } from "~/schemas/projects";
 
 import {
   createTRPCRouter,
@@ -64,6 +63,29 @@ export const projectsRouter = createTRPCRouter({
           lessonsLearnt: input.lessonsLearnt,
           retrospective:input.retrospective,
           status: input.status,
+        }
+      }
+    );
+  }),
+
+  edit: protectedProcedure
+  .input(EditProjectSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.project.update(
+      {
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+          goal: input.goal,
+          estimatedStart: input.estimatedStart,
+          estimatedEnd: input.estimatedEnd,
+          trigger: input.trigger,
+          expectedMovement: input.expectedMovement,
+          alternativeOptions: input.alternativeOptions,
+          estimatedRisk: input.estimatedRisk,
         }
       }
     );

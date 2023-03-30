@@ -25,3 +25,16 @@ export const CompleteProjectSchema = z.object({
   retrospective: z.string().optional(),
   id: z.string().cuid(),
 });
+
+export const EditProjectSchema = z.object({
+  id: z.string().cuid(),
+  name: z.string().min(1).max(255),
+  description: z.string().optional(),
+  goal: z.string().min(1),
+  estimatedStart: z.string().transform((val) => new Date(val).toISOString()),
+  estimatedEnd: z.string().transform((val) => new Date(val).toISOString()).optional(),
+  trigger: z.string().optional(),
+  expectedMovement: z.string().optional(), 
+  alternativeOptions: z.string().optional(),
+  estimatedRisk: z.string().optional(),
+});
