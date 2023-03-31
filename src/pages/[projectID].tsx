@@ -58,12 +58,12 @@ export default function Project() {
         <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
       </div>
       <Link href={"/projectCompletion/" + project?.id}>
-        <Button variant={"default"} className = "mt-5">
+        <Button variant={"default"} className = "mt-5 bg-green-500">
             Complete Project
         </Button>
       </Link>
       <Link href={"/editProject/" + project?.id}>
-        <Button variant={"default"} className = "ml-10">
+        <Button variant={"default"} className = "mx-7">
             Edit Project
         </Button>
       </Link>

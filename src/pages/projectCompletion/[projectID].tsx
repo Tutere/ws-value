@@ -152,7 +152,7 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
+        <Button type="submit" variant={"default"} disabled={mutation.isLoading} className="bg-green-500">
           {mutation.isLoading ? "Loading" : "Complete Project"}
         </Button>
       </form>
