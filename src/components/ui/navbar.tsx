@@ -17,7 +17,7 @@ export function Navbar() {
           <Link href={"/"} className="text-white mr-8">
             Home
           </Link>
-          <Link href={"#"} className="text-white">
+          <Link href={"/monthlyReport"} className="text-white">
             Monthly Report
           </Link>
         </div>
