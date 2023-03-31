@@ -1,5 +1,5 @@
-import { CreateActivitySchema } from "~/schemas/activities";
-import { ReadActivitySchema } from "~/schemas/activities";
+import { CreateActivitySchema, ReadActivitySchema,ReadSpecificActivitySchema  } from "~/schemas/activities";
+
 
 import {
   createTRPCRouter,
@@ -43,6 +43,18 @@ export const activitiesRouter = createTRPCRouter({
       {
         where: {
           projectId: input.projectId,
+        }
+      }
+    );
+  }),
+
+  readSpecific: protectedProcedure
+  .input(ReadSpecificActivitySchema)
+  .query(({ ctx, input }) => {
+    return ctx.prisma.activity.findUnique(
+      {
+        where: {
+          id: input.id,
         }
       }
     );

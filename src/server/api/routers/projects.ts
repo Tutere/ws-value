@@ -1,4 +1,5 @@
-import { CreateProjectSchema, EditProjectSchema, CompleteProjectSchema, DeleteProjectSchema } from "~/schemas/projects";
+import { CreateProjectSchema, EditProjectSchema, CompleteProjectSchema,
+   DeleteProjectSchema, FindProjectByActivityIdSchema } from "~/schemas/projects";
 
 import {
   createTRPCRouter,
@@ -102,4 +103,22 @@ export const projectsRouter = createTRPCRouter({
       }
     );
   }),
+
+  findByActivityId: protectedProcedure
+  .input(FindProjectByActivityIdSchema)
+  .query(({ ctx, input }) => {
+    return ctx.prisma.project.findFirst({
+      where: {
+        Activity: {
+          some: {
+            id: input.id,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+  }),
+
 });

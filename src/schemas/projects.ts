@@ -43,3 +43,7 @@ export const DeleteProjectSchema = z.object({
   id: z.string().cuid(),
 });
 
+export const FindProjectByActivityIdSchema = z.object({
+  id: z.string().cuid(),
+});
+

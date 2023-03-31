@@ -11,7 +11,7 @@ export function Navbar() {
       <div className="flex items-center justify-between bg-gray-800 h-[70px]">
         <div className="flex items-center px-8 cursor-pointer">
           <Link href={"/"}>
-            <h1 className="text-lg font-bold text-white cursor-pointer mr-14">
+            <h1 className="text-xl font-bold text-white cursor-pointer mr-14">
               Measuring Value
             </h1>
           </Link>

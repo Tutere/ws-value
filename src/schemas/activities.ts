@@ -15,3 +15,7 @@ export type CreateActivitySchema = z.infer<typeof CreateActivitySchema>;
 export const ReadActivitySchema = z.object({
     projectId: z.string().cuid(),
   });
+
+  export const ReadSpecificActivitySchema = z.object({
+    id: z.string().cuid(),
+  });
