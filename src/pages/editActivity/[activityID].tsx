@@ -19,7 +19,6 @@ export default function Project() {
    const query = api.projects.findByActivityId.useQuery({id:id}, {
     suspense: true,
   });
-
   const project = query.data;
 
   const { data: activity } = api.activities.readSpecific.useQuery({id: id}, {

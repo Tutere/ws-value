@@ -20,26 +20,28 @@ import { useState } from "react";
 export function DeletionDialog(props: { object: string, id:string }) {
     const router = useRouter();
     const utils = api.useContext().projects;
+    const [isOpen, setIsOpen] = useState(false);
 
+    //project handling
     const query = api.projects.findByActivityId.useQuery({id:props.id}, {
       suspense: true,
     });
-  
-    const project = query.data;
 
+    const project = query.data;
     const mutation = api.projects.delete.useMutation({
         onSuccess: async () => {
           await utils.read.invalidate();
         },
       });
-      
+
       const methods = useZodForm({
         schema: DeleteProjectSchema,
         defaultValues: {
           id: props.id,
         },
       });
-
+    
+      //activity handling
     const utilsActivities = api.useContext().activities;
     const mutationActivities = api.activities.delete.useMutation({
         onSuccess: async () => {
@@ -67,13 +69,12 @@ export function DeletionDialog(props: { object: string, id:string }) {
         },
       });
 
-      const [isOpen, setIsOpen] = useState(false);
+      
 
       const handleDelete = async () => {
         if (props.object === "Activity") {
           await mutationSpecificActivy.mutateAsync(methodSpecificActivity.getValues()),
-          router.push('/' + project?.id);
-          
+          router.push('/' + project?.id); 
         } 
         /** If deleting an entire projet, must first delete all of its activites */
         else { 
@@ -82,11 +83,9 @@ export function DeletionDialog(props: { object: string, id:string }) {
               mutation.mutateAsync(methods.getValues()),
           ]);
           router.push('/');
+        }
       }
 
-      }
-
-    
     return (
         <Dialog open={isOpen}>
         <DialogTrigger>
