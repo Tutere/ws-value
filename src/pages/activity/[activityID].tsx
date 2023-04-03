@@ -63,17 +63,12 @@ export default function Project() {
         <p className="ml-1">{activity?.valueCreated}</p>
       </div>
       <div className="mt-5 flex gap-7">
-      <Link href={"/projectCompletion/" + project?.id}>
+      <Link href={"/editActivity/" + id}>
         <Button variant={"default"}>
-            Complete Project
+            Edit Activity
         </Button>
       </Link>
-      <Link href={"/editProject/" + project?.id}>
-        <Button variant={"default"}>
-            Edit Project
-        </Button>
-      </Link>
-      <DeletionDialog object="Project" id={id}></DeletionDialog>
+      <DeletionDialog object="Activity" id={id}></DeletionDialog>
       </div>
 
     </div>

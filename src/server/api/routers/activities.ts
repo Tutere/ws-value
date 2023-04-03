@@ -1,4 +1,5 @@
-import { CreateActivitySchema, ReadActivitySchema,ReadSpecificActivitySchema  } from "~/schemas/activities";
+import { CreateActivitySchema, ReadActivitySchema,
+  ReadSpecificActivitySchema, EditActivitySchema  } from "~/schemas/activities";
 
 
 import {
@@ -36,6 +37,8 @@ export const activitiesRouter = createTRPCRouter({
     );
   }),
 
+
+  //Delete all activities within a project (given a project ID)
   delete: protectedProcedure
   .input(ReadActivitySchema)
   .mutation(({ ctx, input }) => {
@@ -59,5 +62,40 @@ export const activitiesRouter = createTRPCRouter({
       }
     );
   }),
+
+  edit: protectedProcedure
+  .input(EditActivitySchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.update(
+      {
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+          projectId: input.projectId,
+          engagementPattern: input.engagementPattern,
+          valueCreated: input.valueCreated,
+          startDate: input.startDate,
+          endDate: input.endDate,
+        }
+      }
+    );
+  }),
+
+  //Delete a specific activity within a project (given an activity ID)
+  deleteByActivityId: protectedProcedure
+  .input(ReadSpecificActivitySchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.delete(
+      {
+        where: {
+          id: input.id,
+        },
+      }
+    );
+  }),
+
 
 });
