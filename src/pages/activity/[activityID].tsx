@@ -44,29 +44,29 @@ export default function Project() {
   return (
     <>
     {isMemberFound ? (
-    <div className="p-8">
+    <div className="p-8 bg-white rounded-lg shadow-md">
       <h2 className="mb-5 text-3xl font-bold">Activity Details</h2>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4">
         <Label className="font-medium">Activity Name:</Label>
         <p className="ml-1">{activity?.name}</p>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4">
         <Label className="font-medium">Desription:</Label>
         <p className="ml-1">{activity?.description}</p>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4">
         <Label className="font-medium">Start Date:</Label>
         <p className="ml-1">{activity?.startDate?.toLocaleDateString()}</p>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4">
         <Label className="font-medium">End Date:</Label>
         <p className="ml-1">{activity?.endDate?.toLocaleDateString()}</p>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4 ">
         <Label className="font-medium">Engagement Pattern:</Label>
         <p className="ml-1">{activity?.engagementPattern}</p>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4">
         <Label className="font-medium">Outcome:</Label>
         <p className="ml-1">{activity?.valueCreated}</p>
       </div>

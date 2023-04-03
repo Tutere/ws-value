@@ -27,7 +27,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="p-8">
+        <div className="p-8 ">
           <h2 className="text-3xl font-bold">Your Projects</h2>
           <div className="flex flex-row flex-wrap gap-5 py-4">
             {projects &&

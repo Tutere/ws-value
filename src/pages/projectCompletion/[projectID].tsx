@@ -55,7 +55,7 @@ export default function ProjectCompletion() {
   return (
     <>
     {isMemberFound ? (
-    <div className="p-8">
+    <div className="p-8 ">
       <h2 className="mt-5 mb-5 text-2xl font-bold">Project Completion Page</h2>
       <div className="flex flex-row mb-5">
         <Label className="font-medium">Project Name:</Label>

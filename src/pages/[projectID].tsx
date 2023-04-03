@@ -71,7 +71,7 @@ export default function Project() {
       <DeletionDialog object="Project" id={id}></DeletionDialog>
       </div>
 
-      <h2 className="mt-5 text-2xl font-bold">Project Activities</h2>
+      <h2 className="mt-10 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-row flex-wrap gap-5 py-2">
         {activities &&
           activities.map((activity) => (
