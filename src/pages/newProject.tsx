@@ -175,7 +175,7 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <Button type="submit" variant={"outline"} disabled={mutation.isLoading}>
+        <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Start Project"}
         </Button>
       </form>

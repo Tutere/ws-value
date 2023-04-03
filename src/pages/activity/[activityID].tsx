@@ -59,6 +59,14 @@ export default function Project() {
         <p className="ml-1">{activity?.startDate?.toLocaleDateString()}</p>
       </div>
       <div className="flex flex-row">
+        <Label className="font-medium">End Date:</Label>
+        <p className="ml-1">{activity?.endDate?.toLocaleDateString()}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Engagement Pattern:</Label>
+        <p className="ml-1">{activity?.engagementPattern}</p>
+      </div>
+      <div className="flex flex-row">
         <Label className="font-medium">Outcome:</Label>
         <p className="ml-1">{activity?.valueCreated}</p>
       </div>
