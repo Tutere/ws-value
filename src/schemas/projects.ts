@@ -1,13 +1,17 @@
 import { z } from "zod";
 
 export const CreateProjectSchema = z.object({
+  colour: z.string().min(6).max(6).optional(),
   name: z.string().min(1).max(255),
   description: z.string().optional(),
   goal: z.string().min(1),
   estimatedStart: z.string().transform((val) => new Date(val).toISOString()),
-  estimatedEnd: z.string().transform((val) => new Date(val).toISOString()).optional(),
+  estimatedEnd: z
+    .string()
+    .transform((val) => new Date(val).toISOString())
+    .optional(),
   trigger: z.string().optional(),
-  expectedMovement: z.string().optional(), 
+  expectedMovement: z.string().optional(),
   alternativeOptions: z.string().optional(),
   estimatedRisk: z.string().optional(),
   status: z.string(),
@@ -32,9 +36,12 @@ export const EditProjectSchema = z.object({
   description: z.string().optional(),
   goal: z.string().min(1),
   estimatedStart: z.string().transform((val) => new Date(val).toISOString()),
-  estimatedEnd: z.string().transform((val) => new Date(val).toISOString()).optional(),
+  estimatedEnd: z
+    .string()
+    .transform((val) => new Date(val).toISOString())
+    .optional(),
   trigger: z.string().optional(),
-  expectedMovement: z.string().optional(), 
+  expectedMovement: z.string().optional(),
   alternativeOptions: z.string().optional(),
   estimatedRisk: z.string().optional(),
 });
@@ -46,4 +53,3 @@ export const DeleteProjectSchema = z.object({
 export const FindProjectByActivityIdSchema = z.object({
   id: z.string().cuid(),
 });
-
