@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
-import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
-import { Textarea } from "../ui/TextArea";
+import { Button } from "src/components/ui/Button";
+import { Input } from "src/components/ui/Input";
+import { Textarea } from "src/components/ui/TextArea";
 import {InfoIcon} from "src/components/ui/infoIcon";
+import { useRouter } from "next/router";
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -17,6 +18,8 @@ export default function ProjectForm() {
       console.error(error);
     },
   });
+
+  const router = useRouter();
 
   const projects = query.data;
 
@@ -37,28 +40,14 @@ export default function ProjectForm() {
   const { data: sessionData } = useSession();
   return (
     <>
-      <h2 className="text-3xl font-bold">Projects</h2>
-      <div className="flex flex-row flex-wrap gap-5 py-2">
-        {projects &&
-          projects.map((project) => {
-          return (
-            <Link
-              href={"/" + project.id}
-              key={project.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
-            >
-              <h3 className="text-xl font-bold">{project.name}</h3>
-              <p>{project.description}</p>
-            </Link>
-            )
-          })}
-      </div>
-
+    <div className="p-8">
       <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
           await mutation.mutateAsync(values);
           methods.reset();
+          router.push('/');
+
         })}
         className="space-y-2"
       >
@@ -186,10 +175,11 @@ export default function ProjectForm() {
           )}
         </div>
 
-        <Button type="submit" variant={"outline"} disabled={mutation.isLoading}>
+        <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Start Project"}
         </Button>
       </form>
+      </div>
     </>
   );
 }

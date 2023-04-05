@@ -55,7 +55,7 @@ export default function ProjectCompletion() {
   return (
     <>
     {isMemberFound ? (
-    <div className="p-8">
+    <div className="p-8 ">
       <h2 className="mt-5 mb-5 text-2xl font-bold">Project Completion Page</h2>
       <div className="flex flex-row mb-5">
         <Label className="font-medium">Project Name:</Label>
@@ -65,6 +65,7 @@ export default function ProjectCompletion() {
         onSubmit={methods.handleSubmit(async (values) => {
           await mutation.mutateAsync(values);
           methods.reset();
+          router.push('/');
         })}
         className="space-y-2"
       >
@@ -151,7 +152,7 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
+        <Button type="submit" variant={"default"} disabled={mutation.isLoading} className="bg-green-500">
           {mutation.isLoading ? "Loading" : "Complete Project"}
         </Button>
       </form>

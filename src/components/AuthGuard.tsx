@@ -7,7 +7,8 @@ const AuthGuard = ({ children }: { children: ReactNode }) => {
 
   switch (status) {
     case "loading":
-      return <div>⏳</div>;
+      return <div className="flex justify-center items-center h-screen text-7xl">
+        ⏳</div>;
     case "unauthenticated":
       return (
         <div className="flex justify-center items-center h-screen">
