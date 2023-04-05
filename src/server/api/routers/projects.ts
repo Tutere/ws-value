@@ -1,5 +1,10 @@
-import { CreateProjectSchema, EditProjectSchema, CompleteProjectSchema,
-   DeleteProjectSchema, FindProjectByActivityIdSchema } from "~/schemas/projects";
+import {
+  CreateProjectSchema,
+  EditProjectSchema,
+  CompleteProjectSchema,
+  DeleteProjectSchema,
+  FindProjectByActivityIdSchema,
+} from "~/schemas/projects";
 
 import {
   createTRPCRouter,
@@ -13,6 +18,7 @@ export const projectsRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.project.create({
         data: {
+          colour: input.colour,
           name: input.name,
           description: input.description,
           goal: input.goal,
@@ -49,31 +55,28 @@ export const projectsRouter = createTRPCRouter({
   }),
 
   complete: protectedProcedure
-  .input(CompleteProjectSchema)
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.project.update(
-      {
+    .input(CompleteProjectSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.project.update({
         where: {
           id: input.id,
         },
         data: {
-          outcomeScore:input.outcomeScore,
+          outcomeScore: input.outcomeScore,
           effortScore: input.effortScore,
           actualStart: input.actualStart,
           actualEnd: input.actualEnd,
           lessonsLearnt: input.lessonsLearnt,
-          retrospective:input.retrospective,
+          retrospective: input.retrospective,
           status: input.status,
-        }
-      }
-    );
-  }),
+        },
+      });
+    }),
 
   edit: protectedProcedure
-  .input(EditProjectSchema)
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.project.update(
-      {
+    .input(EditProjectSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.project.update({
         where: {
           id: input.id,
         },
@@ -87,38 +90,34 @@ export const projectsRouter = createTRPCRouter({
           expectedMovement: input.expectedMovement,
           alternativeOptions: input.alternativeOptions,
           estimatedRisk: input.estimatedRisk,
-        }
-      }
-    );
-  }),
+        },
+      });
+    }),
 
   delete: protectedProcedure
-  .input(DeleteProjectSchema)
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.project.delete(
-      {
+    .input(DeleteProjectSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.project.delete({
         where: {
           id: input.id,
         },
-      }
-    );
-  }),
+      });
+    }),
 
   findByActivityId: protectedProcedure
-  .input(FindProjectByActivityIdSchema)
-  .query(({ ctx, input }) => {
-    return ctx.prisma.project.findFirst({
-      where: {
-        Activity: {
-          some: {
-            id: input.id,
+    .input(FindProjectByActivityIdSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.project.findFirst({
+        where: {
+          Activity: {
+            some: {
+              id: input.id,
+            },
           },
         },
-      },
-      include: {
-        members: true,
-      },
-    });
-  }),
-
+        include: {
+          members: true,
+        },
+      });
+    }),
 });
