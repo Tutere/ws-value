@@ -2,7 +2,8 @@ import { Label } from "@radix-ui/react-label";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useZodForm } from "~/hooks/useZodForm";
-import { CreateProjectSchema, EditProjectSchema } from "~/schemas/projects";
+import { CreateProjectSchema,EditProjectSchema } from "~/schemas/projects";
+import {ProjectChangeSchema } from "~/schemas/projectTracker";
 import { api } from "~/utils/api";
 import { Button } from "src/components/ui/Button";
 import { Input } from "src/components/ui/Input";
@@ -12,6 +13,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function ProjectForm() {
+  
   const router = useRouter();
   const id = router.query.projectID as string;
 
@@ -36,6 +38,15 @@ export default function ProjectForm() {
     schema: EditProjectSchema,
     defaultValues: {
       id: project?.id.toString(),
+      projectId: project?.id.toString(),
+      changeType: "Edit",
+      outcomeScore: project?.outcomeScore!,
+      effortScore: project?.effortScore!,
+      actualStart: project?.actualStart?.toISOString(),
+      actualEnd: project?.actualStart?.toISOString(),
+      lessonsLearnt: project?.lessonsLearnt!,
+      retrospective: project?.retrospective!,
+      status: project?.status!,
     },
   });
 
@@ -52,6 +63,18 @@ export default function ProjectForm() {
       }, 3000);
     }
   }, [isMemberFound, router]);
+
+
+  /****  For Data lineage *******/
+
+  const utilsprojectTracker = api.useContext().projectTracker;
+  const mutationProjecTracker = api.projectTracker.create.useMutation({
+    onSuccess: async () => {
+      // await utilsprojectTracker.read.invalidate();
+    },
+  });
+
+  /****   *******/
 
 
   return (

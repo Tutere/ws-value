@@ -100,7 +100,7 @@ model Project {
     name               String
     description        String?
     goal               String
-    estimatedStart     DateTime        @default(now())
+    estimatedStart     DateTime          @default(now())
     estimatedEnd       DateTime?
     trigger            String?
     expectedMovement   String?
@@ -115,12 +115,57 @@ model Project {
     retrospective      String?
     members            ProjectMember[]
     Activity           Activity[]
+    ProjectTracker     ProjectTracker[]
+    ActivityTracker    ActivityTracker[]
 }
 
 model Activity {
+    id                String            @id @default(cuid())
+    createdAt         DateTime          @default(now())
+    updatedAt         DateTime          @updatedAt
+    projectId         String
+    project           Project           @relation(fields: [projectId], references: [id])
+    name              String
+    description       String
+    engagementPattern String
+    valueCreated      String?
+    startDate         DateTime?
+    endDate           DateTime?
+    ActivityTracker   ActivityTracker[]
+
+    @@index([projectId])
+}
+
+model ProjectTracker {
+    id                 String    @id @default(cuid())
+    changeType         String
+    createdAt          DateTime  @default(now())
+    name               String
+    description        String?
+    goal               String
+    estimatedStart     DateTime  @default(now())
+    estimatedEnd       DateTime?
+    trigger            String?
+    expectedMovement   String?
+    alternativeOptions String?
+    estimatedRisk      String?
+    outcomeScore       Int?
+    effortScore        Int?
+    status             String
+    actualStart        DateTime?
+    actualEnd          DateTime?
+    lessonsLearnt      String?
+    retrospective      String?
+    project            Project   @relation(fields: [projectId], references: [id])
+    projectId          String
+
+    @@index([projectId])
+}
+
+model ActivityTracker {
     id                String    @id @default(cuid())
+    changeType        String
     createdAt         DateTime  @default(now())
-    updatedAt         DateTime  @updatedAt
     projectId         String
     project           Project   @relation(fields: [projectId], references: [id])
     name              String
@@ -129,6 +174,9 @@ model Activity {
     valueCreated      String?
     startDate         DateTime?
     endDate           DateTime?
+    activity          Activity  @relation(fields: [activityId], references: [id])
+    activityId        String
 
     @@index([projectId])
+    @@index([activityId])
 }
