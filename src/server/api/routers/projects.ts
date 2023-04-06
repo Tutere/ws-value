@@ -18,6 +18,7 @@ export const projectsRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.project.create({
         data: {
+          icon: input.icon,
           colour: input.colour,
           name: input.name,
           description: input.description,
@@ -81,6 +82,7 @@ export const projectsRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
+          icon:input.icon,
           name: input.name,
           description: input.description,
           goal: input.goal,

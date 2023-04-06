@@ -50,6 +50,19 @@ export default function ProjectForm() {
           })}
           className="space-y-2"
         >
+                    <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Icon</Label>
+            <div className="flex items-center">
+              <Input {...methods.register("icon")} className="mr-4" />
+              <InfoIcon content="icon test tooltip" />
+            </div>
+            {methods.formState.errors.icon?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.icon?.message}
+              </p>
+            )}
+          </div>
+
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Name</Label>
             <div className="flex items-center">
