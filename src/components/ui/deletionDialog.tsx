@@ -123,7 +123,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
         schema: ActivityChangeSchema,
         defaultValues: {
           changeType: "Delete",
-          id: props.id,
+          id: activity?.id,
           projectId: activity?.projectId.toString(),
           name: activity?.name?.toString(),
           description: activity?.description?.toString(),
@@ -144,7 +144,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
           ]);
           router.push('/' + project?.id); 
         } 
-        /** If deleting an entire projet, must first delete all of its activites */
+        /** If deleting an entire projet, must first delete all of its activites and track those changes*/
         else { 
           await Promise.all ([
               await console.log (methodProjectTracker.getValues()),

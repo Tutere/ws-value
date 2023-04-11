@@ -93,14 +93,14 @@ model ProjectMember {
 
 model Project {
     icon               String?
-    id                 String            @id @default(cuid())
-    createdAt          DateTime          @default(now())
-    updatedAt          DateTime          @updatedAt
+    id                 String          @id @default(cuid())
+    createdAt          DateTime        @default(now())
+    updatedAt          DateTime        @updatedAt
     colour             String?
     name               String
     description        String?
     goal               String
-    estimatedStart     DateTime          @default(now())
+    estimatedStart     DateTime        @default(now())
     estimatedEnd       DateTime?
     trigger            String?
     expectedMovement   String?
@@ -116,7 +116,7 @@ model Project {
     members            ProjectMember[]
     Activity           Activity[]
     // ProjectTracker     ProjectTracker[]
-    ActivityTracker    ActivityTracker[]
+    // ActivityTracker    ActivityTracker[]
 }
 
 model Activity {
@@ -169,7 +169,7 @@ model ActivityTracker {
     changeType        String
     createdAt         DateTime  @default(now())
     projectId         String
-    project           Project   @relation(fields: [projectId], references: [id])
+    // project           Project   @relation(fields: [projectId], references: [id])
     name              String
     description       String
     engagementPattern String
