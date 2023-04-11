@@ -142,7 +142,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
 
       const deleteAllActivitesTracking = async () => {
 
-        const activityTrackers = activities?.map(activity => {
+         activities?.map(activity => {
           methodActivityTracker.setValue("id" , activity.id);
           methodActivityTracker.setValue("projectId" , activity.projectId);
           methodActivityTracker.setValue("name" , activity.name);
