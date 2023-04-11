@@ -24,7 +24,8 @@ export default function ProjectForm() {
   const projects = query.data;
 
   const mutation = api.projects.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      methods.setValue("projectId" , data.id);
       await utils.read.invalidate();
     },
   });
@@ -34,17 +35,30 @@ export default function ProjectForm() {
     defaultValues: {
       name: "",
       status: "Active",
+      changeType: "Create",
+      projectId: "" //placeholder before getting id from newly created project 
     },
   });
 
+  const mutationProjecTracker = api.projectTracker.create.useMutation({
+    
+  });
+
   const { data: sessionData } = useSession();
+
   return (
     <>
       <div className="p-8">
         <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
         <form
           onSubmit={methods.handleSubmit(async (values) => {
-            await mutation.mutateAsync(values);
+            await Promise.all ([
+              await mutation.mutateAsync(values),
+              await mutationProjecTracker.mutateAsync({
+                ...values,
+                projectId: methods.getValues("projectId") // update projectId with the created project's id
+              })
+            ])
             methods.reset();
             router.push("/");
           })}

@@ -16,6 +16,8 @@ export const CreateProjectSchema = z.object({
   alternativeOptions: z.string().optional(),
   estimatedRisk: z.string().optional(),
   status: z.string(),
+  projectId: z.string(),
+  changeType: z.string(),
 });
 
 export type CreateProjectSchema = z.infer<typeof CreateProjectSchema>;

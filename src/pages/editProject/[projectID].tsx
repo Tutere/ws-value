@@ -65,7 +65,7 @@ export default function ProjectForm() {
 
   /****  For Data lineage *******/
 
-  const mutationProjecTracker = api.projectTracker.create.useMutation({
+  const mutationProjecTracker = api.projectTracker.edit.useMutation({
     onSuccess: async () => {
       // await utilsprojectTracker.read.invalidate();
     },

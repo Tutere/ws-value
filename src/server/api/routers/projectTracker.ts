@@ -1,4 +1,4 @@
-import { ProjectChangeSchema} from "~/schemas/projectTracker";
+import { ProjectChangeSchema, ProjectCreateSchema} from "~/schemas/projectTracker";
 
  import {
    createTRPCRouter,
@@ -7,7 +7,7 @@ import { ProjectChangeSchema} from "~/schemas/projectTracker";
  } from "~/server/api/trpc";
 
  export const projectTrackerRouter = createTRPCRouter({
-   create: protectedProcedure
+   edit: protectedProcedure
      .input(ProjectChangeSchema)
      .mutation(({ ctx, input }) => {
        return ctx.prisma.projectTracker.create({
@@ -30,6 +30,29 @@ import { ProjectChangeSchema} from "~/schemas/projectTracker";
             actualEnd: input.actualEnd,
             lessonsLearnt: input.lessonsLearnt,
             retrospective:input.retrospective,
+            icon:input.icon,
+            colour: input.colour,
+         },
+       });
+     }),
+
+     create: protectedProcedure
+     .input(ProjectCreateSchema)
+     .mutation(({ ctx, input }) => {
+       return ctx.prisma.projectTracker.create({
+         data: {
+            projectId: input.projectId,
+            changeType: input.changeType,
+            name: input.name,
+            description: input.description,
+            goal: input.goal,
+            estimatedStart: input.estimatedStart,
+            estimatedEnd: input.estimatedEnd,
+            trigger: input.trigger,
+            expectedMovement: input.expectedMovement,
+            alternativeOptions: input.alternativeOptions,
+            estimatedRisk: input.estimatedRisk,
+            status: input.status,
             icon:input.icon,
             colour: input.colour,
          },
