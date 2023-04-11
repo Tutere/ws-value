@@ -134,6 +134,29 @@ export function DeletionDialog(props: { object: string, id:string }) {
         },
       });
 
+      //lineage for all activities if whole project deleted
+
+      const { data: activities } = api.activities.read.useQuery({projectId: props.id}, {
+          suspense: true,
+        });
+
+      const deleteAllActivitesTracking = async () => {
+
+        const activityTrackers = activities?.map(activity => {
+          methodActivityTracker.setValue("id" , activity.id);
+          methodActivityTracker.setValue("projectId" , activity.projectId);
+          methodActivityTracker.setValue("name" , activity.name);
+          methodActivityTracker.setValue("description" , activity.description);
+          methodActivityTracker.setValue("engagementPattern" , activity.engagementPattern);
+          methodActivityTracker.setValue("valueCreated" , activity.valueCreated?.toString());
+          methodActivityTracker.setValue("startDate" , activity.startDate?.toISOString()!);
+          methodActivityTracker.setValue("endDate" , activity?.endDate?.toISOString()!);
+
+          mutationActivityracker.mutateAsync(methodActivityTracker.getValues())
+
+        });
+        
+      }
 
 
       const handleDelete = async () => {
@@ -146,6 +169,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
         } 
         /** If deleting an entire projet, must first delete all of its activites and track those changes*/
         else { 
+          await deleteAllActivitesTracking();
           await Promise.all ([
               await console.log (methodProjectTracker.getValues()),
               await mutationActivities.mutateAsync(methodsActivities.getValues()),
