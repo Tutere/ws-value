@@ -8,6 +8,8 @@ export const CreateActivitySchema = z.object({
   valueCreated: z.string().optional(),
   startDate: z.string().transform((val) => new Date(val).toISOString()),
   endDate: z.string().transform((val) => new Date(val).toISOString()),
+  id: z.string(), //for data lineage
+  changeType: z.string(), //for data lineage
 });
 
 export type CreateActivitySchema = z.infer<typeof CreateActivitySchema>;
@@ -29,4 +31,5 @@ export const ReadActivitySchema = z.object({
     valueCreated: z.string().optional(),
     startDate: z.string().transform((val) => new Date(val).toISOString()),
     endDate: z.string().transform((val) => new Date(val).toISOString()),
+    changeType: z.string(),
   });
