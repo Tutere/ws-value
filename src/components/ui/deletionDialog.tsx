@@ -15,6 +15,7 @@ import { api } from "~/utils/api";
 import { Button } from "./Button";
 import { useState } from "react";
 import { ProjectChangeSchema } from "~/schemas/projectTracker";
+import { ActivityChangeSchema } from "~/schemas/activityTracker";
 
 
 
@@ -70,7 +71,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
         },
       });
 
-      //data lineage handling
+      //data lineage handling for project
       const mutationProjecTracker = api.projectTracker.edit.useMutation({
         
       });
@@ -107,10 +108,40 @@ export function DeletionDialog(props: { object: string, id:string }) {
         },
       });
 
+      //data lineage handling for activity
+      const mutationActivityracker = api.activityTracker.edit.useMutation({
+        
+      });
+
+      const queryActivityById= api.activities.readSpecific.useQuery({id:props.id}, {
+        suspense: true,
+      });
+
+      const activity = queryActivityById.data;
+
+      const methodActivityTracker= useZodForm({
+        schema: ActivityChangeSchema,
+        defaultValues: {
+          changeType: "Delete",
+          id: props.id,
+          projectId: activity?.projectId.toString(),
+          name: activity?.name?.toString(),
+          description: activity?.description?.toString(),
+          engagementPattern: activity?.engagementPattern.toString(),
+          valueCreated: activity?.valueCreated?.toString(),
+          startDate: activity?.startDate?.toISOString(),
+          endDate: activity?.endDate?.toISOString(),
+        },
+      });
+
+
 
       const handleDelete = async () => {
         if (props.object === "Activity") {
-          await mutationSpecificActivy.mutateAsync(methodSpecificActivity.getValues()),
+          await Promise.all ([
+            await mutationActivityracker.mutateAsync(methodActivityTracker.getValues()),
+            await mutationSpecificActivy.mutateAsync(methodSpecificActivity.getValues()),
+          ]);
           router.push('/' + project?.id); 
         } 
         /** If deleting an entire projet, must first delete all of its activites */

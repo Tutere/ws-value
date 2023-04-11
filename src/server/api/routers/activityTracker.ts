@@ -27,4 +27,9 @@ import { ActivityChangeSchema} from "~/schemas/activityTracker";
       );
     }),
 
+    // delete: protectedProcedure
+    // .mutation(({ ctx, input }) => {
+    //   return ctx.prisma.activityTracker.deleteMany();
+    // }),
+
  });
