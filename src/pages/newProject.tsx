@@ -53,8 +53,8 @@ export default function ProjectForm() {
                     <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Icon</Label>
             <div className="flex items-center">
-              <Input {...methods.register("icon")} className="mr-4" />
-              <InfoIcon content="icon test tooltip" />
+              <Input {...methods.register("icon")} className="mr-4" placeholder="Optional" />
+              <InfoIcon content="Emoji" />
             </div>
             {methods.formState.errors.icon?.message && (
               <p className="text-red-700">
@@ -97,8 +97,8 @@ export default function ProjectForm() {
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Colour</Label>
             <div className="flex items-center">
-              <Input {...methods.register("colour")} className="mr-4" />
-              <InfoIcon content="Colour of project tooltip" />
+              <Input {...methods.register("colour")} className="mr-4" placeholder="Optional. (79b7e0 for a nice blue)"/>
+              <InfoIcon content="Hex code" />
             </div>
             {methods.formState.errors.colour?.message && (
               <p className="text-red-700">
