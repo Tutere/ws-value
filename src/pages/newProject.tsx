@@ -56,7 +56,7 @@ export default function ProjectForm() {
               await mutation.mutateAsync(values),
               await mutationProjecTracker.mutateAsync({
                 ...values,
-                projectId: methods.getValues("projectId") // update projectId with the created project's id
+                projectId: methods.getValues("projectId") // update projectId feild with the created project's id
               })
             ])
             methods.reset();
@@ -64,7 +64,7 @@ export default function ProjectForm() {
           })}
           className="space-y-2"
         >
-                    <div className="grid w-full max-w-md items-center gap-1.5">
+          <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Icon</Label>
             <div className="flex items-center">
               <Input {...methods.register("icon")} className="mr-4" />

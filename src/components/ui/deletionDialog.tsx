@@ -14,6 +14,7 @@ import { ReadActivitySchema, ReadSpecificActivitySchema } from "~/schemas/activi
 import { api } from "~/utils/api";
 import { Button } from "./Button";
 import { useState } from "react";
+import { ProjectChangeSchema } from "~/schemas/projectTracker";
 
 
 
@@ -22,11 +23,11 @@ export function DeletionDialog(props: { object: string, id:string }) {
     const utils = api.useContext().projects;
     const [isOpen, setIsOpen] = useState(false);
 
-    //project handling
+    //project handling (find project given activity ID)
     const query = api.projects.findByActivityId.useQuery({id:props.id}, {
       suspense: true,
     });
-
+   
     const project = query.data;
     const mutation = api.projects.delete.useMutation({
         onSuccess: async () => {
@@ -69,7 +70,43 @@ export function DeletionDialog(props: { object: string, id:string }) {
         },
       });
 
-      
+      //data lineage handling
+      const mutationProjecTracker = api.projectTracker.edit.useMutation({
+        
+      });
+
+      const queryProjectById= api.projects.findByProjectId.useQuery({id:props.id}, {
+        suspense: true,
+      });
+     
+      const project2 = queryProjectById.data;
+
+      const methodProjectTracker= useZodForm({
+        schema: ProjectChangeSchema,
+        defaultValues: {
+          changeType: "Delete",
+          projectId: project2?.id.toString(),
+          icon: project2?.icon?.toString(),
+          name: project2?.name?.toString(),
+          description: project2?.description?.toString(),
+          goal: project2?.goal?.toString(),
+          estimatedStart: project2?.estimatedStart?.toISOString(),
+          estimatedEnd: project2?.estimatedEnd?.toISOString(),
+          trigger: project2?.trigger?.toString(),
+          expectedMovement: project2?.expectedMovement?.toString(),
+          alternativeOptions: project2?.alternativeOptions?.toString(),
+          estimatedRisk: project2?.estimatedRisk?.toString(),
+          outcomeScore: project2?.outcomeScore || 1,
+          effortScore: project2?.effortScore || 1,
+          actualStart: project2?.actualStart?.toISOString() || project2?.estimatedStart?.toISOString(),
+          actualEnd: project?.actualEnd?.toISOString() || project2?.estimatedEnd?.toISOString(),
+          lessonsLearnt: project2?.lessonsLearnt! || "",
+          retrospective: project2?.retrospective! || "",
+          status: project2?.status!,
+          colour: project2?.colour!,
+        },
+      });
+
 
       const handleDelete = async () => {
         if (props.object === "Activity") {
@@ -79,8 +116,10 @@ export function DeletionDialog(props: { object: string, id:string }) {
         /** If deleting an entire projet, must first delete all of its activites */
         else { 
           await Promise.all ([
-              mutationActivities.mutateAsync(methodsActivities.getValues()),
-              mutation.mutateAsync(methods.getValues()),
+              await console.log (methodProjectTracker.getValues()),
+              await mutationActivities.mutateAsync(methodsActivities.getValues()),
+              await mutationProjecTracker.mutateAsync(methodProjectTracker.getValues()),
+              await mutation.mutateAsync(methods.getValues()),
           ]);
           router.push('/');
         }

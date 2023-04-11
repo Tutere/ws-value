@@ -115,7 +115,7 @@ model Project {
     retrospective      String?
     members            ProjectMember[]
     Activity           Activity[]
-    ProjectTracker     ProjectTracker[]
+    // ProjectTracker     ProjectTracker[]
     ActivityTracker    ActivityTracker[]
 }
 
@@ -156,12 +156,12 @@ model ProjectTracker {
     actualEnd          DateTime?
     lessonsLearnt      String?
     retrospective      String?
-    project            Project   @relation(fields: [projectId], references: [id])
+    // project            Project   @relation(fields: [projectId], references: [id])
     projectId          String
     icon               String?
     colour             String?
 
-    @@index([projectId])
+    // @@index([projectId])
 }
 
 model ActivityTracker {
