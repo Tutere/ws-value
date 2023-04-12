@@ -4,6 +4,7 @@ import { projectsRouter } from "./routers/projects";
 import {activitiesRouter} from  "./routers/activities";
 import { projectTrackerRouter } from "./routers/projectTracker";
 import { activityTrackerRouter } from "./routers/activityTracker";
+import { usersRouter } from "./routers/users";
 
 /**
  * This is the primary router for your server.
@@ -15,7 +16,8 @@ export const appRouter = createTRPCRouter({
   projects: projectsRouter,
   activities: activitiesRouter,
   projectTracker: projectTrackerRouter,
-  activityTracker: activityTrackerRouter
+  activityTracker: activityTrackerRouter,
+  users: usersRouter,
 });
 
 // export type definition of API

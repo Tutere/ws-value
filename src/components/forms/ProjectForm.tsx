@@ -9,6 +9,7 @@ import { Input } from "../ui/Input";
 import { Textarea } from "../ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 
+
 export default function ProjectForm() {
   const utils = api.useContext().projects;
   const query = api.projects.read.useQuery(undefined, {
@@ -34,7 +35,11 @@ export default function ProjectForm() {
     },
   });
 
+
   const { data: sessionData } = useSession();
+
+
+  
   return (
     <>
       <h2 className="text-3xl font-bold">Projects</h2>

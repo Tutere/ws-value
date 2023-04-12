@@ -9,6 +9,7 @@ import { Input } from "src/components/ui/Input";
 import { Textarea } from "src/components/ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
+import Select from 'react-select'
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -45,6 +46,26 @@ export default function ProjectForm() {
   });
 
   const { data: sessionData } = useSession();
+
+
+    // ****** get users for dropdown selection **********
+    const queryUsers = api.users.read.useQuery(undefined, {
+      suspense: true,
+      onError: (error) => {
+        console.error(error);
+      },
+    });
+  
+    const users = queryUsers.data;
+
+    const options = users?.map((user) => ({
+      value: user.id,
+      label: user.name,
+    }));
+
+    const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
+
+  // ****************
 
   return (
     <>
@@ -222,6 +243,24 @@ export default function ProjectForm() {
               </p>
             )}
           </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Project members</Label>
+            <div className="flex items-center">
+              <Select options={options} 
+              className="mr-4 w-full"
+              isMulti
+              defaultValue={defaultValue}
+              />
+              <InfoIcon content="Emoji" />
+            </div>
+            {methods.formState.errors.icon?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.icon?.message}
+              </p>
+            )}
+          </div>
+
 
           <Button
             type="submit"
