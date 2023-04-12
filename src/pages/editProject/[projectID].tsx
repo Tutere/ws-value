@@ -35,7 +35,17 @@ export default function ProjectForm() {
   const methods = useZodForm({
     schema: EditProjectSchema,
     defaultValues: {
+      changeType: "Edit",
       id: project?.id.toString(),
+      projectId: project?.id.toString(),
+      outcomeScore: project?.outcomeScore || 1,
+      effortScore: project?.effortScore || 1,
+      actualStart: project?.actualStart?.toISOString() || project?.estimatedStart?.toISOString(),
+      actualEnd: project?.actualEnd?.toISOString() || project?.estimatedEnd?.toISOString(),
+      lessonsLearnt: project?.lessonsLearnt! || "",
+      retrospective: project?.retrospective! || "",
+      status: project?.status!,
+      colour: project?.colour!,
     },
   });
 
@@ -53,6 +63,16 @@ export default function ProjectForm() {
     }
   }, [isMemberFound, router]);
 
+  /****  For Data lineage *******/
+
+  const mutationProjecTracker = api.projectTracker.edit.useMutation({
+    onSuccess: async () => {
+      // await utilsprojectTracker.read.invalidate();
+    },
+  });
+
+  /****   *******/
+
 
   return (
     <>
@@ -61,17 +81,20 @@ export default function ProjectForm() {
           <h2 className="py-2 text-2xl font-bold">Edit Project</h2>
           <form
             onSubmit={methods.handleSubmit(async (values) => {
-              await mutation.mutateAsync(values);
+              console.log(methods.getValues())
+              await Promise.all ([
+                mutation.mutateAsync(values),
+                mutationProjecTracker.mutateAsync(values)
+              ])
               methods.reset();
               router.push('/' + id);
             })}
             className="space-y-2"
           >
-
             <div className="grid w-full max-w-md items-center gap-1.5">
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
-                <Input {...methods.register("icon")} className="mr-4" defaultValue={project?.icon} />
+                <Input {...methods.register("icon")} className="mr-4" defaultValue={project?.icon!} />
                 <InfoIcon content="icon test tooltip" />
               </div>
               {methods.formState.errors.icon?.message && (

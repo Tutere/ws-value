@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
+import { ActivityChangeSchema } from "~/schemas/activityTracker";
 
 export default function Project() {
   const router = useRouter();
@@ -24,7 +25,9 @@ export default function Project() {
 
 
   const mutation = api.activities.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      console.log(data.id);
+      methods.setValue("id" , data.id);
       await utils.read.invalidate();
     },
   });
@@ -33,6 +36,8 @@ export default function Project() {
     schema: CreateActivitySchema,
     defaultValues: {
       projectId: project?.id.toString(),
+      changeType: "Create",
+      id: "" //placeholder before getting id from newly created activity 
     },
   });
 
@@ -49,16 +54,25 @@ export default function Project() {
     }
   }, [isMemberFound, router]);
 
+   /****  For Data lineage *******/
+   const mutationActivityTracker = api.activityTracker.edit.useMutation();
+
   return (
     <>
-    {isMemberFound ? (
+    {isMemberFound ? (    
     <div className="p-8">
       <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
 
       <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
-          await mutation.mutateAsync(values);
+          await Promise.all ([
+            await mutation.mutateAsync(values),
+            await mutationActivityTracker.mutateAsync({
+              ...values,
+              id: methods.getValues("id") // update id feild with the created activity's id
+            })
+          ])
           methods.reset();
           router.push('/' + id);
         })}

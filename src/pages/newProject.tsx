@@ -24,7 +24,8 @@ export default function ProjectForm() {
   const projects = query.data;
 
   const mutation = api.projects.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      methods.setValue("projectId" , data.id);
       await utils.read.invalidate();
     },
   });
@@ -34,23 +35,36 @@ export default function ProjectForm() {
     defaultValues: {
       name: "",
       status: "Active",
+      changeType: "Create",
+      projectId: "" //placeholder before getting id from newly created project 
     },
   });
 
+  const mutationProjecTracker = api.projectTracker.create.useMutation({
+    
+  });
+
   const { data: sessionData } = useSession();
+
   return (
     <>
       <div className="p-8">
         <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
         <form
           onSubmit={methods.handleSubmit(async (values) => {
-            await mutation.mutateAsync(values);
+            await Promise.all ([
+              await mutation.mutateAsync(values),
+              await mutationProjecTracker.mutateAsync({
+                ...values,
+                projectId: methods.getValues("projectId") // update projectId feild with the created project's id
+              })
+            ])
             methods.reset();
             router.push("/");
           })}
           className="space-y-2"
         >
-                    <div className="grid w-full max-w-md items-center gap-1.5">
+          <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Icon</Label>
             <div className="flex items-center">
               <Input {...methods.register("icon")} className="mr-4" placeholder="Optional" />
