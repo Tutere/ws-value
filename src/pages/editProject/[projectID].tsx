@@ -91,11 +91,12 @@ export default function ProjectForm() {
             })}
             className="space-y-2"
           >
-            <div className="grid w-full max-w-md items-center gap-1.5">
+          <div className="flex">
+            <div>
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
-                <Input {...methods.register("icon")} className="mr-4" defaultValue={project?.icon!} />
-                <InfoIcon content="icon test tooltip" />
+                <Input {...methods.register("icon")} className="mr-4" defaultValue={project?.icon} />
+                <InfoIcon content="Emoji" />
               </div>
               {methods.formState.errors.icon?.message && (
                 <p className="text-red-700">
@@ -103,6 +104,20 @@ export default function ProjectForm() {
                 </p>
               )}
             </div>
+
+            <div className="ml-5">
+              <Label htmlFor="name">Colour</Label>
+              <div className="flex items-center">
+                <Input {...methods.register("colour")} className="mr-4" defaultValue={project?.colour} />
+                <InfoIcon content="Hex code" />
+              </div>
+              {methods.formState.errors.colour?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.colour?.message}
+                </p>
+              )}
+            </div>
+          </div>
 
             <div className="grid w-full max-w-md items-center gap-1.5">
               <Label htmlFor="name">Name</Label>
