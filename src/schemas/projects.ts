@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const CreateProjectSchema = z.object({
-  colour: z.string().min(6).max(6).optional(),
+  icon: z.string().optional(),
+  colour: z.string().optional(),
   name: z.string().min(1).max(255),
   description: z.string().optional(),
   goal: z.string().min(1),
@@ -31,6 +32,7 @@ export const CompleteProjectSchema = z.object({
 });
 
 export const EditProjectSchema = z.object({
+  icon: z.string().optional(),
   id: z.string().cuid(),
   name: z.string().min(1).max(255),
   description: z.string().optional(),

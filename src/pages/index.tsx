@@ -38,7 +38,11 @@ const Home: NextPage = () => {
                     style={{ backgroundColor: `#${project.colour}` }}
                     className="basis-60 overflow-hidden p-4 shadow sm:rounded-lg"
                   >
+                    <div className="flex justify-start">
+                    <div className ="text-lg mr-2">{project.icon}</div>
                     <h3 className="text-xl font-bold">{project.name}</h3>
+                    </div>
+
                     <p>{project.description}</p>
                   </Link>
                 );
