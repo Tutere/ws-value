@@ -9,7 +9,7 @@ import { Input } from "src/components/ui/Input";
 import { Textarea } from "src/components/ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
-import Select, { OptionsOrGroups } from 'react-select'
+import Select from 'react-select'
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
