@@ -18,6 +18,7 @@ export const CreateProjectSchema = z.object({
   status: z.string(),
   projectId: z.string(),
   changeType: z.string(),
+  members: z.array(z.string()),
 });
 
 export type CreateProjectSchema = z.infer<typeof CreateProjectSchema>;

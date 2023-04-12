@@ -9,7 +9,8 @@ import { Input } from "src/components/ui/Input";
 import { Textarea } from "src/components/ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
-import Select from 'react-select'
+import Select, { MultiValue } from 'react-select'
+import { SetStateAction, useState } from "react";
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -37,7 +38,8 @@ export default function ProjectForm() {
       name: "",
       status: "Active",
       changeType: "Create",
-      projectId: "" //placeholder before getting id from newly created project 
+      projectId: "" ,//placeholder before getting id from newly created project
+      members: [], 
     },
   });
 
@@ -63,7 +65,23 @@ export default function ProjectForm() {
     label: user.name,
   }));
 
-  const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
+    //set current logged in user as default value (will pre-load the dropdown)
+    const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
+    
+    type Option = { label: string, value: string }
+
+    const [selectedOption, setSelectedOption] = useState<Option [] >([]);
+
+    //turn logged in (default) user to type Option, then add to selectedOption/dropdown
+    const user: Option = {label : defaultValue?.label!, value: defaultValue?.value!}
+    if (selectedOption.length === 0) {
+      selectedOption.push(user);
+    }
+
+    const handleChange = (options: readonly Option[]) => {
+      console.log(options);
+      setSelectedOption(options); //not sure why there is an error here as it still works?
+    };
 
   // ****************
 
@@ -73,11 +91,15 @@ export default function ProjectForm() {
         <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
         <form
           onSubmit={methods.handleSubmit(async (values) => {
-            await Promise.all([
-              await mutation.mutateAsync(values),
+            await console.log(selectedOption);
+            await Promise.all ([
+              await mutation.mutateAsync({
+                ...values,
+                members: selectedOption.map((option) => option.value)
+              }),
               await mutationProjecTracker.mutateAsync({
                 ...values,
-                projectId: methods.getValues("projectId") // update projectId feild with the created project's id
+                projectId: methods.getValues("projectId"),
               })
             ])
             methods.reset();
@@ -253,10 +275,13 @@ export default function ProjectForm() {
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Project members</Label>
             <div className="flex items-center">
-              <Select options={options}
-                className="mr-4 w-full"
-                isMulti
-                defaultValue={defaultValue}
+              <Select options={options} 
+              className="mr-4 w-full"
+              isMulti
+              defaultValue={defaultValue}
+              value={selectedOption}
+              closeMenuOnSelect={false}
+              onChange={handleChange}
               />
               <InfoIcon content="Emoji" />
             </div>
@@ -280,3 +305,4 @@ export default function ProjectForm() {
     </>
   );
 }
+

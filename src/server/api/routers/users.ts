@@ -1,4 +1,5 @@
 
+import { FindUserSchema } from "~/schemas/users";
 import {
     createTRPCRouter,
     publicProcedure,
@@ -9,6 +10,16 @@ import {
     read: protectedProcedure
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findMany();
+    }),
+
+    readSpecific: protectedProcedure
+    .input(FindUserSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findMany({
+        where: {
+          id: input.id
+        }
+      });
     }),
   
   });

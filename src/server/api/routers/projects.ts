@@ -31,10 +31,14 @@ export const projectsRouter = createTRPCRouter({
           estimatedRisk: input.estimatedRisk,
           status: input.status,
           members: {
-            create: {
-              userId: ctx.session.user.id,
-              role: "OWNER",
-            },
+            createMany: {
+              data: input.members.map(member => {
+                return {
+                  userId: member,
+                  role: "OWNER",
+                }
+              })
+            }
           },
         },
       });
