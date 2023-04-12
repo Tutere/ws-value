@@ -27,7 +27,7 @@ export default function ProjectForm() {
 
   const mutation = api.projects.create.useMutation({
     onSuccess: async (data) => {
-      methods.setValue("projectId" , data.id);
+      methods.setValue("projectId", data.id);
       await utils.read.invalidate();
     },
   });
@@ -44,26 +44,26 @@ export default function ProjectForm() {
   });
 
   const mutationProjecTracker = api.projectTracker.create.useMutation({
-    
+
   });
 
   const { data: sessionData } = useSession();
 
 
-    // ****** get users for dropdown selection **********
-    const queryUsers = api.users.read.useQuery(undefined, {
-      suspense: true,
-      onError: (error) => {
-        console.error(error);
-      },
-    });
-  
-    const users = queryUsers.data;
+  // ****** get users for dropdown selection **********
+  const queryUsers = api.users.read.useQuery(undefined, {
+    suspense: true,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 
-    const options = users?.map((user) => ({
-      value: user.id,
-      label: user.name,
-    }));
+  const users = queryUsers.data;
+
+  const options = users?.map((user) => ({
+    value: user.id,
+    label: user.name,
+  }));
 
     //set current logged in user as default value (will pre-load the dropdown)
     const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
@@ -107,18 +107,35 @@ export default function ProjectForm() {
           })}
           className="space-y-2"
         >
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Icon</Label>
-            <div className="flex items-center">
-              <Input {...methods.register("icon")} className="mr-4" placeholder="Optional" />
-              <InfoIcon content="Emoji" />
+
+          <div className="flex">
+            <div>
+              <Label htmlFor="name">Icon</Label>
+              <div className="flex items-center">
+                <Input {...methods.register("icon")} className="mr-4" defaultValue={"📄"} />
+                <InfoIcon content="Emoji" />
+              </div>
+              {methods.formState.errors.icon?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.icon?.message}
+                </p>
+              )}
             </div>
-            {methods.formState.errors.icon?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.icon?.message}
-              </p>
-            )}
+
+            <div className="ml-5">
+              <Label htmlFor="name">Colour</Label>
+              <div className="flex items-center">
+                <Input {...methods.register("colour")} className="mr-4" defaultValue={"cfdfdc"} />
+                <InfoIcon content="Hex code" />
+              </div>
+              {methods.formState.errors.colour?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.colour?.message}
+                </p>
+              )}
+            </div>
           </div>
+
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Name</Label>
@@ -151,18 +168,7 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Colour</Label>
-            <div className="flex items-center">
-              <Input {...methods.register("colour")} className="mr-4" placeholder="Optional. (79b7e0 for a nice blue)"/>
-              <InfoIcon content="Hex code" />
-            </div>
-            {methods.formState.errors.colour?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.colour?.message}
-              </p>
-            )}
-          </div>
+
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Goal</Label>
