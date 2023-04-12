@@ -43,7 +43,7 @@ const Home: NextPage = () => {
                     <h3 className="text-xl font-bold">{project.name}</h3>
                     </div>
 
-                    <p>{project.description}</p>
+                    <p className = "line-clamp-3 m-1 italic text-sm" >{project.description}</p>
                   </Link>
                 );
               })}
