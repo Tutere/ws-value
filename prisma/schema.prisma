@@ -102,17 +102,17 @@ model Project {
     goal               String
     estimatedStart     DateTime        @default(now())
     estimatedEnd       DateTime?
-    trigger            String?
-    expectedMovement   String?
-    alternativeOptions String?
-    estimatedRisk      String?
+    trigger            String?         @db.Text
+    expectedMovement   String?         @db.Text
+    alternativeOptions String?         @db.Text
+    estimatedRisk      String?         @db.Text
     outcomeScore       Int?
     effortScore        Int?
     status             String
     actualStart        DateTime?
     actualEnd          DateTime?
-    lessonsLearnt      String?
-    retrospective      String?
+    lessonsLearnt      String?         @db.Text
+    retrospective      String?         @db.Text
     members            ProjectMember[]
     Activity           Activity[]
     // ProjectTracker     ProjectTracker[]
@@ -126,9 +126,9 @@ model Activity {
     projectId         String
     project           Project   @relation(fields: [projectId], references: [id])
     name              String
-    description       String
-    engagementPattern String
-    valueCreated      String?
+    description       String    @db.Text
+    engagementPattern String    @db.Text
+    valueCreated      String?   @db.Text
     startDate         DateTime?
     endDate           DateTime?
     // ActivityTracker   ActivityTracker[]
@@ -145,17 +145,17 @@ model ProjectTracker {
     goal               String
     estimatedStart     DateTime  @default(now())
     estimatedEnd       DateTime?
-    trigger            String?
-    expectedMovement   String?
-    alternativeOptions String?
-    estimatedRisk      String?
+    trigger            String?   @db.Text
+    expectedMovement   String?   @db.Text
+    alternativeOptions String?   @db.Text
+    estimatedRisk      String?   @db.Text
     outcomeScore       Int?
     effortScore        Int?
     status             String
     actualStart        DateTime?
     actualEnd          DateTime?
-    lessonsLearnt      String?
-    retrospective      String?
+    lessonsLearnt      String?   @db.Text
+    retrospective      String?   @db.Text
     // project            Project   @relation(fields: [projectId], references: [id])
     projectId          String
     icon               String?
@@ -171,8 +171,8 @@ model ActivityTracker {
     projectId         String
     // project           Project   @relation(fields: [projectId], references: [id])
     name              String
-    description       String
-    engagementPattern String
+    description       String    @db.Text
+    engagementPattern String    @db.Text
     valueCreated      String?
     startDate         DateTime?
     endDate           DateTime?
