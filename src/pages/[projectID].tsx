@@ -74,6 +74,10 @@ export default function Project() {
         <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
       </div>
       <div className="flex flex-row">
+        <Label className="font-medium">Description:</Label>
+        <p className="ml-1">{project?.description}</p>
+      </div>
+      <div className="flex flex-row">
         <Label className="font-medium">Project Members:</Label>
         <p className="ml-1">
           {projectMembers?.map((member) => member?.name).join(", ")}   

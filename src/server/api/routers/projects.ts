@@ -87,6 +87,7 @@ export const projectsRouter = createTRPCRouter({
         },
         data: {
           icon:input.icon,
+          colour: input.colour,
           name: input.name,
           description: input.description,
           goal: input.goal,
