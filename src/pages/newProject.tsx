@@ -9,6 +9,8 @@ import { Input } from "src/components/ui/Input";
 import { Textarea } from "src/components/ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
+import Select, { MultiValue } from 'react-select'
+import { SetStateAction, useState } from "react";
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -24,7 +26,8 @@ export default function ProjectForm() {
   const projects = query.data;
 
   const mutation = api.projects.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      methods.setValue("projectId", data.id);
       await utils.read.invalidate();
     },
   });
@@ -34,34 +37,105 @@ export default function ProjectForm() {
     defaultValues: {
       name: "",
       status: "Active",
+      changeType: "Create",
+      projectId: "" ,//placeholder before getting id from newly created project
+      members: [], 
     },
   });
 
+  const mutationProjecTracker = api.projectTracker.create.useMutation({
+
+  });
+
   const { data: sessionData } = useSession();
+
+
+  // ****** get users for dropdown selection **********
+  const queryUsers = api.users.read.useQuery(undefined, {
+    suspense: true,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const users = queryUsers.data;
+
+  const options = users?.map((user) => ({
+    value: user.id,
+    label: user.name,
+  }));
+
+    //set current logged in user as default value (will pre-load the dropdown)
+    const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
+    
+    type Option = { label: string, value: string }
+
+    const [selectedOption, setSelectedOption] = useState<Option [] >([]);
+
+    //turn logged in (default) user to type Option, then add to selectedOption/dropdown
+    const user: Option = {label : defaultValue?.label!, value: defaultValue?.value!}
+    if (selectedOption.length === 0) {
+      selectedOption.push(user);
+    }
+
+    const handleChange = (options: readonly Option[]) => {
+      console.log(options);
+      setSelectedOption(options); //not sure why there is an error here as it still works?
+    };
+
+  // ****************
+
   return (
     <>
       <div className="p-8">
         <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
         <form
           onSubmit={methods.handleSubmit(async (values) => {
-            await mutation.mutateAsync(values);
+            await console.log(selectedOption);
+            await Promise.all ([
+              await mutation.mutateAsync({
+                ...values,
+                members: selectedOption.map((option) => option.value)
+              }),
+              await mutationProjecTracker.mutateAsync({
+                ...values,
+                projectId: methods.getValues("projectId"),
+              })
+            ])
             methods.reset();
             router.push("/");
           })}
           className="space-y-2"
         >
-                    <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Icon</Label>
-            <div className="flex items-center">
-              <Input {...methods.register("icon")} className="mr-4" placeholder="Optional" />
-              <InfoIcon content="Emoji" />
+
+          <div className="flex">
+            <div>
+              <Label htmlFor="name">Icon</Label>
+              <div className="flex items-center">
+                <Input {...methods.register("icon")} className="mr-4" defaultValue={"📄"} />
+                <InfoIcon content="Emoji" />
+              </div>
+              {methods.formState.errors.icon?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.icon?.message}
+                </p>
+              )}
             </div>
-            {methods.formState.errors.icon?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.icon?.message}
-              </p>
-            )}
+
+            <div className="ml-5">
+              <Label htmlFor="name">Colour</Label>
+              <div className="flex items-center">
+                <Input {...methods.register("colour")} className="mr-4" defaultValue={"cfdfdc"} />
+                <InfoIcon content="Hex code" />
+              </div>
+              {methods.formState.errors.colour?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.colour?.message}
+                </p>
+              )}
+            </div>
           </div>
+
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Name</Label>
@@ -94,18 +168,7 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Colour</Label>
-            <div className="flex items-center">
-              <Input {...methods.register("colour")} className="mr-4" placeholder="Optional. (79b7e0 for a nice blue)"/>
-              <InfoIcon content="Hex code" />
-            </div>
-            {methods.formState.errors.colour?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.colour?.message}
-              </p>
-            )}
-          </div>
+
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Goal</Label>
@@ -209,6 +272,27 @@ export default function ProjectForm() {
             )}
           </div>
 
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Project members</Label>
+            <div className="flex items-center">
+              <Select options={options} 
+              className="mr-4 w-full"
+              isMulti
+              defaultValue={defaultValue}
+              value={selectedOption}
+              closeMenuOnSelect={false}
+              onChange={handleChange}
+              />
+              <InfoIcon content="Emoji" />
+            </div>
+            {methods.formState.errors.icon?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.icon?.message}
+              </p>
+            )}
+          </div>
+
+
           <Button
             type="submit"
             variant={"default"}
@@ -221,3 +305,4 @@ export default function ProjectForm() {
     </>
   );
 }
+

@@ -31,10 +31,14 @@ export const projectsRouter = createTRPCRouter({
           estimatedRisk: input.estimatedRisk,
           status: input.status,
           members: {
-            create: {
-              userId: ctx.session.user.id,
-              role: "OWNER",
-            },
+            createMany: {
+              data: input.members.map(member => {
+                return {
+                  userId: member,
+                  role: "OWNER",
+                }
+              })
+            }
           },
         },
       });
@@ -83,6 +87,7 @@ export const projectsRouter = createTRPCRouter({
         },
         data: {
           icon:input.icon,
+          colour: input.colour,
           name: input.name,
           description: input.description,
           goal: input.goal,
@@ -116,6 +121,19 @@ export const projectsRouter = createTRPCRouter({
               id: input.id,
             },
           },
+        },
+        include: {
+          members: true,
+        },
+      });
+    }),
+
+    findByProjectId: protectedProcedure
+    .input(FindProjectByActivityIdSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.project.findUnique({
+        where: {
+          id:input.id,
         },
         include: {
           members: true,

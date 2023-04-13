@@ -40,6 +40,22 @@ export default function Project() {
     }
   }, [isMemberFound, router]);
 
+  //project members
+  const queryUsers = api.users.read.useQuery(undefined, {
+    suspense: true,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const users = queryUsers.data;
+  console.log(users);
+
+
+  const projectMembers = project?.members.map((member) =>
+  users?.find((user) => user.id === member.userId)
+);
+
   return (
     <>
     {isMemberFound ? (
@@ -56,6 +72,16 @@ export default function Project() {
       <div className="flex flex-row">
         <Label className="font-medium">Start Date:</Label>
         <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Description:</Label>
+        <p className="ml-1">{project?.description}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Project Members:</Label>
+        <p className="ml-1">
+          {projectMembers?.map((member) => member?.name).join(", ")}   
+        </p>
       </div>
       <div className="mt-5 flex gap-7">
       <Link href={"/projectCompletion/" + project?.id}>

@@ -36,6 +36,7 @@ export default function Project() {
     defaultValues: {
       projectId: project?.id.toString(),
       id: id,
+      changeType: "Edit",
     },
   });
 
@@ -52,16 +53,30 @@ export default function Project() {
     }
   }, [isMemberFound, router]);
 
+
+   /****  For Data lineage *******/
+
+   const mutationActivityTracker = api.activityTracker.edit.useMutation({
+    onSuccess: async () => {
+      //TBC
+    },
+  });
+
+  /****   *******/
+
   return (
     <>
     {isMemberFound ? (
     <div className="p-8">
       <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
 
-      <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
+      <h2 className="mt-7 text-xl font-bold">Edit Activity</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
-          await mutation.mutateAsync(values);
+          await Promise.all ([
+            mutation.mutateAsync(values),
+            mutationActivityTracker.mutateAsync(values)
+          ])
           methods.reset();
           router.push('/activity/' + id);
         })}
