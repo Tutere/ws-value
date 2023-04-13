@@ -112,7 +112,7 @@ export default function Project() {
           <Label htmlFor="name">Engagement Pattern</Label>
           <div className="flex items-center">
             <Textarea {...methods.register("engagementPattern")} className="mr-4"/>
-            <InfoIcon content="Engagement Pattern test tooltip"/>
+            <InfoIcon content="Brief summary on how engaging were your stakeholders - where they proactive, reactive, passive etc."/>
           </div>
           
           {methods.formState.errors.engagementPattern?.message && (
@@ -126,7 +126,7 @@ export default function Project() {
           <Label htmlFor="name">Value Created (Outcome)</Label>
           <div className="flex items-center">
             <Textarea {...methods.register("valueCreated")} className="mr-4"/>
-            <InfoIcon content="Engagement Pattern test tooltip"/>
+            <InfoIcon content="Brief summary on the consequence/outcome that was achieved by carrying out this initiaitve."/>
           </div>
           
 

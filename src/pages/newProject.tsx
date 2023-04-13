@@ -38,8 +38,8 @@ export default function ProjectForm() {
       name: "",
       status: "Active",
       changeType: "Create",
-      projectId: "" ,//placeholder before getting id from newly created project
-      members: [], 
+      projectId: "",//placeholder before getting id from newly created project
+      members: [],
     },
   });
 
@@ -65,23 +65,23 @@ export default function ProjectForm() {
     label: user.name,
   }));
 
-    //set current logged in user as default value (will pre-load the dropdown)
-    const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
-    
-    type Option = { label: string, value: string }
+  //set current logged in user as default value (will pre-load the dropdown)
+  const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
 
-    const [selectedOption, setSelectedOption] = useState<Option [] >([]);
+  type Option = { label: string, value: string }
 
-    //turn logged in (default) user to type Option, then add to selectedOption/dropdown
-    const user: Option = {label : defaultValue?.label!, value: defaultValue?.value!}
-    if (selectedOption.length === 0) {
-      selectedOption.push(user);
-    }
+  const [selectedOption, setSelectedOption] = useState<Option[]>([]);
 
-    const handleChange = (options: readonly Option[]) => {
-      console.log(options);
-      setSelectedOption(options); //not sure why there is an error here as it still works?
-    };
+  //turn logged in (default) user to type Option, then add to selectedOption/dropdown
+  const user: Option = { label: defaultValue?.label!, value: defaultValue?.value! }
+  if (selectedOption.length === 0) {
+    selectedOption.push(user);
+  }
+
+  const handleChange = (options: readonly Option[]) => {
+    console.log(options);
+    setSelectedOption(options); //not sure why there is an error here as it still works?
+  };
 
   // ****************
 
@@ -92,7 +92,7 @@ export default function ProjectForm() {
         <form
           onSubmit={methods.handleSubmit(async (values) => {
             await console.log(selectedOption);
-            await Promise.all ([
+            await Promise.all([
               await mutation.mutateAsync({
                 ...values,
                 members: selectedOption.map((option) => option.value)
@@ -113,7 +113,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
                 <Input {...methods.register("icon")} className="mr-4" defaultValue={"📄"} />
-                <InfoIcon content="Emoji" />
+                <InfoIcon content="Choose an Emoji, or stick with the default." />
               </div>
               {methods.formState.errors.icon?.message && (
                 <p className="text-red-700">
@@ -126,7 +126,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Colour</Label>
               <div className="flex items-center">
                 <Input {...methods.register("colour")} className="mr-4" defaultValue={"cfdfdc"} />
-                <InfoIcon content="Hex code" />
+                <InfoIcon content="Hex code for a colour." />
               </div>
               {methods.formState.errors.colour?.message && (
                 <p className="text-red-700">
@@ -141,7 +141,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Name</Label>
             <div className="flex items-center">
               <Input {...methods.register("name")} className="mr-4" />
-              <InfoIcon content="name test tooltip" />
+              <InfoIcon content="Name of the person filling this information" />
             </div>
             {methods.formState.errors.name?.message && (
               <p className="text-red-700">
@@ -158,7 +158,7 @@ export default function ProjectForm() {
                 {...methods.register("description")}
                 className="mr-4"
               />
-              <InfoIcon content="description test tooltip" />
+              <InfoIcon content="A brief summary describing the initiative" />
             </div>
 
             {methods.formState.errors.description?.message && (
@@ -174,7 +174,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Goal</Label>
             <div className="flex items-center">
               <Textarea {...methods.register("goal")} className="mr-4" />
-              <InfoIcon content="goal test tooltip" />
+              <InfoIcon content="Goal" />
             </div>
             {methods.formState.errors.goal?.message && (
               <p className="text-red-700">
@@ -210,7 +210,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Trigger</Label>
             <div className="flex items-center">
               <Textarea {...methods.register("trigger")} className="mr-4" />
-              <InfoIcon content="trigger test tooltip" />
+              <InfoIcon content="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc" />
             </div>
             {methods.formState.errors.trigger?.message && (
               <p className="text-red-700">
@@ -226,7 +226,7 @@ export default function ProjectForm() {
                 {...methods.register("expectedMovement")}
                 className="mr-4"
               />
-              <InfoIcon content="expected movement test tooltip" />
+              <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
             </div>
 
             {methods.formState.errors.expectedMovement?.message && (
@@ -245,7 +245,7 @@ export default function ProjectForm() {
                 {...methods.register("alternativeOptions")}
                 className="mr-4"
               />
-              <InfoIcon content="alternative solutions test tooltip" />
+              <InfoIcon content="Explanation goes here" />
             </div>
 
             {methods.formState.errors.alternativeOptions?.message && (
@@ -262,7 +262,7 @@ export default function ProjectForm() {
                 {...methods.register("estimatedRisk")}
                 className="mr-4"
               />
-              <InfoIcon content="risks test tooltip" />
+              <InfoIcon content="Explanation goes here" />
             </div>
 
             {methods.formState.errors.estimatedRisk?.message && (
@@ -275,15 +275,15 @@ export default function ProjectForm() {
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Project members</Label>
             <div className="flex items-center">
-              <Select options={options} 
-              className="mr-4 w-full"
-              isMulti
-              defaultValue={defaultValue}
-              value={selectedOption}
-              closeMenuOnSelect={false}
-              onChange={handleChange}
+              <Select options={options}
+                className="mr-4 w-full"
+                isMulti
+                defaultValue={defaultValue}
+                value={selectedOption}
+                closeMenuOnSelect={false}
+                onChange={handleChange}
               />
-              <InfoIcon content="Emoji" />
+              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
             {methods.formState.errors.icon?.message && (
               <p className="text-red-700">

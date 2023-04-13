@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Tooltip,
     TooltipContent,
@@ -7,10 +7,12 @@ import {
   } from "~/components/ui/tooltip"
 
 export function InfoIcon(props: { content: string }) {
+
+
   return (
 
-    <TooltipProvider>
-        <Tooltip>
+    <TooltipProvider >
+        <Tooltip delayDuration={0}>
             <TooltipTrigger> 
             <svg className="flex-shrink-0 cursor-pointer rounded-full hover:bg-slate-200" 
             onClick={(e) => {e.preventDefault()}}
@@ -26,7 +28,7 @@ export function InfoIcon(props: { content: string }) {
                 </path>
             </svg>
             </TooltipTrigger>
-            <TooltipContent className="max-w-s">
+            <TooltipContent className="w-40"  >
                 <p>{props.content}</p>
             </TooltipContent>
         </Tooltip>
