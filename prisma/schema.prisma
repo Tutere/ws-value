@@ -98,7 +98,7 @@ model Project {
     updatedAt          DateTime        @updatedAt
     colour             String?
     name               String
-    description        String?
+    description        String?         @db.Text
     goal               String
     estimatedStart     DateTime        @default(now())
     estimatedEnd       DateTime?
@@ -141,7 +141,7 @@ model ProjectTracker {
     changeType         String
     createdAt          DateTime  @default(now())
     name               String
-    description        String?
+    description        String?   @db.Text
     goal               String
     estimatedStart     DateTime  @default(now())
     estimatedEnd       DateTime?
