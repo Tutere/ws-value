@@ -119,7 +119,7 @@ export default function Project() {
           <div className="flex items-center">
             <Textarea {...methods.register("engagementPattern")} className="mr-4"
             defaultValue={activity?.engagementPattern}/>
-            <InfoIcon content="Engagement Pattern test tooltip"/>
+            <InfoIcon content="Brief summary on how engaging were your stakeholders - where they proactive, reactive, passive etc."/>
           </div>
           
           {methods.formState.errors.engagementPattern?.message && (
@@ -134,7 +134,7 @@ export default function Project() {
           <div className="flex items-center">
             <Textarea {...methods.register("valueCreated")} className="mr-4"
             defaultValue={activity?.valueCreated!}/>
-            <InfoIcon content="Engagement Pattern test tooltip"/>
+            <InfoIcon content="Brief summary on the consequence/outcome that was achieved by carrying out this initiaitve."/>
           </div>
           
 

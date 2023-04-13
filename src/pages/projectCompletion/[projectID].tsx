@@ -74,7 +74,7 @@ export default function ProjectCompletion() {
           <Label htmlFor="name">Retrospective/Overall Summary</Label>
           <div className="flex items-center">
             <Textarea {...methods.register("retrospective")} className="mr-4" />
-            <InfoIcon content="Retrospective test tooltip"/>
+            <InfoIcon content="If you had to do this or a similar initiative, what would you have done it differently. Brief summary"/>
           </div>
           
           {methods.formState.errors.retrospective?.message && (
@@ -88,7 +88,7 @@ export default function ProjectCompletion() {
           <Label htmlFor="name">Lessons Learnt</Label>
           <div className="flex items-center">
             <Textarea {...methods.register("lessonsLearnt")} className="mr-4"  />
-            <InfoIcon content="Lessons learnt test tooltip"/>
+            <InfoIcon content="The knowledge gained from the process of conducting this activity that could be useful in the future iterations or similar work"/>
           </div> 
 
           {methods.formState.errors.lessonsLearnt?.message && (
@@ -126,7 +126,7 @@ export default function ProjectCompletion() {
           <Label htmlFor="name">Outcome Score (1-10) </Label>
           <div className="flex items-center">
             <Input {...methods.register("outcomeScore")} className="mr-4" />
-            <InfoIcon content="Outcome score test tooltip"/>
+            <InfoIcon content="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"/>
           </div>
           
 
@@ -141,7 +141,7 @@ export default function ProjectCompletion() {
           <Label htmlFor="name">Effort Score (1-10) </Label>
           <div className="flex items-center">
             <Input {...methods.register("effortScore")} className="mr-4"/>
-            <InfoIcon content="Effort score test tooltip"/>
+            <InfoIcon content="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"/>
           </div>
           
 

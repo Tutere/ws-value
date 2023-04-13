@@ -96,7 +96,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
                 <Input {...methods.register("icon")} className="mr-4" defaultValue={project?.icon} />
-                <InfoIcon content="Emoji" />
+                <InfoIcon content="Choose an Emoji, or stick with the default." />
               </div>
               {methods.formState.errors.icon?.message && (
                 <p className="text-red-700">
@@ -109,7 +109,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Colour</Label>
               <div className="flex items-center">
                 <Input {...methods.register("colour")} className="mr-4" defaultValue={project?.colour} />
-                <InfoIcon content="Hex code" />
+                <InfoIcon content="Hex code for a colour." />
               </div>
               {methods.formState.errors.colour?.message && (
                 <p className="text-red-700">
@@ -123,7 +123,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Name</Label>
               <div className="flex items-center">
                 <Input {...methods.register("name")} className="mr-4" defaultValue={project?.name} />
-                <InfoIcon content="name test tooltip" />
+                <InfoIcon content="Name of the person filling this information" />
               </div>
               {methods.formState.errors.name?.message && (
                 <p className="text-red-700">
@@ -141,7 +141,7 @@ export default function ProjectForm() {
                   className="mr-4"
                   defaultValue={project?.description!}
                 />
-                <InfoIcon content="description test tooltip" />
+                <InfoIcon content="A brief summary describing the initiative"  />
               </div>
 
               {methods.formState.errors.description?.message && (
@@ -155,7 +155,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Goal</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("goal")} className="mr-4" defaultValue={project?.goal} />
-                <InfoIcon content="goal test tooltip" />
+                <InfoIcon content="Goal" />
               </div>
               {methods.formState.errors.goal?.message && (
                 <p className="text-red-700">
@@ -202,7 +202,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Trigger</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("trigger")} className="mr-4" defaultValue={project?.trigger!} />
-                <InfoIcon content="trigger test tooltip" />
+                <InfoIcon content="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc" />
               </div>
               {methods.formState.errors.trigger?.message && (
                 <p className="text-red-700">
@@ -215,7 +215,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Expected Movement</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("expectedMovement")} className="mr-4" defaultValue={project?.expectedMovement!} />
-                <InfoIcon content="expected movement test tooltip" />
+                <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
               </div>
 
               {methods.formState.errors.expectedMovement?.message && (
@@ -231,7 +231,7 @@ export default function ProjectForm() {
               </Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("alternativeOptions")} className="mr-4" defaultValue={project?.alternativeOptions!} />
-                <InfoIcon content="alternative solutions test tooltip" />
+                <InfoIcon content="Explanation goes here" />
               </div>
 
               {methods.formState.errors.alternativeOptions?.message && (
@@ -245,7 +245,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Estimated Risks/Concerns/Bottleknecks</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("estimatedRisk")} className="mr-4" defaultValue={project?.estimatedRisk!} />
-                <InfoIcon content="risks test tooltip" />
+                <InfoIcon content="Explanation goes here" />
               </div>
 
               {methods.formState.errors.estimatedRisk?.message && (
