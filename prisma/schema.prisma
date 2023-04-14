@@ -131,6 +131,7 @@ model Activity {
     valueCreated      String?   @db.Text
     startDate         DateTime?
     endDate           DateTime?
+    status            String?
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])
@@ -178,6 +179,7 @@ model ActivityTracker {
     endDate           DateTime?
     // activity          Activity  @relation(fields: [activityId], references: [id])
     activityId        String
+    status            String?
 
     @@index([projectId])
     @@index([activityId])
