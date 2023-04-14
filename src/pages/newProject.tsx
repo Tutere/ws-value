@@ -108,7 +108,7 @@ export default function ProjectForm() {
           className="space-y-2"
         >
 
-          <div className="flex">
+          {/* <div className="flex">
             <div>
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
@@ -134,7 +134,7 @@ export default function ProjectForm() {
                 </p>
               )}
             </div>
-          </div>
+          </div> */}
 
 
           <div className="grid w-full max-w-md items-center gap-1.5">
