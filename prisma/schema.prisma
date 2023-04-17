@@ -131,7 +131,7 @@ model Activity {
     valueCreated      String?   @db.Text
     startDate         DateTime?
     endDate           DateTime?
-    status            String?
+    status            String
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])

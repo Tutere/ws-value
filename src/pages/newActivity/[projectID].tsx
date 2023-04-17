@@ -37,7 +37,8 @@ export default function Project() {
     defaultValues: {
       projectId: project?.id.toString(),
       changeType: "Create",
-      id: "" //placeholder before getting id from newly created activity 
+      id: "",//placeholder before getting id from newly created activity 
+      status: "Active"
     },
   });
 
