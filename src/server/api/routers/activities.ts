@@ -7,7 +7,6 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-
 export const activitiesRouter = createTRPCRouter({
   create: protectedProcedure
     .input(CreateActivitySchema)
@@ -21,6 +20,9 @@ export const activitiesRouter = createTRPCRouter({
           valueCreated: input.valueCreated,
           startDate: input.startDate,
           endDate: input.endDate,
+          status: input.status
+
+          
         },
       });
     }),

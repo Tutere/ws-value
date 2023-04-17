@@ -10,6 +10,7 @@ export const CreateActivitySchema = z.object({
   endDate: z.string().transform((val) => new Date(val).toISOString()),
   id: z.string(), //for data lineage
   changeType: z.string(), //for data lineage
+  status: z.string()
 });
 
 export type CreateActivitySchema = z.infer<typeof CreateActivitySchema>;
