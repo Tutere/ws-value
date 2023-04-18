@@ -40,6 +40,7 @@ export const projectsRouter = createTRPCRouter({
               })
             }
           },
+          stakeholders: input.stakeholders
         },
       });
     }),

@@ -292,6 +292,23 @@ export default function ProjectForm() {
             )}
           </div>
 
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">External Stakeholders</Label>
+            <div className="flex items-center">
+              <Input
+                {...methods.register("stakeholders")}
+                className="mr-4"
+              />
+              <InfoIcon content="Who did you work with that is not a part of Worksafe?" />
+            </div>
+
+            {methods.formState.errors.stakeholders?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div>
+
 
           <Button
             type="submit"
