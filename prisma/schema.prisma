@@ -132,6 +132,8 @@ model Activity {
     startDate         DateTime?
     endDate           DateTime?
     status            String
+    outcomeScore      Int?
+    effortScore       Int?
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])
