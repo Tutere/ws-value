@@ -92,31 +92,32 @@ model ProjectMember {
 }
 
 model Project {
-    icon               String?
-    id                 String          @id @default(cuid())
-    createdAt          DateTime        @default(now())
-    updatedAt          DateTime        @updatedAt
-    colour             String?
-    name               String
-    description        String?         @db.Text
-    goal               String
-    estimatedStart     DateTime        @default(now())
-    estimatedEnd       DateTime?
-    trigger            String?         @db.Text
-    expectedMovement   String?         @db.Text
-    alternativeOptions String?         @db.Text
-    estimatedRisk      String?         @db.Text
-    outcomeScore       Int?
-    effortScore        Int?
-    status             String
-    actualStart        DateTime?
-    actualEnd          DateTime?
-    lessonsLearnt      String?         @db.Text
-    retrospective      String?         @db.Text
-    members            ProjectMember[]
-    Activity           Activity[]
+    icon                String?
+    id                  String                @id @default(cuid())
+    createdAt           DateTime              @default(now())
+    updatedAt           DateTime              @updatedAt
+    colour              String?
+    name                String
+    description         String?               @db.Text
+    goal                String
+    estimatedStart      DateTime              @default(now())
+    estimatedEnd        DateTime?
+    trigger             String?               @db.Text
+    expectedMovement    String?               @db.Text
+    alternativeOptions  String?               @db.Text
+    estimatedRisk       String?               @db.Text
+    outcomeScore        Int?
+    effortScore         Int?
+    status              String
+    actualStart         DateTime?
+    actualEnd           DateTime?
+    lessonsLearnt       String?               @db.Text
+    retrospective       String?               @db.Text
+    members             ProjectMember[]
+    Activity            Activity[]
     // ProjectTracker     ProjectTracker[]
     // ActivityTracker    ActivityTracker[]
+    StakeholderResponse StakeholderResponse[]
 }
 
 model Activity {
@@ -183,4 +184,17 @@ model ActivityTracker {
 
     @@index([projectId])
     @@index([activityId])
+}
+
+model StakeholderResponse {
+    id               String  @id @default(cuid())
+    project          Project @relation(fields: [projectId], references: [id])
+    projectId        String
+    organisation     String
+    benefitsRating   Int?
+    experienceRating Int?
+    improvements     String?
+    complaints       String?
+
+    @@index([projectId])
 }
