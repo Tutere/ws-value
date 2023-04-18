@@ -115,6 +115,7 @@ model Project {
     retrospective      String?         @db.Text
     members            ProjectMember[]
     Activity           Activity[]
+    stakeholders       String?
     // ProjectTracker     ProjectTracker[]
     // ActivityTracker    ActivityTracker[]
 }
@@ -132,6 +133,8 @@ model Activity {
     startDate         DateTime?
     endDate           DateTime?
     status            String
+    outcomeScore      Int?
+    effortScore       Int?
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])

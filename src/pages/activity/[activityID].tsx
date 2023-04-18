@@ -71,6 +71,8 @@ export default function Project() {
         <p className="ml-1">{activity?.valueCreated}</p>
       </div>
       <div className="mt-5 flex gap-7">
+
+        
       <Link href={"/editActivity/" + id}>
         <Button variant={"default"}>
             Edit Activity
