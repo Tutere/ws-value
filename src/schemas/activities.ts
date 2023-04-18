@@ -13,6 +13,7 @@ export const CreateActivitySchema = z.object({
   status: z.string(),
   outcomeScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
   effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
+  stakeholders: z.string().optional()
 });
 
 export type CreateActivitySchema = z.infer<typeof CreateActivitySchema>;
@@ -37,4 +38,5 @@ export const ReadActivitySchema = z.object({
     changeType: z.string(),
     outcomeScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
     effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
+    stakeholders: z.string().optional()
   });

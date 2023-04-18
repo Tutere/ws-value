@@ -23,6 +23,7 @@ export const activitiesRouter = createTRPCRouter({
           status: input.status,
           outcomeScore: input.outcomeScore,
           effortScore: input.effortScore,
+          stakeholders: input.stakeholders
 
           
         },
