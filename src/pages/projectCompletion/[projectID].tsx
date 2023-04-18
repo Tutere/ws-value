@@ -155,7 +155,11 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Stakeholder Survey Form: </Label>
           <div className="flex items-center">
-            <Link className="mr-4 font-medium text-blue-600 hover:underline" href={"/stakeholderSurvey/" + project?.id}>
+            <Link className="mr-4 font-medium text-blue-600 hover:underline" 
+            href={"/stakeholderSurvey/" + project?.id}
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
               <p>Link Here</p>
             </Link> 
           </div>

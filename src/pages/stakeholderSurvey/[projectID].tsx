@@ -8,7 +8,7 @@ import { useZodForm } from "~/hooks/useZodForm";
 import {CreateStakeholderResponseSchema} from "~/schemas/stakeholderResponse";
 import { InfoIcon } from "~/components/ui/infoIcon";
 
-export default function ProjectCompletion() {
+export default function stakeholderSurveyForm() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().stakeholderResponse;
