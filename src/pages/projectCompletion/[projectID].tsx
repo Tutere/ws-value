@@ -152,6 +152,15 @@ export default function ProjectCompletion() {
           )}
         </div>
 
+        <div className="grid w-full max-w-md items-center gap-1.5">
+          <Label htmlFor="name">Stakeholder Survey Form: </Label>
+          <div className="flex items-center">
+            <Link className="mr-4 font-medium text-blue-600 hover:underline" href={"/stakeholderSurvey/" + project?.id}>
+              <p>Link Here</p>
+            </Link> 
+          </div>
+        </div>
+
         <Button type="submit" variant={"default"} disabled={mutation.isLoading} className="bg-green-500">
           {mutation.isLoading ? "Loading" : "Complete Project"}
         </Button>
