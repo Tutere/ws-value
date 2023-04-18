@@ -92,29 +92,31 @@ model ProjectMember {
 }
 
 model Project {
-    icon                String?
-    id                  String                @id @default(cuid())
-    createdAt           DateTime              @default(now())
-    updatedAt           DateTime              @updatedAt
-    colour              String?
-    name                String
-    description         String?               @db.Text
-    goal                String
-    estimatedStart      DateTime              @default(now())
-    estimatedEnd        DateTime?
-    trigger             String?               @db.Text
-    expectedMovement    String?               @db.Text
-    alternativeOptions  String?               @db.Text
-    estimatedRisk       String?               @db.Text
-    outcomeScore        Int?
-    effortScore         Int?
-    status              String
-    actualStart         DateTime?
-    actualEnd           DateTime?
-    lessonsLearnt       String?               @db.Text
-    retrospective       String?               @db.Text
-    members             ProjectMember[]
-    Activity            Activity[]
+
+    icon               String?
+    id                 String          @id @default(cuid())
+    createdAt          DateTime        @default(now())
+    updatedAt          DateTime        @updatedAt
+    colour             String?
+    name               String
+    description        String?         @db.Text
+    goal               String
+    estimatedStart     DateTime        @default(now())
+    estimatedEnd       DateTime?
+    trigger            String?         @db.Text
+    expectedMovement   String?         @db.Text
+    alternativeOptions String?         @db.Text
+    estimatedRisk      String?         @db.Text
+    outcomeScore       Int?
+    effortScore        Int?
+    status             String
+    actualStart        DateTime?
+    actualEnd          DateTime?
+    lessonsLearnt      String?         @db.Text
+    retrospective      String?         @db.Text
+    members            ProjectMember[]
+    Activity           Activity[]
+    stakeholders       String?
     // ProjectTracker     ProjectTracker[]
     // ActivityTracker    ActivityTracker[]
     StakeholderResponse StakeholderResponse[]
@@ -133,6 +135,8 @@ model Activity {
     startDate         DateTime?
     endDate           DateTime?
     status            String
+    outcomeScore      Int?
+    effortScore       Int?
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])

@@ -20,7 +20,9 @@ export const activitiesRouter = createTRPCRouter({
           valueCreated: input.valueCreated,
           startDate: input.startDate,
           endDate: input.endDate,
-          status: input.status
+          status: input.status,
+          outcomeScore: input.outcomeScore,
+          effortScore: input.effortScore,
 
           
         },
