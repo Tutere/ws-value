@@ -92,6 +92,7 @@ model ProjectMember {
 }
 
 model Project {
+
     icon               String?
     id                 String          @id @default(cuid())
     createdAt          DateTime        @default(now())
@@ -118,6 +119,7 @@ model Project {
     stakeholders       String?
     // ProjectTracker     ProjectTracker[]
     // ActivityTracker    ActivityTracker[]
+    StakeholderResponse StakeholderResponse[]
 }
 
 model Activity {
@@ -186,4 +188,17 @@ model ActivityTracker {
 
     @@index([projectId])
     @@index([activityId])
+}
+
+model StakeholderResponse {
+    id               String  @id @default(cuid())
+    project          Project @relation(fields: [projectId], references: [id])
+    projectId        String
+    organisation     String
+    benefitsRating   Int?
+    experienceRating Int?
+    improvements     String?
+    complaints       String?
+
+    @@index([projectId])
 }

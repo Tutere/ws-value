@@ -179,7 +179,7 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("outcomeScore")} className="mr-4" />
+            <Input {...methods.register("outcomeScore")} className="mr-4"  defaultValue={activity?.outcomeScore!}/>
             <InfoIcon content="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"/>
           </div>
           
@@ -194,7 +194,7 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Effort Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("effortScore")} className="mr-4"/>
+            <Input {...methods.register("effortScore")} className="mr-4" defaultValue={activity?.effortScore!}/>
             <InfoIcon content="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"/>
           </div>
           
