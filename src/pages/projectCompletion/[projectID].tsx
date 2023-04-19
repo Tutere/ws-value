@@ -10,7 +10,7 @@ import { CreateProjectSchema } from "~/schemas/projects";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import {CompleteProjectSchema} from "~/schemas/projects";
+import {CompleteProjectSchema, EditProjectSchema} from "~/schemas/projects";
 import { InfoIcon } from "~/components/ui/infoIcon";
 
 export default function ProjectCompletion() {
@@ -32,10 +32,23 @@ export default function ProjectCompletion() {
   });
 
   const methods = useZodForm({
-    schema: CompleteProjectSchema,
+    schema: EditProjectSchema, //using this schema because it has all fields for project tracking
     defaultValues: {
       status:"Complete",
+      changeType: "Complete",
       id: project?.id.toString(),
+      projectId: project?.id.toString(),
+      colour: project?.colour!,
+      icon: project?.icon?.toString(),
+      name: project?.name?.toString(),
+      description: project?.description?.toString(),
+      goal: project?.goal?.toString(),
+      estimatedStart: project?.estimatedStart?.toISOString(),
+      estimatedEnd: project?.estimatedEnd?.toISOString(),
+      trigger: project?.trigger?.toString(),
+      expectedMovement: project?.expectedMovement?.toString(),
+      alternativeOptions: project?.alternativeOptions?.toString(),
+      estimatedRisk: project?.estimatedRisk?.toString(),
     },
   });
 
@@ -59,6 +72,17 @@ export default function ProjectCompletion() {
     }
   }, [isMemberFound, router]);
 
+   /****  For Data lineage *******/
+
+   const mutationProjecTracker = api.projectTracker.edit.useMutation({
+    onSuccess: async () => {
+      // await utilsprojectTracker.read.invalidate();
+    },
+  });
+
+  /****   *******/
+
+
   return (
     <>
     {isMemberFound ? (
@@ -70,7 +94,10 @@ export default function ProjectCompletion() {
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
-          await mutation.mutateAsync(values);
+          await Promise.all ([
+            mutation.mutateAsync(values),
+            mutationProjecTracker.mutateAsync(values)
+          ])
           methods.reset();
           router.push('/');
         })}

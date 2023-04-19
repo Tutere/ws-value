@@ -45,7 +45,7 @@ export default function stakeholderSurveyForm() {
         onSubmit={methods.handleSubmit(async (values) => {
           await mutation.mutateAsync(values);
           methods.reset();
-          router.push('/');
+          router.push('/stakeholderSurvey/completionPage');
         })}
         className="space-y-2"
       >
