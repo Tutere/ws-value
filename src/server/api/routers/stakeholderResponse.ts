@@ -1,4 +1,4 @@
-import {CreateStakeholderResponseSchema,} from "~/schemas/stakeholderResponse";
+import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/schemas/stakeholderResponse";
   
   import {
     createTRPCRouter,
@@ -22,18 +22,13 @@ import {CreateStakeholderResponseSchema,} from "~/schemas/stakeholderResponse";
         });
       }),
   
-    read: protectedProcedure.query(({ ctx }) => {
-      return ctx.prisma.project.findMany({
+    read: protectedProcedure
+    .input(ReadStakeholderResponseSchema)
+    .query(({ ctx,input }) => {
+      return ctx.prisma.stakeholderResponse.findMany({
         where: {
-          members: {
-            some: {
-              userId: ctx.session.user.id,
-            },
-          },
-        },
-        include: {
-          members: true,
-        },
+          projectId: input.projectId,
+        }
       });
     }),
   
