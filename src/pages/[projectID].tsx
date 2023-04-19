@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
+import { ActivateProjectSchema } from "~/schemas/projects";
 
 export default function Project() {
   const router = useRouter();
@@ -56,6 +57,17 @@ export default function Project() {
   users?.find((user) => user.id === member.userId)
 );
 
+const mutation = api.projects.edit.useMutation({
+  onSuccess: async () => {
+    await utils.read.invalidate();
+  },
+});
+
+const methods = useZodForm({
+  schema: ActivateProjectSchema,
+
+});
+
   return (
     <>
     {isMemberFound ? (
@@ -84,16 +96,27 @@ export default function Project() {
         </p>
       </div>
       <div className="mt-5 flex gap-7">
-      <Link href={"/projectCompletion/" + project?.id}>
-        <Button variant={"default"}>
-            Complete Project
+
+      <Link href={"/projectCompletion/" + project?.id} className={project?.status=="Complete"? "pointer-events-none":""} >
+        <Button variant={project?.status=="Active"?"default":"subtle"} >
+          {project?.status=="Complete"?"Completed":"Complete Project"}
         </Button>
       </Link>
+
+      <Link href={"/" + project?.id} className={project?.status=="Active" ? "hidden":""} >
+      <Button variant={"default"}  className="bg-green-500" >
+            Make Active
+        </Button>
+      </Link>
+
+
       <Link href={"/editProject/" + project?.id}>
         <Button variant={"default"}>
             Edit Project
         </Button>
       </Link>
+      
+
       <DeletionDialog object="Project" id={id}></DeletionDialog>
       </div>
 
