@@ -191,6 +191,22 @@ export default function Project() {
           )}
         </div>
 
+        <div className="grid w-full max-w-md items-center gap-1.5">
+          <Label htmlFor="name">Hours taken to complete </Label>
+          <div className="flex items-center">
+            <Input {...methods.register("hours")} className="mr-4"/>
+            <InfoIcon content="How many hours has it taken to complete this activity?"/>
+          </div>
+          
+
+            {methods.formState.errors.effortScore?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.effortScore?.message}
+            </p>
+          )}
+        </div>
+
+
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Add Activity"}
         </Button>
