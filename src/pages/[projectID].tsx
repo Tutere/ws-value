@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
 import { ActivateProjectSchema } from "~/schemas/projects";
+import { ProjectChangeSchema } from "~/schemas/projectTracker";
 
 export default function Project() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function Project() {
   users?.find((user) => user.id === member.userId)
 );
 
-const mutation = api.projects.edit.useMutation({
+const mutation = api.projects.activate.useMutation({
   onSuccess: async () => {
     await utils.read.invalidate();
   },
@@ -65,7 +66,42 @@ const mutation = api.projects.edit.useMutation({
 
 const methods = useZodForm({
   schema: ActivateProjectSchema,
+  defaultValues: {
+    status: "Active",
+    id: project?.id,
+  },
+});
 
+//data lineage for "reactivating" a project
+
+const mutationProjecTracker = api.projectTracker.edit.useMutation({
+        
+});
+
+const methodProjectTracker= useZodForm({
+  schema: ProjectChangeSchema,
+  defaultValues: {
+    changeType: "Re-Activate",
+    projectId: project?.id.toString(),
+    icon: project?.icon?.toString(),
+    name: project?.name?.toString(),
+    description: project?.description?.toString(),
+    goal: project?.goal?.toString(),
+    estimatedStart: project?.estimatedStart?.toISOString(),
+    estimatedEnd: project?.estimatedEnd?.toISOString(),
+    trigger: project?.trigger?.toString(),
+    expectedMovement: project?.expectedMovement?.toString(),
+    alternativeOptions: project?.alternativeOptions?.toString(),
+    estimatedRisk: project?.estimatedRisk?.toString(),
+    outcomeScore: project?.outcomeScore!,
+    effortScore: project?.effortScore!,
+    actualStart: project?.actualStart?.toISOString(),
+    actualEnd: project?.actualEnd?.toISOString(),
+    lessonsLearnt: project?.lessonsLearnt!,
+    retrospective: project?.retrospective!,
+    status: project?.status!,
+    colour: project?.colour!,
+  },
 });
 
   return (
@@ -104,7 +140,16 @@ const methods = useZodForm({
       </Link>
 
       <Link href={"/" + project?.id} className={project?.status=="Active" ? "hidden":""} >
-      <Button variant={"default"}  className="bg-green-500" >
+      <Button variant={"default"}  className="bg-green-500" 
+      onClick={methods.handleSubmit(async (values) => {
+        await Promise.all ([
+          mutation.mutateAsync(values),
+          mutationProjecTracker.mutateAsync(methodProjectTracker.getValues())
+        ])
+        methods.reset();
+        window.location.reload();
+      })}
+      >
             Make Active
         </Button>
       </Link>

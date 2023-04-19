@@ -150,17 +150,6 @@ export const projectsRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          // icon: input.icon,
-          // colour: input.colour,
-          // name: input.name,
-          // description: input.description,
-          // goal: input.goal,
-          // estimatedStart: input.estimatedStart,
-          // estimatedEnd: input.estimatedEnd,
-          // trigger: input.trigger,
-          // expectedMovement: input.expectedMovement,
-          // alternativeOptions: input.alternativeOptions,
-          // estimatedRisk: input.estimatedRisk,
           status: "Active"
         },
       });
