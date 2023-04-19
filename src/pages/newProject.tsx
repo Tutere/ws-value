@@ -226,7 +226,7 @@ export default function ProjectForm() {
                 {...methods.register("expectedMovement")}
                 className="mr-4"
               />
-              <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
+              <InfoIcon content="What outcome are you expected to provide the stakeholders, worksafe, etc. " />
             </div>
 
             {methods.formState.errors.expectedMovement?.message && (
@@ -245,7 +245,7 @@ export default function ProjectForm() {
                 {...methods.register("alternativeOptions")}
                 className="mr-4"
               />
-              <InfoIcon content="Explanation goes here" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.alternativeOptions?.message && (
@@ -262,7 +262,7 @@ export default function ProjectForm() {
                 {...methods.register("estimatedRisk")}
                 className="mr-4"
               />
-              <InfoIcon content="Explanation goes here" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.estimatedRisk?.message && (
