@@ -82,7 +82,7 @@ export default function ProjectForm() {
           <form
             onSubmit={methods.handleSubmit(async (values) => {
               console.log(methods.getValues())
-              await Promise.all ([
+              await Promise.all([
                 mutation.mutateAsync(values),
                 mutationProjecTracker.mutateAsync(values)
               ])
@@ -91,7 +91,7 @@ export default function ProjectForm() {
             })}
             className="space-y-2"
           >
-          {/* <div className="flex">
+            {/* <div className="flex">
             <div>
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
@@ -141,7 +141,7 @@ export default function ProjectForm() {
                   className="mr-4"
                   defaultValue={project?.description!}
                 />
-                <InfoIcon content="A brief summary describing the initiative"  />
+                <InfoIcon content="A brief summary describing the initiative" />
               </div>
 
               {methods.formState.errors.description?.message && (
@@ -155,7 +155,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Goal</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("goal")} className="mr-4" defaultValue={project?.goal} />
-                <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound."  />
+                <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
               </div>
               {methods.formState.errors.goal?.message && (
                 <p className="text-red-700">
@@ -164,16 +164,19 @@ export default function ProjectForm() {
               )}
             </div>
 
-            <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+            <div className="grid w-full max-w-md items-center gap-1.5">
               <Label htmlFor="name">Estimated Start Date</Label>
+              <div className="flex items-center">
               {/* default to todays date if nothing selected */}
-              <Input {...methods.register("estimatedStart")} type="date"
+              <Input {...methods.register("estimatedStart")} type="date" className="mr-4"
                 defaultValue={
                   project?.estimatedStart &&
                   project.estimatedStart.toISOString().slice(0, 10)
                 }
-              />
 
+              />
+              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+              </div>
               {methods.formState.errors.estimatedStart?.message && (
                 <p className="text-red-700">
                   {methods.formState.errors.estimatedStart?.message}
@@ -181,15 +184,18 @@ export default function ProjectForm() {
               )}
             </div>
 
-            <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+            <div className="grid w-full max-w-md items-center gap-1.5">
               <Label htmlFor="name">Estimated End Date</Label>
-              <Input {...methods.register("estimatedEnd")} type="date"
+              <div className="flex items-center">
+              <Input {...methods.register("estimatedEnd")} type="date" className="mr-4"
                 defaultValue={
                   project?.estimatedEnd ?
                     project.estimatedEnd.toISOString().slice(0, 10)
                     : undefined
                 }
               />
+              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+              </div>
 
               {methods.formState.errors.estimatedEnd?.message && (
                 <p className="text-red-700">
@@ -215,7 +221,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Expected Movement</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("expectedMovement")} className="mr-4" defaultValue={project?.expectedMovement!} />
-                <InfoIcon content="What outcome are you expected to provide the stakeholders, worksafe, etc. "/>
+                <InfoIcon content="What outcome are you expected to provide the stakeholders, worksafe, etc. " />
               </div>
 
               {methods.formState.errors.expectedMovement?.message && (

@@ -183,11 +183,13 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Estimated Start Date</Label>
             {/* default to todays date if nothing selected */}
-            <Input {...methods.register("estimatedStart")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedStart")} type="date" className="mr-4"  />
+            <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+            </div>
             {methods.formState.errors.estimatedStart?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedStart?.message}
@@ -195,10 +197,13 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
+          
             <Label htmlFor="name">Estimated End Date</Label>
-            <Input {...methods.register("estimatedEnd")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedEnd")} type="date" className="mr-4" />
+            <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+              </div>
             {methods.formState.errors.estimatedEnd?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedEnd?.message}
