@@ -136,6 +136,7 @@ model Activity {
     status            String
     outcomeScore      Int?
     effortScore       Int?
+    hours             Int?
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])
@@ -184,6 +185,9 @@ model ActivityTracker {
     // activity          Activity  @relation(fields: [activityId], references: [id])
     activityId        String
     status            String?
+    outcomeScore      Int?
+    effortScore       Int?
+    hours             Int?
 
     @@index([projectId])
     @@index([activityId])
