@@ -155,7 +155,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Goal</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("goal")} className="mr-4" defaultValue={project?.goal} />
-                <InfoIcon content="Goal" />
+                <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound."  />
               </div>
               {methods.formState.errors.goal?.message && (
                 <p className="text-red-700">
