@@ -136,7 +136,10 @@ model Activity {
     status            String
     outcomeScore      Int?
     effortScore       Int?
+    stakeholders      String?
+
     hours             Int?
+
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])

@@ -40,6 +40,7 @@ export default function ProjectForm() {
       changeType: "Create",
       projectId: "",//placeholder before getting id from newly created project
       members: [],
+
     },
   });
 
@@ -293,6 +294,25 @@ export default function ProjectForm() {
             {methods.formState.errors.icon?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.icon?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">External Stakeholders</Label>
+            <div className="flex items-center">
+              <Textarea
+                {...methods.register("stakeholders")}
+                className="mr-4"
+                placeholder="Optional"
+              />
+              
+              <InfoIcon content="Who did you work with that is not a part of our team?" />
+            </div>
+
+            {methods.formState.errors.stakeholders?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.stakeholders?.message}
               </p>
             )}
           </div>

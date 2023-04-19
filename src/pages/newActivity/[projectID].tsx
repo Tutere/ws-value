@@ -110,6 +110,21 @@ export default function Project() {
         </div>
 
         <div className="grid w-full max-w-md items-center gap-1.5">
+          <Label htmlFor="name">External Stakeholders Involved</Label>
+          <div className="flex items-center">
+            <Input {...methods.register("stakeholders")} className="mr-4" defaultValue={project?.stakeholders}/>
+            <InfoIcon content="stakeholders test tooltip"/>
+          </div>
+          
+
+          {methods.formState.errors.description?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.description?.message}
+            </p>
+          )}
+        </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Engagement Pattern</Label>
           <div className="flex items-center">
             <Textarea {...methods.register("engagementPattern")} className="mr-4"/>
