@@ -174,7 +174,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Goal</Label>
             <div className="flex items-center">
               <Textarea {...methods.register("goal")} className="mr-4" />
-              <InfoIcon content="Goal" />
+              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
             </div>
             {methods.formState.errors.goal?.message && (
               <p className="text-red-700">
@@ -183,11 +183,13 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Estimated Start Date</Label>
             {/* default to todays date if nothing selected */}
-            <Input {...methods.register("estimatedStart")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedStart")} type="date" className="mr-4"  />
+            <InfoIcon content="The date that is estimated for the project to start being worked on" />
+            </div>
             {methods.formState.errors.estimatedStart?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedStart?.message}
@@ -195,10 +197,13 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
+          
             <Label htmlFor="name">Estimated End Date</Label>
-            <Input {...methods.register("estimatedEnd")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedEnd")} type="date" className="mr-4" />
+            <InfoIcon content="The date that is estimated for the project to be completed" />
+              </div>
             {methods.formState.errors.estimatedEnd?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedEnd?.message}
@@ -226,7 +231,7 @@ export default function ProjectForm() {
                 {...methods.register("expectedMovement")}
                 className="mr-4"
               />
-              <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
+              <InfoIcon content="What outcome are you expected to provide the stakeholders, worksafe, etc. " />
             </div>
 
             {methods.formState.errors.expectedMovement?.message && (
@@ -245,7 +250,7 @@ export default function ProjectForm() {
                 {...methods.register("alternativeOptions")}
                 className="mr-4"
               />
-              <InfoIcon content="Explanation goes here" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.alternativeOptions?.message && (
@@ -262,7 +267,7 @@ export default function ProjectForm() {
                 {...methods.register("estimatedRisk")}
                 className="mr-4"
               />
-              <InfoIcon content="Explanation goes here" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.estimatedRisk?.message && (
