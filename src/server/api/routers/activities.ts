@@ -24,8 +24,8 @@ export const activitiesRouter = createTRPCRouter({
           outcomeScore: input.outcomeScore,
           effortScore: input.effortScore,
           stakeholders: input.stakeholders
+          hours: input.hours,     
 
-          
         },
       });
     }),
@@ -84,6 +84,9 @@ export const activitiesRouter = createTRPCRouter({
           valueCreated: input.valueCreated,
           startDate: input.startDate,
           endDate: input.endDate,
+          outcomeScore: input.outcomeScore,
+          effortScore: input.effortScore,
+          hours: input.hours,
         }
       }
     );
