@@ -60,7 +60,7 @@ const Home: NextPage = () => {
           </div>
 
 
-          <div className="my-10">
+          <div className="mt-10">
             <h2 className="text-2xl font-bold">Completed Projects</h2>
             <div className="flex flex-row flex-wrap gap-5 py-4">
               {projects &&

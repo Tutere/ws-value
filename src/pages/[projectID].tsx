@@ -179,9 +179,10 @@ const methodProjectTracker= useZodForm({
             </Link>
           ))}
       </div>
-      <Link href={"/newActivity/" + id}>
-        <Button type="submit" variant={"default"} className="mt-5  bg-green-500">
-          Add New Activity
+
+      <Link href={"/newActivity/" + id } className={project?.status=="Complete"? "pointer-events-none":""}>
+        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project?.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
+        Add New Activity
         </Button>
       </Link>
 
