@@ -44,6 +44,13 @@ export default function ProjectCompletion() {
     return member.userId === sessionData?.user.id;
   });
 
+  //read in stakeholder survey responses
+  const querySurveyResponses = api.stakeholderResponse.read.useQuery({projectId:id}, {
+    suspense: true,
+  });
+
+  const stakeholderResponses = querySurveyResponses.data;
+
   useEffect(() => {
     if (!isMemberFound) {
       setTimeout(() => {
@@ -73,7 +80,7 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Retrospective/Overall Summary</Label>
           <div className="flex items-center">
-            <Textarea {...methods.register("retrospective")} className="mr-4" />
+            <Textarea {...methods.register("retrospective")} className="mr-4" defaultValue={project?.retrospective!} />
             <InfoIcon content="If you had to do this or a similar initiative, what would you have done it differently. Brief summary"/>
           </div>
           
@@ -87,7 +94,7 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Lessons Learnt</Label>
           <div className="flex items-center">
-            <Textarea {...methods.register("lessonsLearnt")} className="mr-4"  />
+            <Textarea {...methods.register("lessonsLearnt")} className="mr-4" defaultValue={project?.lessonsLearnt!}/>
             <InfoIcon content="The knowledge gained from the process of conducting this activity that could be useful in the future iterations or similar work"/>
           </div> 
 
@@ -101,7 +108,10 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Actual Start Date</Label>
           {/* default to todays date if nothing selected */}
-          <Input {...methods.register("actualStart")} type="date" />
+          <Input {...methods.register("actualStart")} type="date" defaultValue={
+                  project?.actualStart! &&
+                  project.actualStart.toISOString().slice(0, 10)
+                } />
 
           {methods.formState.errors.actualStart?.message && (
             <p className="text-red-700">
@@ -113,7 +123,10 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Actual End Date</Label>
           {/* default to todays date if nothing selected */}
-          <Input {...methods.register("actualEnd")} type="date" />
+          <Input {...methods.register("actualEnd")} type="date" defaultValue={
+                  project?.actualEnd! &&
+                  project.actualEnd.toISOString().slice(0, 10)
+                } />
 
           {methods.formState.errors.actualEnd?.message && (
             <p className="text-red-700">
@@ -125,7 +138,7 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("outcomeScore")} className="mr-4" />
+            <Input {...methods.register("outcomeScore")} className="mr-4" defaultValue={project?.outcomeScore!} />
             <InfoIcon content="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"/>
           </div>
           
@@ -140,7 +153,7 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Effort Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("effortScore")} className="mr-4"/>
+            <Input {...methods.register("effortScore")} className="mr-4" defaultValue={project?.effortScore!}/>
             <InfoIcon content="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"/>
           </div>
           
@@ -155,16 +168,41 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Stakeholder Survey Form: </Label>
           <div className="flex items-center">
-            <Link className="mr-4 font-medium text-blue-600 hover:underline" href={"/stakeholderSurvey/" + project?.id}>
+            <Link className="mr-4 font-medium text-blue-600 hover:underline" 
+            href={"/stakeholderSurvey/" + project?.id}
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
               <p>Link Here</p>
             </Link> 
           </div>
         </div>
-
+        
         <Button type="submit" variant={"default"} disabled={mutation.isLoading} className="bg-green-500">
           {mutation.isLoading ? "Loading" : "Complete Project"}
         </Button>
+
       </form>
+
+      <h2 className="mt-10 text-2xl font-bold">Stakeholder Survey Responses:</h2>
+      <div className="flex flex-row flex-wrap gap-5 py-2">
+        {stakeholderResponses?.length! > 0 ? (
+          stakeholderResponses?.map((stakeholderResponse) => (
+            <Link
+              href={"/activity/" + stakeholderResponse.id}
+              key={stakeholderResponse.id}
+              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+              style={{ backgroundColor: `#${project?.colour}` }}
+            >
+              <h3 className="text-xl font-bold">{stakeholderResponse.organisation}</h3>
+              <p>{"Benefits rating: " + stakeholderResponse.benefitsRating}</p>
+              <p>{"Experience rating: " + stakeholderResponse.experienceRating}</p>
+            </Link>
+          ))): (
+            <div> No survey responses yet </div> 
+          )}
+      </div> 
+      
     </div>
     ): (
       <div className="p-8">

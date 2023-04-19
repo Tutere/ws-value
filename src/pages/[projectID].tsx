@@ -86,7 +86,7 @@ export default function Project() {
       <div className="mt-5 flex gap-7">
       <Link href={"/projectCompletion/" + project?.id}>
         <Button variant={"default"}>
-            Complete Project
+            {project?.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
         </Button>
       </Link>
       <Link href={"/editProject/" + project?.id}>
