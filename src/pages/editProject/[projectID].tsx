@@ -175,7 +175,7 @@ export default function ProjectForm() {
                 }
 
               />
-              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+              <InfoIcon content="The date that is estimated for the project to start being worked on" />
               </div>
               {methods.formState.errors.estimatedStart?.message && (
                 <p className="text-red-700">
@@ -194,7 +194,7 @@ export default function ProjectForm() {
                     : undefined
                 }
               />
-              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+              <InfoIcon content="The date that is estimated for the project to be completed" />
               </div>
 
               {methods.formState.errors.estimatedEnd?.message && (

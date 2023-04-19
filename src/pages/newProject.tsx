@@ -188,7 +188,7 @@ export default function ProjectForm() {
             {/* default to todays date if nothing selected */}
             <div className="flex items-center">
             <Input {...methods.register("estimatedStart")} type="date" className="mr-4"  />
-            <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+            <InfoIcon content="The date that is estimated for the project to start being worked on" />
             </div>
             {methods.formState.errors.estimatedStart?.message && (
               <p className="text-red-700">
@@ -202,7 +202,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Estimated End Date</Label>
             <div className="flex items-center">
             <Input {...methods.register("estimatedEnd")} type="date" className="mr-4" />
-            <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
+            <InfoIcon content="The date that is estimated for the project to be completed" />
               </div>
             {methods.formState.errors.estimatedEnd?.message && (
               <p className="text-red-700">
