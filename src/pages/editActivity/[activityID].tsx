@@ -226,6 +226,7 @@ export default function Project() {
             )}
           </div>
 
+          <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Hours taken to complete  </Label>
           <div className="flex items-center">
             <Input {...methods.register("hours")} className="mr-4" defaultValue={activity?.hours!}/>
