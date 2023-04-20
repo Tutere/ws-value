@@ -8,9 +8,10 @@ import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
+import Select, { MultiValue } from 'react-select'
 
 export default function Project() {
   const router = useRouter();
@@ -57,6 +58,56 @@ export default function Project() {
 
    /****  For Data lineage *******/
    const mutationActivityTracker = api.activityTracker.edit.useMutation();
+
+    // ****** get users for dropdown selection **********
+    //ONLY READ PROKJECT MEMBERS!!!
+    const queryUsers = api.users.read.useQuery(undefined, {
+      suspense: true,
+      onError: (error) => {
+        console.error(error);
+      },
+    });
+  
+    const users = queryUsers.data;
+
+
+  const queryProjectmembers = api.projectmember.read.useQuery({id: id}, {
+    suspense: true,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const projectMembers = queryProjectmembers.data;
+  console.log(projectMembers);
+
+  const options = projectMembers?.map((projectMember) => ({
+    value: projectMember.id,
+    label: users?.find((item) => item.id === projectMember.userId)?.name
+  }));
+
+  //current logged in user
+  const currentUser = projectMembers?.find((projectMember) => projectMember.userId === sessionData?.user.id);
+
+  //set current logged in user as default value (will pre-load the dropdown)
+  const defaultValue = options?.find((option) => option.value === currentUser?.id);
+
+  type Option = { label: string, value: string }
+
+  const [selectedOption, setSelectedOption] = useState<Option[]>([]);
+
+  //turn logged in (default) user to type Option, then add to selectedOption/dropdown
+  const user: Option = { label: defaultValue?.label!, value: defaultValue?.value! }
+  if (selectedOption.length === 0) {
+    selectedOption.push(user);
+  }
+
+  const handleChange = (options: readonly Option[]) => {
+    console.log(options);
+    setSelectedOption(options); //not sure why there is an error here as it still works?
+  };
+
+  // ****************
 
   return (
     <>
@@ -220,6 +271,26 @@ export default function Project() {
             </p>
           )}
         </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Activity members</Label>
+            <div className="flex items-center">
+              <Select options={options}
+                className="mr-4 w-full"
+                isMulti
+                defaultValue={defaultValue}
+                value={selectedOption}
+                closeMenuOnSelect={false}
+                onChange={handleChange}
+              />
+              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+            </div>
+            {/* {methods.formState.errors.icon?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.icon?.message}
+              </p>
+            )} */}
+          </div>
 
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>

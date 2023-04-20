@@ -25,7 +25,15 @@ export const activitiesRouter = createTRPCRouter({
           effortScore: input.effortScore,
           stakeholders: input.stakeholders,
           hours: input.hours,     
-
+          members: {
+            createMany: {
+              data: input.members.map(member => {
+                return {
+                  projectMemberId: member,
+                }
+              })
+            }
+          },
         },
       });
     }),
