@@ -70,3 +70,10 @@ export const DeleteProjectSchema = z.object({
 export const FindProjectByActivityIdSchema = z.object({
   id: z.string().cuid(),
 });
+
+export const ActivateProjectSchema = z.object({
+  id: z.string().cuid(),
+  status: z.string(),
+});
+
+

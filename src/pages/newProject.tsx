@@ -185,6 +185,25 @@ export default function ProjectForm() {
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
+
+            <Label htmlFor="name">Expected Outcomes</Label>
+            <div className="flex items-center">
+              <Textarea
+                {...methods.register("expectedMovement")}
+                className="mr-4"
+              />
+              <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
+            </div>
+
+            {methods.formState.errors.expectedMovement?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.expectedMovement?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+
             <Label htmlFor="name">Estimated Start Date</Label>
             {/* default to todays date if nothing selected */}
             <div className="flex items-center">
@@ -225,22 +244,8 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Expected Movement</Label>
-            <div className="flex items-center">
-              <Textarea
-                {...methods.register("expectedMovement")}
-                className="mr-4"
-              />
-              <InfoIcon content="What outcome are you expected to provide the stakeholders, worksafe, etc. " />
-            </div>
 
-            {methods.formState.errors.expectedMovement?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.expectedMovement?.message}
-              </p>
-            )}
-          </div>
+
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">

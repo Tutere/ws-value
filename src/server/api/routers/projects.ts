@@ -4,6 +4,7 @@ import {
   CompleteProjectSchema,
   DeleteProjectSchema,
   FindProjectByActivityIdSchema,
+  ActivateProjectSchema,
 } from "~/schemas/projects";
 
 import {
@@ -88,7 +89,7 @@ export const projectsRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          icon:input.icon,
+          icon: input.icon,
           colour: input.colour,
           name: input.name,
           description: input.description,
@@ -131,15 +132,28 @@ export const projectsRouter = createTRPCRouter({
       });
     }),
 
-    findByProjectId: protectedProcedure
+  findByProjectId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
     .query(({ ctx, input }) => {
       return ctx.prisma.project.findUnique({
         where: {
-          id:input.id,
+          id: input.id,
         },
         include: {
           members: true,
+        },
+      });
+    }),
+
+  activate: protectedProcedure
+    .input(ActivateProjectSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.project.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: "Active"
         },
       });
     }),

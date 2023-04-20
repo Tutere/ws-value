@@ -11,6 +11,8 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
+import { ActivateProjectSchema } from "~/schemas/projects";
+import { ProjectChangeSchema } from "~/schemas/projectTracker";
 
 export default function Project() {
   const router = useRouter();
@@ -56,6 +58,52 @@ export default function Project() {
   users?.find((user) => user.id === member.userId)
 );
 
+const mutation = api.projects.activate.useMutation({
+  onSuccess: async () => {
+    await utils.read.invalidate();
+  },
+});
+
+const methods = useZodForm({
+  schema: ActivateProjectSchema,
+  defaultValues: {
+    status: "Active",
+    id: project?.id,
+  },
+});
+
+//data lineage for "reactivating" a project
+
+const mutationProjecTracker = api.projectTracker.edit.useMutation({
+        
+});
+
+const methodProjectTracker= useZodForm({
+  schema: ProjectChangeSchema,
+  defaultValues: {
+    changeType: "Re-Activate",
+    projectId: project?.id.toString(),
+    icon: project?.icon?.toString(),
+    name: project?.name?.toString(),
+    description: project?.description?.toString(),
+    goal: project?.goal?.toString(),
+    estimatedStart: project?.estimatedStart?.toISOString(),
+    estimatedEnd: project?.estimatedEnd?.toISOString(),
+    trigger: project?.trigger?.toString(),
+    expectedMovement: project?.expectedMovement?.toString(),
+    alternativeOptions: project?.alternativeOptions?.toString(),
+    estimatedRisk: project?.estimatedRisk?.toString(),
+    outcomeScore: project?.outcomeScore!,
+    effortScore: project?.effortScore!,
+    actualStart: project?.actualStart?.toISOString(),
+    actualEnd: project?.actualEnd?.toISOString(),
+    lessonsLearnt: project?.lessonsLearnt!,
+    retrospective: project?.retrospective!,
+    status: project?.status!,
+    colour: project?.colour!,
+  },
+});
+
   return (
     <>
     {isMemberFound ? (
@@ -88,17 +136,38 @@ export default function Project() {
         <p className="ml-1">{project?.stakeholders}</p>
       </div>
       <div className="mt-5 flex gap-7">
+
         
       <Link href={"/projectCompletion/" + project?.id}>
         <Button variant={"default"}>
             {project?.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
+
         </Button>
       </Link>
+
+      <Link href={"/" + project?.id} className={project?.status=="Active" ? "hidden":""} >
+      <Button variant={"default"}  className="bg-green-500" 
+      onClick={methods.handleSubmit(async (values) => {
+        await Promise.all ([
+          mutation.mutateAsync(values),
+          mutationProjecTracker.mutateAsync(methodProjectTracker.getValues())
+        ])
+        methods.reset();
+        window.location.reload();
+      })}
+      >
+            Make Active
+        </Button>
+      </Link>
+
+
       <Link href={"/editProject/" + project?.id}>
         <Button variant={"default"}>
             Edit Project
         </Button>
       </Link>
+      
+
       <DeletionDialog object="Project" id={id}></DeletionDialog>
       </div>
 
@@ -116,9 +185,10 @@ export default function Project() {
             </Link>
           ))}
       </div>
-      <Link href={"/newActivity/" + id}>
-        <Button type="submit" variant={"default"} className="mt-5  bg-green-500">
-          Add New Activity
+
+      <Link href={"/newActivity/" + id } className={project?.status=="Complete"? "pointer-events-none":""}>
+        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project?.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
+        Add New Activity
         </Button>
       </Link>
 
