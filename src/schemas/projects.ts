@@ -9,8 +9,8 @@ export const CreateProjectSchema = z.object({
   estimatedStart: z.string().transform((val) => new Date(val).toISOString()),
   estimatedEnd: z
     .string()
-    .transform((val) => new Date(val).toISOString())
-    .optional(),
+    .transform((val) => val? new Date(val).toISOString(): null)
+    .nullable(),
   trigger: z.string().optional(),
   expectedMovement: z.string().optional(),
   alternativeOptions: z.string().optional(),
@@ -45,8 +45,8 @@ export const EditProjectSchema = z.object({
   estimatedStart: z.string().transform((val) => new Date(val).toISOString()),
   estimatedEnd: z
     .string()
-    .transform((val) => new Date(val).toISOString())
-    .optional(),
+    .transform((val) => val? new Date(val).toISOString(): null)
+    .nullable(),
   trigger: z.string().optional(),
   expectedMovement: z.string().optional(),
   alternativeOptions: z.string().optional(),
@@ -55,7 +55,10 @@ export const EditProjectSchema = z.object({
   effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
   status: z.string(),
   actualStart: z.string().transform((val) => new Date(val).toISOString()),
-  actualEnd: z.string().transform((val) => new Date(val).toISOString()),
+  actualEnd: z
+  .string()
+  .transform((val) => val? new Date(val).toISOString(): null)
+  .nullable(),
   lessonsLearnt: z.string().optional(),
   retrospective: z.string().optional(),
   changeType: z.string(),
