@@ -7,7 +7,10 @@ export const ProjectChangeSchema = z.object({
     description: z.string().optional(),
     goal: z.string().min(1),
     estimatedStart: z.string().transform((val) => new Date(val).toISOString()),
-    estimatedEnd: z.string().transform((val) => new Date(val).toISOString()).optional(),
+    estimatedEnd: z
+    .string()
+    .transform((val) => val? new Date(val).toISOString(): null)
+    .nullable(),
     trigger: z.string().optional(),
     expectedMovement: z.string().optional(), 
     alternativeOptions: z.string().optional(),
@@ -16,7 +19,10 @@ export const ProjectChangeSchema = z.object({
     outcomeScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
     effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
     actualStart: z.string().transform((val) => new Date(val).toISOString()),
-    actualEnd: z.string().transform((val) => new Date(val).toISOString()),
+    actualEnd: z
+    .string()
+    .transform((val) => val? new Date(val).toISOString(): null)
+    .nullable(),
     lessonsLearnt: z.string().optional(),
     retrospective: z.string().optional(),
     icon: z.string().optional(),
@@ -32,7 +38,10 @@ export const ProjectCreateSchema = z.object({
     description: z.string().optional(),
     goal: z.string().min(1),
     estimatedStart: z.string().transform((val) => new Date(val).toISOString()),
-    estimatedEnd: z.string().transform((val) => new Date(val).toISOString()).optional(),
+    estimatedEnd: z
+    .string()
+    .transform((val) => val? new Date(val).toISOString(): null)
+    .nullable(),
     trigger: z.string().optional(),
     expectedMovement: z.string().optional(), 
     alternativeOptions: z.string().optional(),

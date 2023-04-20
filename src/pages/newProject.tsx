@@ -202,12 +202,15 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
 
             <Label htmlFor="name">Estimated Start Date</Label>
             {/* default to todays date if nothing selected */}
             <div className="flex items-center">
-            <Input {...methods.register("estimatedStart")} type="date" className="mr-4"  />
+            <Input {...methods.register("estimatedStart")} type="date" 
+            className="mr-4"  
+            defaultValue={new Date().toISOString().slice(0,10)}
+            />
             <InfoIcon content="The date that is estimated for the project to start being worked on" />
             </div>
             {methods.formState.errors.estimatedStart?.message && (
