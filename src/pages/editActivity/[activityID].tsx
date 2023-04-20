@@ -37,6 +37,7 @@ export default function Project() {
       projectId: project?.id.toString(),
       id: id,
       changeType: "Edit",
+      status: project?.status!,
     },
   });
 
@@ -205,6 +206,40 @@ export default function Project() {
             </p>
           )}
         </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5">
+
+            <Label htmlFor="name">External Stakeholders</Label>
+            <div className="flex items-center">
+              <Input
+                {...methods.register("stakeholders")}
+                className="mr-4"
+                defaultValue={project?.stakeholders!}
+              />
+              <InfoIcon content="Who did you work with that is not a part of Worksafe?" />
+            </div>
+
+            {methods.formState.errors.stakeholders?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div>
+
+          <Label htmlFor="name">Hours taken to complete  </Label>
+          <div className="flex items-center">
+            <Input {...methods.register("hours")} className="mr-4" defaultValue={activity?.hours!}/>
+            <InfoIcon content="How many hours has it taken to complete this activity?"/>
+          </div>
+          
+
+            {methods.formState.errors.effortScore?.message && (
+            <p className="text-red-700">
+              {methods.formState.errors.effortScore?.message}
+            </p>
+          )}
+        </div>
+
 
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>

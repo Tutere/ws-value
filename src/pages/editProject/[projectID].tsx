@@ -82,7 +82,7 @@ export default function ProjectForm() {
           <form
             onSubmit={methods.handleSubmit(async (values) => {
               console.log(methods.getValues())
-              await Promise.all ([
+              await Promise.all([
                 mutation.mutateAsync(values),
                 mutationProjecTracker.mutateAsync(values)
               ])
@@ -91,7 +91,7 @@ export default function ProjectForm() {
             })}
             className="space-y-2"
           >
-          {/* <div className="flex">
+            {/* <div className="flex">
             <div>
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
@@ -141,7 +141,7 @@ export default function ProjectForm() {
                   className="mr-4"
                   defaultValue={project?.description!}
                 />
-                <InfoIcon content="A brief summary describing the initiative"  />
+                <InfoIcon content="A brief summary describing the initiative" />
               </div>
 
               {methods.formState.errors.description?.message && (
@@ -155,7 +155,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Goal</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("goal")} className="mr-4" defaultValue={project?.goal} />
-                <InfoIcon content="Goal" />
+                <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
               </div>
               {methods.formState.errors.goal?.message && (
                 <p className="text-red-700">
@@ -165,6 +165,7 @@ export default function ProjectForm() {
             </div>
 
             <div className="grid w-full max-w-md items-center gap-1.5">
+
               <Label htmlFor="name">Expected Outcomes</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("expectedMovement")} className="mr-4" defaultValue={project?.expectedMovement!} />
@@ -179,15 +180,19 @@ export default function ProjectForm() {
             </div>
 
             <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+
               <Label htmlFor="name">Estimated Start Date</Label>
+              <div className="flex items-center">
               {/* default to todays date if nothing selected */}
-              <Input {...methods.register("estimatedStart")} type="date"
+              <Input {...methods.register("estimatedStart")} type="date" className="mr-4"
                 defaultValue={
                   project?.estimatedStart &&
                   project.estimatedStart.toISOString().slice(0, 10)
                 }
-              />
 
+              />
+              <InfoIcon content="The date that is estimated for the project to start being worked on" />
+              </div>
               {methods.formState.errors.estimatedStart?.message && (
                 <p className="text-red-700">
                   {methods.formState.errors.estimatedStart?.message}
@@ -195,15 +200,18 @@ export default function ProjectForm() {
               )}
             </div>
 
-            <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+            <div className="grid w-full max-w-md items-center gap-1.5">
               <Label htmlFor="name">Estimated End Date</Label>
-              <Input {...methods.register("estimatedEnd")} type="date"
+              <div className="flex items-center">
+              <Input {...methods.register("estimatedEnd")} type="date" className="mr-4"
                 defaultValue={
                   project?.estimatedEnd ?
                     project.estimatedEnd.toISOString().slice(0, 10)
                     : undefined
                 }
               />
+              <InfoIcon content="The date that is estimated for the project to be completed" />
+              </div>
 
               {methods.formState.errors.estimatedEnd?.message && (
                 <p className="text-red-700">
@@ -233,7 +241,7 @@ export default function ProjectForm() {
               </Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("alternativeOptions")} className="mr-4" defaultValue={project?.alternativeOptions!} />
-                <InfoIcon content="Explanation goes here" />
+                <InfoIcon content="" />
               </div>
 
               {methods.formState.errors.alternativeOptions?.message && (
@@ -247,7 +255,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Estimated Risks/Concerns/Bottleknecks</Label>
               <div className="flex items-center">
                 <Textarea {...methods.register("estimatedRisk")} className="mr-4" defaultValue={project?.estimatedRisk!} />
-                <InfoIcon content="Explanation goes here" />
+                <InfoIcon content="" />
               </div>
 
               {methods.formState.errors.estimatedRisk?.message && (
@@ -257,6 +265,24 @@ export default function ProjectForm() {
               )}
             </div>
 
+            <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">External Stakeholders</Label>
+            <div className="flex items-center">
+              <Input
+                {...methods.register("stakeholders")}
+                className="mr-4"
+                defaultValue={project?.stakeholders!}
+              />
+              <InfoIcon content="Who did you work with that is not a part of Worksafe?" />
+            </div>
+
+            {methods.formState.errors.stakeholders?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div>
+          
 
             <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
               {mutation.isLoading ? "Loading" : "Done Editing"}

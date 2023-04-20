@@ -40,6 +40,7 @@ export default function ProjectForm() {
       changeType: "Create",
       projectId: "",//placeholder before getting id from newly created project
       members: [],
+
     },
   });
 
@@ -108,7 +109,7 @@ export default function ProjectForm() {
           className="space-y-2"
         >
 
-          {/* <div className="flex">
+          <div className="flex">
             <div>
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
@@ -134,7 +135,7 @@ export default function ProjectForm() {
                 </p>
               )}
             </div>
-          </div> */}
+          </div>
 
 
           <div className="grid w-full max-w-md items-center gap-1.5">
@@ -174,7 +175,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Goal</Label>
             <div className="flex items-center">
               <Textarea {...methods.register("goal")} className="mr-4" />
-              <InfoIcon content="Goal" />
+              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
             </div>
             {methods.formState.errors.goal?.message && (
               <p className="text-red-700">
@@ -184,6 +185,7 @@ export default function ProjectForm() {
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
+
             <Label htmlFor="name">Expected Outcomes</Label>
             <div className="flex items-center">
               <Textarea
@@ -201,10 +203,13 @@ export default function ProjectForm() {
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+
             <Label htmlFor="name">Estimated Start Date</Label>
             {/* default to todays date if nothing selected */}
-            <Input {...methods.register("estimatedStart")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedStart")} type="date" className="mr-4"  />
+            <InfoIcon content="The date that is estimated for the project to start being worked on" />
+            </div>
             {methods.formState.errors.estimatedStart?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedStart?.message}
@@ -212,10 +217,13 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
+          
             <Label htmlFor="name">Estimated End Date</Label>
-            <Input {...methods.register("estimatedEnd")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedEnd")} type="date" className="mr-4" />
+            <InfoIcon content="The date that is estimated for the project to be completed" />
+              </div>
             {methods.formState.errors.estimatedEnd?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedEnd?.message}
@@ -238,6 +246,7 @@ export default function ProjectForm() {
 
 
 
+
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">
               Alternative Options or Solutions Considered
@@ -247,7 +256,7 @@ export default function ProjectForm() {
                 {...methods.register("alternativeOptions")}
                 className="mr-4"
               />
-              <InfoIcon content="Explanation goes here" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.alternativeOptions?.message && (
@@ -264,7 +273,7 @@ export default function ProjectForm() {
                 {...methods.register("estimatedRisk")}
                 className="mr-4"
               />
-              <InfoIcon content="Explanation goes here" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.estimatedRisk?.message && (
@@ -290,6 +299,25 @@ export default function ProjectForm() {
             {methods.formState.errors.icon?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.icon?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">External Stakeholders</Label>
+            <div className="flex items-center">
+              <Textarea
+                {...methods.register("stakeholders")}
+                className="mr-4"
+                placeholder="Optional"
+              />
+              
+              <InfoIcon content="Who did you work with that is not a part of our team?" />
+            </div>
+
+            {methods.formState.errors.stakeholders?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.stakeholders?.message}
               </p>
             )}
           </div>

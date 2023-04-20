@@ -131,11 +131,17 @@ const methodProjectTracker= useZodForm({
           {projectMembers?.map((member) => member?.name).join(", ")}   
         </p>
       </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Stakeholders:</Label>
+        <p className="ml-1">{project?.stakeholders}</p>
+      </div>
       <div className="mt-5 flex gap-7">
 
-      <Link href={"/projectCompletion/" + project?.id} className={project?.status=="Complete"? "pointer-events-none":""} >
-        <Button variant={project?.status=="Active"?"default":"subtle"} >
-          {project?.status=="Complete"?"Completed":"Complete Project"}
+        
+      <Link href={"/projectCompletion/" + project?.id}>
+        <Button variant={"default"}>
+            {project?.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
+
         </Button>
       </Link>
 

@@ -131,6 +131,10 @@ export function DeletionDialog(props: { object: string, id:string }) {
           valueCreated: activity?.valueCreated?.toString(),
           startDate: activity?.startDate?.toISOString(),
           endDate: activity?.endDate?.toISOString(),
+          outcomeScore: activity?.outcomeScore!,
+          effortScore: activity?.effortScore!,
+          status: activity?.status!,
+          hours: activity?.hours!,
         },
       });
 
@@ -151,6 +155,10 @@ export function DeletionDialog(props: { object: string, id:string }) {
           methodActivityTracker.setValue("valueCreated" , activity.valueCreated?.toString());
           methodActivityTracker.setValue("startDate" , activity.startDate?.toISOString()!);
           methodActivityTracker.setValue("endDate" , activity?.endDate?.toISOString()!);
+          methodActivityTracker.setValue("outcomeScore" , activity.outcomeScore);
+          methodActivityTracker.setValue("effortScore" , activity.effortScore);
+          methodActivityTracker.setValue("status" , activity.status);
+          methodActivityTracker.setValue("hours" , activity.hours);
 
           mutationActivityracker.mutateAsync(methodActivityTracker.getValues())
 
