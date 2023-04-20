@@ -41,7 +41,7 @@ export default function ProjectForm() {
       outcomeScore: project?.outcomeScore || 1,
       effortScore: project?.effortScore || 1,
       actualStart: project?.actualStart?.toISOString() || project?.estimatedStart?.toISOString(),
-      actualEnd: project?.actualEnd?.toISOString() || project?.estimatedEnd?.toISOString(),
+      actualEnd: project?.actualEnd?.toISOString() || '',
       lessonsLearnt: project?.lessonsLearnt! || "",
       retrospective: project?.retrospective! || "",
       status: project?.status!,
@@ -66,8 +66,8 @@ export default function ProjectForm() {
   /****  For Data lineage *******/
 
   const mutationProjecTracker = api.projectTracker.edit.useMutation({
-    onSuccess: async () => {
-      // await utilsprojectTracker.read.invalidate();
+    onError: (error) => {
+      console.error(error);
     },
   });
 
@@ -81,7 +81,7 @@ export default function ProjectForm() {
           <h2 className="py-2 text-2xl font-bold">Edit Project</h2>
           <form
             onSubmit={methods.handleSubmit(async (values) => {
-              console.log(methods.getValues())
+              await console.log(methods.getValues())
               await Promise.all([
                 mutation.mutateAsync(values),
                 mutationProjecTracker.mutateAsync(values)
@@ -91,7 +91,7 @@ export default function ProjectForm() {
             })}
             className="space-y-2"
           >
-            {/* <div className="flex">
+            <div className="flex">
             <div>
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
@@ -117,7 +117,7 @@ export default function ProjectForm() {
                 </p>
               )}
             </div>
-          </div> */}
+          </div>
 
             <div className="grid w-full max-w-md items-center gap-1.5">
               <Label htmlFor="name">Name</Label>
@@ -207,7 +207,7 @@ export default function ProjectForm() {
                 defaultValue={
                   project?.estimatedEnd ?
                     project.estimatedEnd.toISOString().slice(0, 10)
-                    : undefined
+                    : ""
                 }
               />
               <InfoIcon content="The date that is estimated for the project to be completed" />

@@ -15,6 +15,7 @@ export const CreateActivitySchema = z.object({
   effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
   stakeholders: z.string().optional(),
   hours: z.preprocess((val) => Number(val), z.number()),
+  members: z.array(z.string()),
 });
 
 export type CreateActivitySchema = z.infer<typeof CreateActivitySchema>;
