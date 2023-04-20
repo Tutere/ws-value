@@ -39,7 +39,8 @@ export default function Project() {
       projectId: project?.id.toString(),
       changeType: "Create",
       id: "",//placeholder before getting id from newly created activity 
-      status: "Active"
+      status: "Active",
+      members: [],
     },
   });
 
@@ -59,8 +60,7 @@ export default function Project() {
    /****  For Data lineage *******/
    const mutationActivityTracker = api.activityTracker.edit.useMutation();
 
-    // ****** get users for dropdown selection **********
-    //ONLY READ PROKJECT MEMBERS!!!
+    // *** get users for later searching ***//
     const queryUsers = api.users.read.useQuery(undefined, {
       suspense: true,
       onError: (error) => {
@@ -70,7 +70,7 @@ export default function Project() {
   
     const users = queryUsers.data;
 
-
+// ****** get project members for dropdown selection **********
   const queryProjectmembers = api.projectmember.read.useQuery({id: id}, {
     suspense: true,
     onError: (error) => {
@@ -79,7 +79,6 @@ export default function Project() {
   });
 
   const projectMembers = queryProjectmembers.data;
-  console.log(projectMembers);
 
   const options = projectMembers?.map((projectMember) => ({
     value: projectMember.id,
@@ -119,7 +118,10 @@ export default function Project() {
       <form
         onSubmit={methods.handleSubmit(async (values) => {
           await Promise.all ([
-            await mutation.mutateAsync(values),
+            await mutation.mutateAsync({
+              ...values,
+              members: selectedOption.map((option) => option.value)
+            }),
             await mutationActivityTracker.mutateAsync({
               ...values,
               id: methods.getValues("id") // update id feild with the created activity's id

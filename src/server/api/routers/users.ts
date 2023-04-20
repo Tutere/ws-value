@@ -9,7 +9,11 @@ import {
   export const usersRouter = createTRPCRouter({
     read: protectedProcedure
     .query(({ ctx, input }) => {
-      return ctx.prisma.user.findMany();
+      return ctx.prisma.user.findMany({
+        include: {
+          projects: true,
+        },
+      });
     }),
 
     readSpecific: protectedProcedure
@@ -18,7 +22,10 @@ import {
       return ctx.prisma.user.findMany({
         where: {
           id: input.id
-        }
+        },
+        include: {
+          projects: true,
+        },
       });
     }),
   

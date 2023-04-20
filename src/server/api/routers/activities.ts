@@ -45,8 +45,11 @@ export const activitiesRouter = createTRPCRouter({
       {
         where: {
           projectId: input.projectId,
-        }
-      }
+        },
+        include: {
+          members: true,
+        },
+      },
     );
   }),
 
@@ -71,7 +74,10 @@ export const activitiesRouter = createTRPCRouter({
       {
         where: {
           id: input.id,
-        }
+        },
+        include: {
+          members: true,
+        },
       }
     );
   }),

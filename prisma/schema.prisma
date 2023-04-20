@@ -138,26 +138,24 @@ model Project {
 }
 
 model Activity {
-    id                String    @id @default(cuid())
-    createdAt         DateTime  @default(now())
-    updatedAt         DateTime  @updatedAt
+    id                String           @id @default(cuid())
+    createdAt         DateTime         @default(now())
+    updatedAt         DateTime         @updatedAt
     projectId         String
-    project           Project   @relation(fields: [projectId], references: [id])
+    project           Project          @relation(fields: [projectId], references: [id])
     name              String
-    description       String    @db.Text
-    engagementPattern String    @db.Text
-    valueCreated      String?   @db.Text
+    description       String           @db.Text
+    engagementPattern String           @db.Text
+    valueCreated      String?          @db.Text
     startDate         DateTime?
     endDate           DateTime?
     status            String
     outcomeScore      Int?
     effortScore       Int?
     stakeholders      String?
-
-    hours Int?
-
+    members           ActivityMember[]
+    hours             Int?
     // ActivityTracker   ActivityTracker[]
-    members ActivityMember[]
 
     @@index([projectId])
 }
