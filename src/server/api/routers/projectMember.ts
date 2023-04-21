@@ -27,5 +27,17 @@ import {
         }
       });
     }),
+
+    delete: protectedProcedure
+    .input(FindProjectmemberSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.projectMember.deleteMany({
+        where: {
+          userId: input.id,
+        }
+      });
+    }),
+
+
   
   });

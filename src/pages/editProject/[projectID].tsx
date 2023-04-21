@@ -11,6 +11,7 @@ import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Select, { MultiValue } from 'react-select'
+import { FindProjectmemberSchema } from "~/schemas/projectmember";
 
 export default function ProjectForm() {
   const router = useRouter();
@@ -124,6 +125,32 @@ export default function ProjectForm() {
       setSelectedOption(options); //not sure why there is an error here as it still works?
     };
 
+    //project memeber deletion
+    const mutationProjectMemberDeletion = api.projectmember.delete.useMutation({
+      onSuccess: async () => {
+        await utils.read.invalidate();
+      },
+    });
+    const methodsProjectMemberDeletion = useZodForm({
+      schema: FindProjectmemberSchema,
+      defaultValues: {
+        id: "",
+      },
+    });
+
+
+    const handleProjectMemberDeletions = () => {
+      //get difference between default values we started with and the new selected options
+      const membersToDelete = defaultValues.filter((element) => !selectedOption.includes(element));
+ 
+      membersToDelete.forEach((element) => {
+        methodsProjectMemberDeletion.setValue("id",element.value);
+        mutationProjectMemberDeletion.mutateAsync(methodsProjectMemberDeletion.getValues());
+        methods.reset();
+      });
+      
+    };
+
 
   return (
     <>
@@ -134,6 +161,7 @@ export default function ProjectForm() {
             onSubmit={methods.handleSubmit(async (values) => {
               await console.log(methods.getValues())
               await console.log(selectedOption);
+              await handleProjectMemberDeletions();
               await Promise.all([
                 mutation.mutateAsync({
                   ...values,
