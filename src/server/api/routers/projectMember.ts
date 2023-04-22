@@ -33,7 +33,7 @@ import {
     .mutation(({ ctx, input }) => {
       return ctx.prisma.projectMember.deleteMany({
         where: {
-          userId: input.id,
+          id: input.id,
         }
       });
     }),
