@@ -78,7 +78,7 @@ export default function ProjectForm() {
 
   /***********/
 
-    // ****** get users for dropdown selection **********
+    // ****** get users for dropdown selection options**********
     const queryUsers = api.users.read.useQuery(undefined, {
       suspense: true,
       onError: (error) => {
@@ -98,14 +98,14 @@ export default function ProjectForm() {
     const [selectedOption, setSelectedOption] = useState<Option[]>([]);
     const [defaultValues, setDefaultValues] = useState<Option[]>([]);
   
-    //turn current project memebers to type Option, then add to selectedOption/dropdown
+    //turn current project memebers to type Option, then add to selectedOption/dropdown selection 
     useEffect(() => {
-          // find all options where value is in project.members array and set to default values
+    // find all options where value is in project.members array and set to default values
       const defaultValues = project?.members
         .filter((member) => options?.some((option) => option.value === member.userId))
         .map((member) => {
           const option = options?.find((option) => option.value === member.userId);
-          return { label: option?.label ?? "", value: option?.value ?? "" };
+          return { label: option?.label!, value: option?.value!};
         });
       if (defaultValues && defaultValues.length > 0) {
         setDefaultValues(defaultValues);

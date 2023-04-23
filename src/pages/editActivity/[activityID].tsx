@@ -106,7 +106,7 @@ useEffect(() => {
   .filter((member) => options?.some((option) => option.value === member.projectMemberId))
   .map((member) => {
     const option = options?.find((option) => option.value === member.projectMemberId);
-    return { label: option?.label ?? "", value: option?.value ?? "" };
+    return { label: option?.label!, value: option?.value!};
   });
   if (defaultValues && defaultValues.length > 0) {
     setDefaultValues(defaultValues);
@@ -140,10 +140,9 @@ const methodsActivityMemberDeletion = useZodForm({
 });
 
 const handleActivityMemberDeletions = () => {
-  //get difference between default values we started with and the new selected options
+  //get difference between default values we started with and the new selected options (if we have removed someone from the seleciton)
   const membersToDelete = defaultValues.filter((element) => !selectedOption.includes(element));
   
-  //firstly delete associated activity members before deleting project meember
   membersToDelete.forEach( async (element) => {
     const projectmemberId = project?.members.find((member) => member.userId === element.value)?.id as string
     await console.log(projectmemberId);
