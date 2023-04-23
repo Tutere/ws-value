@@ -98,7 +98,7 @@ model ActivityMember {
     updatedAt       DateTime      @updatedAt
     members         ProjectMember @relation(fields: [projectMemberId], references: [id])
     projectMemberId String
-    activity        Activity      @relation(fields: [activityId], references: [id])
+    activity        Activity      @relation(fields: [activityId], references: [id], onDelete: Cascade)
     activityId      String
 
     @@index([projectMemberId])
@@ -184,6 +184,9 @@ model ProjectTracker {
     projectId          String
     icon               String?
     colour             String?
+    members            String?   @db.Text
+    // Activity           Activity[]     *** Need to organise how these will be stored in projectTracker
+    stakeholders       String?
 
     // @@index([projectId])
 }
@@ -206,6 +209,8 @@ model ActivityTracker {
     outcomeScore      Int?
     effortScore       Int?
     hours             Int?
+    stakeholders      String?
+    members           String?   @db.Text
 
     @@index([projectId])
     @@index([activityId])

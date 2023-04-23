@@ -26,6 +26,8 @@ import { ActivityChangeSchema} from "~/schemas/activityTracker";
             effortScore: input.effortScore,
             hours: input.hours,
             status: input.status,
+            stakeholders: input.stakeholders,
+            members: input.members.join(','),
           }
         }
       );

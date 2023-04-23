@@ -50,6 +50,7 @@ export default function ProjectForm() {
       status: project?.status!,
       colour: project?.colour!,
       members: [],
+      stakeholders: project?.stakeholders! || '',
     },
   });
 
@@ -92,15 +93,14 @@ export default function ProjectForm() {
       label: user.name,
     }));
   
-    // find all options where value is in project.members array and set to default values
     type Option = { label: string, value: string }
   
     const [selectedOption, setSelectedOption] = useState<Option[]>([]);
     const [defaultValues, setDefaultValues] = useState<Option[]>([]);
   
     //turn current project memebers to type Option, then add to selectedOption/dropdown
-
     useEffect(() => {
+          // find all options where value is in project.members array and set to default values
       const defaultValues = project?.members
         .filter((member) => options?.some((option) => option.value === member.userId))
         .map((member) => {
@@ -117,9 +117,7 @@ export default function ProjectForm() {
     
     }, []);
 
-    
 
-    
 
     const handleChange = (options: readonly Option[]) => {
       console.log(options);
@@ -186,9 +184,12 @@ export default function ProjectForm() {
                 mutation.mutateAsync({
                   ...values,
                   members: selectedOption.map((option) => option.value)
-                  .filter((value) => !defaultValues.some((option) => option.value === value))
+                  .filter((value) => !defaultValues.some((option) => option.value === value)) //don't include option that were already added to project 
                 }),
-                mutationProjecTracker.mutateAsync(values)
+                mutationProjecTracker.mutateAsync({
+                  ...values,
+                  members: selectedOption.map((option) => option.value),
+                })
               ])
               methods.reset();
               router.push('/' + id);
