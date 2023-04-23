@@ -105,6 +105,8 @@ export function DeletionDialog(props: { object: string, id:string }) {
           retrospective: project2?.retrospective! || "",
           status: project2?.status!,
           colour: project2?.colour!,
+          members: project2?.members?.map(member => member.userId),
+          stakeholders:project2?.stakeholders!,
         },
       });
 
@@ -135,6 +137,8 @@ export function DeletionDialog(props: { object: string, id:string }) {
           effortScore: activity?.effortScore!,
           status: activity?.status!,
           hours: activity?.hours!,
+          members: activity?.members?.map(member => member.projectMemberId),
+          stakeholders:project2?.stakeholders!,
         },
       });
 
@@ -159,6 +163,8 @@ export function DeletionDialog(props: { object: string, id:string }) {
           methodActivityTracker.setValue("effortScore" , activity.effortScore);
           methodActivityTracker.setValue("status" , activity.status);
           methodActivityTracker.setValue("hours" , activity.hours);
+          methodActivityTracker.setValue("stakeholders" , activity.stakeholders!);
+          methodActivityTracker.setValue("members" , activity.members?.map(member => member.projectMemberId));
 
           mutationActivityracker.mutateAsync(methodActivityTracker.getValues())
 

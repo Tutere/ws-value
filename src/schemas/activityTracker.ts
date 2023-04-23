@@ -14,6 +14,8 @@ export const ActivityChangeSchema = z.object({
     effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
     hours: z.preprocess((val) => Number(val), z.number()),
     status: z.string(),
+    members: z.array(z.string()),
+    stakeholders: z.string().optional()
 });
 
 export type ActivityChangeSchema = z.infer<typeof ActivityChangeSchema>;

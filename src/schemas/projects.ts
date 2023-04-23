@@ -63,7 +63,8 @@ export const EditProjectSchema = z.object({
   retrospective: z.string().optional(),
   changeType: z.string(),
   colour: z.string().optional(),
-  stakeholders: z.string().optional()
+  stakeholders: z.string().optional(),
+  members: z.array(z.string()),
 });
 
 export const DeleteProjectSchema = z.object({

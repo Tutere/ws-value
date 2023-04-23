@@ -101,6 +101,7 @@ export default function ProjectForm() {
               await mutationProjecTracker.mutateAsync({
                 ...values,
                 projectId: methods.getValues("projectId"),
+                members: selectedOption.map((option) => option.value),
               })
             ])
             methods.reset();

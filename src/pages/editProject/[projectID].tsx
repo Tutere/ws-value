@@ -9,7 +9,10 @@ import { Input } from "src/components/ui/Input";
 import { Textarea } from "src/components/ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Select, { MultiValue } from 'react-select'
+import { FindProjectmemberSchema } from "~/schemas/projectmember";
+import { FindActivityMemberSchema } from "~/schemas/activityMember";
 
 export default function ProjectForm() {
   const router = useRouter();
@@ -46,6 +49,8 @@ export default function ProjectForm() {
       retrospective: project?.retrospective! || "",
       status: project?.status!,
       colour: project?.colour!,
+      members: [],
+      stakeholders: project?.stakeholders! || '',
     },
   });
 
@@ -71,7 +76,98 @@ export default function ProjectForm() {
     },
   });
 
-  /****   *******/
+  /***********/
+
+    // ****** get users for dropdown selection options**********
+    const queryUsers = api.users.read.useQuery(undefined, {
+      suspense: true,
+      onError: (error) => {
+        console.error(error);
+      },
+    });
+  
+    const users = queryUsers.data;
+  
+    const options = users?.map((user) => ({
+      value: user.id,
+      label: user.name,
+    }));
+  
+    type Option = { label: string, value: string }
+  
+    const [selectedOption, setSelectedOption] = useState<Option[]>([]);
+    const [defaultValues, setDefaultValues] = useState<Option[]>([]);
+  
+    //turn current project memebers to type Option, then add to selectedOption/dropdown selection 
+    useEffect(() => {
+    // find all options where value is in project.members array and set to default values
+      const defaultValues = project?.members
+        .filter((member) => options?.some((option) => option.value === member.userId))
+        .map((member) => {
+          const option = options?.find((option) => option.value === member.userId);
+          return { label: option?.label!, value: option?.value!};
+        });
+      if (defaultValues && defaultValues.length > 0) {
+        setDefaultValues(defaultValues);
+      }
+
+      if (defaultValues && defaultValues.length > 0) {
+      setSelectedOption(defaultValues);
+    }
+    
+    }, []);
+
+
+
+    const handleChange = (options: readonly Option[]) => {
+      console.log(options);
+      setSelectedOption(options); //not sure why there is an error here as it still works?
+    };
+
+    //project memeber deletion setup
+    const mutationProjectMemberDeletion = api.projectmember.delete.useMutation({
+      onSuccess: async () => {
+        await utils.read.invalidate();
+      },
+    });
+    const methodsProjectMemberDeletion = useZodForm({
+      schema: FindProjectmemberSchema,
+      defaultValues: {
+        id: "",
+      },
+    });
+
+    //for each member deleted, also need to delete where they are an activity member
+    const mutationActivityMemberDeletion = api.activitymember.delete.useMutation({
+      onSuccess: async () => {
+        await utils.read.invalidate();
+      },
+    });
+
+    const methodsActivityMemberDeletion = useZodForm({
+      schema: FindActivityMemberSchema,
+      defaultValues: {
+        id: "",
+      },
+    });
+
+    const handleProjectMemberDeletions = () => {
+      //get difference between default values we started with and the new selected options
+      const membersToDelete = defaultValues.filter((element) => !selectedOption.includes(element));
+      
+      //firstly delete associated activity members before deleting project meember
+      membersToDelete.forEach( async (element) => {
+        const projectmemberId = project?.members.find((member) => member.userId === element.value)?.id as string
+        await console.log(projectmemberId);
+        await methodsProjectMemberDeletion.setValue("id",projectmemberId);
+        await methodsActivityMemberDeletion.setValue("id",projectmemberId);
+        await mutationActivityMemberDeletion.mutateAsync(methodsActivityMemberDeletion.getValues()); //use same id input as projectMember deletion
+        await mutationProjectMemberDeletion.mutateAsync(methodsProjectMemberDeletion.getValues());
+         await methodsActivityMemberDeletion.reset();
+        await methodsProjectMemberDeletion.reset();
+      });
+      
+    };
 
 
   return (
@@ -82,9 +178,18 @@ export default function ProjectForm() {
           <form
             onSubmit={methods.handleSubmit(async (values) => {
               await console.log(methods.getValues())
+              await console.log(selectedOption);
+              await handleProjectMemberDeletions();
               await Promise.all([
-                mutation.mutateAsync(values),
-                mutationProjecTracker.mutateAsync(values)
+                mutation.mutateAsync({
+                  ...values,
+                  members: selectedOption.map((option) => option.value)
+                  .filter((value) => !defaultValues.some((option) => option.value === value)) //don't include option that were already added to project 
+                }),
+                mutationProjecTracker.mutateAsync({
+                  ...values,
+                  members: selectedOption.map((option) => option.value),
+                })
               ])
               methods.reset();
               router.push('/' + id);
@@ -264,6 +369,26 @@ export default function ProjectForm() {
                 </p>
               )}
             </div>
+
+            <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Project members</Label>
+            <div className="flex items-center">
+              <Select options={options}
+                className="mr-4 w-full"
+                isMulti
+                defaultValue={defaultValues}
+                value={selectedOption}
+                closeMenuOnSelect={false}
+                onChange={handleChange}
+              />
+              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+            </div>
+            {methods.formState.errors.icon?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.icon?.message}
+              </p>
+            )}
+          </div>
 
             <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">External Stakeholders</Label>

@@ -124,7 +124,8 @@ export default function Project() {
             }),
             await mutationActivityTracker.mutateAsync({
               ...values,
-              id: methods.getValues("id") // update id feild with the created activity's id
+              id: methods.getValues("id"), // update id feild with the created activity's id
+              members: selectedOption.map((option) => option.value)
             })
           ])
           methods.reset();

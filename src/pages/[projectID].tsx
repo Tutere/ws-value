@@ -51,7 +51,6 @@ export default function Project() {
   });
 
   const users = queryUsers.data;
-  console.log(users);
 
 
   const projectMembers = project?.members.map((member) =>

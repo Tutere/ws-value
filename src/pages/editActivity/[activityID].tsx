@@ -8,8 +8,10 @@ import { useZodForm } from "~/hooks/useZodForm";
 import { EditActivitySchema } from "~/schemas/activities";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
+import Select, { MultiValue } from 'react-select';
+import { FindActivityMemberSchema } from "~/schemas/activityMember";
 
 export default function Project() {
   const router = useRouter();
@@ -38,6 +40,7 @@ export default function Project() {
       id: id,
       changeType: "Edit",
       status: project?.status!,
+      members: [],
     },
   });
 
@@ -65,6 +68,92 @@ export default function Project() {
 
   /****   *******/
 
+  // *** get users for later searching ***//
+  const queryUsers = api.users.read.useQuery(undefined, {
+    suspense: true,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const users = queryUsers.data;
+
+// ****** get project members for dropdown selection **********
+const queryProjectmembers = api.projectmember.read.useQuery({id: project?.id!}, { 
+  suspense: true,
+  onError: (error) => {
+    console.error(error);
+  },
+});
+
+const projectMembers = queryProjectmembers.data;
+
+const options = projectMembers?.map((projectMember) => ({
+  value: projectMember.id,
+  label: users?.find((item) => item.id === projectMember.userId)?.name
+}));
+
+type Option = { label: string, value: string }
+
+const [selectedOption, setSelectedOption] = useState<Option[]>([]);
+const [defaultValues, setDefaultValues] = useState<Option[]>([]);
+
+
+//turn current activity memebers to type Option, then add to selectedOption/dropdown
+useEffect(() => {
+  // find all options where value is in project.members array and set to default values
+  const defaultValues = activity?.members
+  .filter((member) => options?.some((option) => option.value === member.projectMemberId))
+  .map((member) => {
+    const option = options?.find((option) => option.value === member.projectMemberId);
+    return { label: option?.label!, value: option?.value!};
+  });
+  if (defaultValues && defaultValues.length > 0) {
+    setDefaultValues(defaultValues);
+  }
+
+  if (defaultValues && defaultValues.length > 0) {
+    setSelectedOption(defaultValues);
+  }
+
+}, []);
+
+
+const handleChange = (options: readonly Option[]) => {
+  console.log(options);
+  setSelectedOption(options); //not sure why there is an error here as it still works?
+};
+
+
+ //activity memeber deletion setup
+const mutationActivityMemberDeletion = api.activitymember.delete.useMutation({
+  onSuccess: async () => {
+    await utils.read.invalidate();
+  },
+});
+
+const methodsActivityMemberDeletion = useZodForm({
+  schema: FindActivityMemberSchema,
+  defaultValues: {
+    id: "",
+  },
+});
+
+const handleActivityMemberDeletions = () => {
+  //get difference between default values we started with and the new selected options (if we have removed someone from the seleciton)
+  const membersToDelete = defaultValues.filter((element) => !selectedOption.includes(element));
+  
+  membersToDelete.forEach( async (element) => {
+    const projectmemberId = project?.members.find((member) => member.userId === element.value)?.id as string
+    await console.log(projectmemberId);
+    await methodsActivityMemberDeletion.setValue("id",projectmemberId);
+    await mutationActivityMemberDeletion.mutateAsync(methodsActivityMemberDeletion.getValues()); //use same id input as projectMember deletion
+     await methodsActivityMemberDeletion.reset();
+  });
+  
+};
+
+
   return (
     <>
     {isMemberFound ? (
@@ -74,9 +163,18 @@ export default function Project() {
       <h2 className="mt-7 text-xl font-bold">Edit Activity</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
+          await handleActivityMemberDeletions();
           await Promise.all ([
-            mutation.mutateAsync(values),
-            mutationActivityTracker.mutateAsync(values)
+            mutation.mutateAsync({
+              ...values,
+              members: selectedOption.map((option) => option.value)
+              .filter((value) => !defaultValues.some((option) => option.value === value)) //don't include option that were already added to activity 
+            }),
+            mutationActivityTracker.mutateAsync({
+              ...values,
+              id: methods.getValues("id"), // update id feild with the created activity's id
+              members: selectedOption.map((option) => option.value)
+            })
           ])
           methods.reset();
           router.push('/activity/' + id);
@@ -240,6 +338,26 @@ export default function Project() {
             </p>
           )}
         </div>
+
+        <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Activity members</Label>
+            <div className="flex items-center">
+              <Select options={options}
+                className="mr-4 w-full"
+                isMulti
+                defaultValue={defaultValues}
+                value={selectedOption}
+                closeMenuOnSelect={false}
+                onChange={handleChange}
+              />
+              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+            </div>
+            {/* {methods.formState.errors.icon?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.icon?.message}
+              </p>
+            )} */}
+          </div>
 
 
 

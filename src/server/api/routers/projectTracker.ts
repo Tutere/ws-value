@@ -32,6 +32,8 @@ import { ProjectChangeSchema, ProjectCreateSchema} from "~/schemas/projectTracke
             retrospective:input.retrospective,
             icon:input.icon,
             colour: input.colour,
+            stakeholders: input.stakeholders,
+            members: input.members.join(','),
          },
        });
      }),
@@ -55,6 +57,8 @@ import { ProjectChangeSchema, ProjectCreateSchema} from "~/schemas/projectTracke
             status: input.status,
             icon:input.icon,
             colour: input.colour,
+            stakeholders: input.stakeholders,
+            members: input.members.join(','),
          },
        });
      }),
