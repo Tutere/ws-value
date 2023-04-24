@@ -153,6 +153,38 @@ const handleActivityMemberDeletions = () => {
   
 };
 
+ //setup for stakeholder dropdown
+ const stakeholderOptions = project?.stakeholders?.split(',').map((stakeholder) => ({
+  value: stakeholder,
+  label: stakeholder,
+}));
+
+const [stakeholderSelectedOptions, setStakeholderSelectedOptions] = useState<Option[]>([]);
+const [defaultValueStakeholder, setDefaultValueStakeholder] = useState<Option[]>([]);
+
+useEffect(() => {
+  // find all options where value is in project.stakeholder field and set to default values
+    const defaultValueStakeholder = stakeholderOptions?.
+    filter((option) => activity?.stakeholders?.includes(option.value))
+    .map((option) => ({ label: option.label!, value: option.value! }));
+
+    if (defaultValueStakeholder && defaultValueStakeholder.length > 0) {
+      setDefaultValueStakeholder(defaultValueStakeholder);
+    }
+
+    if (defaultValueStakeholder && defaultValueStakeholder.length > 0) {
+      setStakeholderSelectedOptions(defaultValueStakeholder);
+  }
+  
+  }, []);
+
+
+
+const handleChangeStakeholder = (options: readonly Option[]) => {
+  console.log(options);
+  setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
+};
+
 
   return (
     <>
@@ -168,12 +200,16 @@ const handleActivityMemberDeletions = () => {
             mutation.mutateAsync({
               ...values,
               members: selectedOption.map((option) => option.value)
-              .filter((value) => !defaultValues.some((option) => option.value === value)) //don't include option that were already added to activity 
+              .filter((value) => !defaultValues.some((option) => option.value === value)), //don't include option that were already added to activity
+              stakeholders: stakeholderSelectedOptions.map((option) => option.value).join(','),
+ 
             }),
             mutationActivityTracker.mutateAsync({
               ...values,
               id: methods.getValues("id"), // update id feild with the created activity's id
-              members: selectedOption.map((option) => option.value)
+              members: selectedOption.map((option) => option.value),
+              stakeholders: stakeholderSelectedOptions.map((option) => option.value).join(','),
+
             })
           ])
           methods.reset();
@@ -304,7 +340,7 @@ const handleActivityMemberDeletions = () => {
             </p>
           )}
         </div>
-
+{/* 
         <div className="grid w-full max-w-md items-center gap-1.5">
 
             <Label htmlFor="name">External Stakeholders</Label>
@@ -320,6 +356,26 @@ const handleActivityMemberDeletions = () => {
             {methods.formState.errors.stakeholders?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div> */}
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">External Stakeholders Involved</Label>
+            <div className="flex items-center">
+              <Select options={stakeholderOptions}
+                className="mr-4 w-full"
+                isMulti
+                defaultValue={defaultValueStakeholder}
+                value={stakeholderSelectedOptions}
+                closeMenuOnSelect={false}
+                onChange={handleChangeStakeholder}
+              />
+              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+            </div>
+            {methods.formState.errors.icon?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.icon?.message}
               </p>
             )}
           </div>
