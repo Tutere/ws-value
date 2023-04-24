@@ -177,7 +177,7 @@ const handleActivityMemberDeletions = () => {
             })
           ])
           methods.reset();
-          router.push('/activity/' + id);
+          router.push('/' + project?.id);
         })}
         className="space-y-2"
       >
