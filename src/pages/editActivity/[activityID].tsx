@@ -362,7 +362,7 @@ const handleActivityMemberDeletions = () => {
 
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
-          {mutation.isLoading ? "Loading" : "Edit Activity"}
+          {mutation.isLoading ? "Loading" : "Save Changes"}
         </Button>
       </form>
     </div>

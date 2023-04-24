@@ -410,7 +410,7 @@ export default function ProjectForm() {
           
 
             <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
-              {mutation.isLoading ? "Loading" : "Done Editing"}
+              {mutation.isLoading ? "Loading" : "Save Changes"}
             </Button>
           </form>
         </div>
