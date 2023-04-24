@@ -210,7 +210,9 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Start Date</Label>
           {/* default to todays date if nothing selected */}
-          <Input {...methods.register("startDate")} type="date" />
+          <Input {...methods.register("startDate")} type="date" 
+          defaultValue={new Date().toISOString().slice(0,10)}
+          />
 
           {methods.formState.errors.startDate?.message && (
             <p className="text-red-700">
