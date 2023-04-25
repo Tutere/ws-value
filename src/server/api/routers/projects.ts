@@ -166,4 +166,17 @@ export const projectsRouter = createTRPCRouter({
         },
       });
     }),
+
+    PublicFindByProjectId: publicProcedure
+    .input(FindProjectByActivityIdSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.project.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          members: true,
+        },
+      });
+    }),
 });
