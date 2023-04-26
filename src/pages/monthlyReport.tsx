@@ -1,42 +1,65 @@
-import React, { useState } from 'react';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+"use client"
 
+import * as React from "react"
+import { addDays, format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
 
-export default function ProjectForm() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+import { cn } from "~/utils/cn"
+import { Button } from  "~/components/ui/Button"
+import { Calendar } from "src/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "src/components/ui/popover"
+
+export default function CalendarDateRangePicker({
+  className,
+}: React.HTMLAttributes<HTMLDivElement>) {
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 30),
+  })
 
   return (
-    <div className=' mx-10'>
-      <div className='flex justify-start my-12 w-28  '>
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)} //not sure about this error
-          selectsStart
-          startDate={startDate}
-          endDate={endDate}
-          placeholderText="Pick Date"
-          dateFormat="d MMMM, yyyy"
-          className='w-28  border-b-slate-400 border-b-2'
-        />
-        <h1 className='ml-8'>TO</h1>
-
-        <DatePicker
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}  //not sure about this error
-          selectsEnd
-          startDate={startDate}
-          endDate={endDate}
-          minDate={startDate}
-          placeholderText="Pick Date"
-          dateFormat="d MMMM, yyyy"
-          className='ml-8 w-28 border-b-slate-400 border-b-2'
-        />
-      </div>
-      <h1 className='my-10'>
-        Completed Activities
-      </h1>
+    <div className={cn("grid gap-2", className)}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id="date"
+            variant={"outline"}
+            className={cn(
+              "w-[300px] justify-start text-left font-normal",
+              !date && "text-muted-foreground"
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date?.from ? (
+              date.to ? (
+                <>
+                  {format(date.from, "LLL dd, y")} -{" "}
+                  {format(date.to, "LLL dd, y")}
+                </>
+              ) : (
+                format(date.from, "LLL dd, y")
+              )
+            ) : (
+              <span>Pick a date</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            initialFocus
+            mode="range"
+            defaultMonth={date?.from}
+            selected={date}
+            onSelect={setDate}
+            numberOfMonths={2}
+          />
+        </PopoverContent>
+      </Popover>
     </div>
-  );
+  )
 }
