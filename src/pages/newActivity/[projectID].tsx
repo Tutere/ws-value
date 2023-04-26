@@ -123,6 +123,21 @@ export default function Project() {
     setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
   };
 
+   //handling the exiting of a page (pop up confirmation)
+   useEffect(() => {
+    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+  
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, []);
+
   return (
     <>
     {isMemberFound ? (    

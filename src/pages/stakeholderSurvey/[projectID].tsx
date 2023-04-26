@@ -7,6 +7,7 @@ import { Label } from "@radix-ui/react-label";
 import { useZodForm } from "~/hooks/useZodForm";
 import {CreateStakeholderResponseSchema} from "~/schemas/stakeholderResponse";
 import { InfoIcon } from "~/components/ui/infoIcon";
+import { useEffect } from "react";
 
 export default function stakeholderSurveyForm() {
   const router = useRouter();
@@ -31,6 +32,21 @@ export default function stakeholderSurveyForm() {
       projectId: project?.id.toString(),
     },
   });
+
+   //handling the exiting of a page (pop up confirmation)
+   useEffect(() => {
+    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+  
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, []);
 
   return (
     <>
