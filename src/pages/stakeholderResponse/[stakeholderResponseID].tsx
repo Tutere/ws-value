@@ -38,6 +38,9 @@ export default function Project() {
 
 const isMemberFound = true;
 
+if (stakeholderResponse === null || stakeholderResponse === undefined ) {
+  return <p>Error finding project</p>
+}
   return (
     <>
     {isMemberFound ? (
@@ -45,27 +48,27 @@ const isMemberFound = true;
       <h2 className="mb-5 text-3xl font-bold">Survey Response Details:</h2>
       <div className="flex flex-row mb-4">
         <Label className="font-medium">Orgsanisation Name:</Label>
-        <p className="ml-1">{stakeholderResponse?.organisation}</p>
+        <p className="ml-1">{stakeholderResponse.organisation}</p>
       </div>
       <div className="flex flex-row mb-4">
         <Label className="font-medium">Benefits Rating:</Label>
-        <p className="ml-1">{stakeholderResponse?.benefitsRating}</p>
+        <p className="ml-1">{stakeholderResponse.benefitsRating}</p>
       </div>
       <div className="flex flex-row mb-4">
         <Label className="font-medium">Experience Rating:</Label>
-        <p className="ml-1">{stakeholderResponse?.experienceRating}</p>
+        <p className="ml-1">{stakeholderResponse.experienceRating}</p>
       </div>
       <div className="flex flex-row mb-4">
         <Label className="font-medium">Suggested Improvements:</Label>
-        <p className="ml-1">{stakeholderResponse?.improvements}</p>
+        <p className="ml-1">{stakeholderResponse.improvements}</p>
       </div>
       <div className="flex flex-row mb-4 ">
         <Label className="font-medium">Complaints:</Label>
-        <p className="ml-1">{stakeholderResponse?.complaints}</p>
+        <p className="ml-1">{stakeholderResponse.complaints}</p>
       </div>
       <div className="flex flex-row mb-4">
         <Label className="font-medium">Date Submitted:</Label>
-        <p className="ml-1">{stakeholderResponse?.createdAt.toLocaleDateString()}</p>
+        <p className="ml-1">{stakeholderResponse.createdAt.toLocaleDateString()}</p>
       </div>
       <div className="mt-5 flex gap-7"> 
       {/* <Link href={"/editActivity/" + id}>
