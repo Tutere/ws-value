@@ -38,8 +38,9 @@ export default function ProjectForm() {
       name: "",
       status: "Active",
       changeType: "Create",
-      projectId: "" ,//placeholder before getting id from newly created project
-      members: [], 
+      projectId: "",//placeholder before getting id from newly created project
+      members: [],
+
     },
   });
 
@@ -65,23 +66,23 @@ export default function ProjectForm() {
     label: user.name,
   }));
 
-    //set current logged in user as default value (will pre-load the dropdown)
-    const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
-    
-    type Option = { label: string, value: string }
+  //set current logged in user as default value (will pre-load the dropdown)
+  const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
 
-    const [selectedOption, setSelectedOption] = useState<Option [] >([]);
+  type Option = { label: string | null, value: string }
 
-    //turn logged in (default) user to type Option, then add to selectedOption/dropdown
-    const user: Option = {label : defaultValue?.label!, value: defaultValue?.value!}
-    if (selectedOption.length === 0) {
-      selectedOption.push(user);
-    }
+  const [selectedOption, setSelectedOption] = useState<Option[]>([]);
 
-    const handleChange = (options: readonly Option[]) => {
-      console.log(options);
-      setSelectedOption(options); //not sure why there is an error here as it still works?
-    };
+  //turn logged in (default) user to type Option, then add to selectedOption/dropdown
+  const user: Option = { label: defaultValue?.label!, value: defaultValue?.value! }
+  if (selectedOption.length === 0) {
+    selectedOption.push(user);
+  }
+
+  const handleChange = (options: Option[]) => {
+    console.log(options);
+    setSelectedOption(options); //not sure why there is an error here as it still works?
+  };
 
   // ****************
 
@@ -92,7 +93,7 @@ export default function ProjectForm() {
         <form
           onSubmit={methods.handleSubmit(async (values) => {
             await console.log(selectedOption);
-            await Promise.all ([
+            await Promise.all([
               await mutation.mutateAsync({
                 ...values,
                 members: selectedOption.map((option) => option.value)
@@ -100,6 +101,7 @@ export default function ProjectForm() {
               await mutationProjecTracker.mutateAsync({
                 ...values,
                 projectId: methods.getValues("projectId"),
+                members: selectedOption.map((option) => option.value),
               })
             ])
             methods.reset();
@@ -113,7 +115,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
                 <Input {...methods.register("icon")} className="mr-4" defaultValue={"📄"} />
-                <InfoIcon content="Emoji" />
+                <InfoIcon content="Choose an Emoji, or stick with the default." />
               </div>
               {methods.formState.errors.icon?.message && (
                 <p className="text-red-700">
@@ -126,7 +128,7 @@ export default function ProjectForm() {
               <Label htmlFor="name">Colour</Label>
               <div className="flex items-center">
                 <Input {...methods.register("colour")} className="mr-4" defaultValue={"cfdfdc"} />
-                <InfoIcon content="Hex code" />
+                <InfoIcon content="Hex code for a colour." />
               </div>
               {methods.formState.errors.colour?.message && (
                 <p className="text-red-700">
@@ -141,7 +143,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Name</Label>
             <div className="flex items-center">
               <Input {...methods.register("name")} className="mr-4" />
-              <InfoIcon content="name test tooltip" />
+              <InfoIcon content="Name of the person filling this information" />
             </div>
             {methods.formState.errors.name?.message && (
               <p className="text-red-700">
@@ -158,7 +160,7 @@ export default function ProjectForm() {
                 {...methods.register("description")}
                 className="mr-4"
               />
-              <InfoIcon content="description test tooltip" />
+              <InfoIcon content="A brief summary describing the initiative" />
             </div>
 
             {methods.formState.errors.description?.message && (
@@ -174,7 +176,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Goal</Label>
             <div className="flex items-center">
               <Textarea {...methods.register("goal")} className="mr-4" />
-              <InfoIcon content="goal test tooltip" />
+              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
             </div>
             {methods.formState.errors.goal?.message && (
               <p className="text-red-700">
@@ -183,11 +185,35 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
+
+            <Label htmlFor="name">Expected Outcomes</Label>
+            <div className="flex items-center">
+              <Textarea
+                {...methods.register("expectedMovement")}
+                className="mr-4"
+              />
+              <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
+            </div>
+
+            {methods.formState.errors.expectedMovement?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.expectedMovement?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+
             <Label htmlFor="name">Estimated Start Date</Label>
             {/* default to todays date if nothing selected */}
-            <Input {...methods.register("estimatedStart")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedStart")} type="date" 
+            className="mr-4"  
+            defaultValue={new Date().toISOString().slice(0,10)}
+            />
+            <InfoIcon content="The date that is estimated for the project to start being worked on" />
+            </div>
             {methods.formState.errors.estimatedStart?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedStart?.message}
@@ -195,10 +221,13 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+          <div className="grid w-full max-w-md items-center gap-1.5">
+          
             <Label htmlFor="name">Estimated End Date</Label>
-            <Input {...methods.register("estimatedEnd")} type="date" />
-
+            <div className="flex items-center">
+            <Input {...methods.register("estimatedEnd")} type="date" className="mr-4" />
+            <InfoIcon content="The date that is estimated for the project to be completed" />
+              </div>
             {methods.formState.errors.estimatedEnd?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.estimatedEnd?.message}
@@ -210,7 +239,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Trigger</Label>
             <div className="flex items-center">
               <Textarea {...methods.register("trigger")} className="mr-4" />
-              <InfoIcon content="trigger test tooltip" />
+              <InfoIcon content="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc" />
             </div>
             {methods.formState.errors.trigger?.message && (
               <p className="text-red-700">
@@ -219,22 +248,8 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Expected Movement</Label>
-            <div className="flex items-center">
-              <Textarea
-                {...methods.register("expectedMovement")}
-                className="mr-4"
-              />
-              <InfoIcon content="expected movement test tooltip" />
-            </div>
 
-            {methods.formState.errors.expectedMovement?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.expectedMovement?.message}
-              </p>
-            )}
-          </div>
+
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">
@@ -245,7 +260,7 @@ export default function ProjectForm() {
                 {...methods.register("alternativeOptions")}
                 className="mr-4"
               />
-              <InfoIcon content="alternative solutions test tooltip" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.alternativeOptions?.message && (
@@ -262,7 +277,7 @@ export default function ProjectForm() {
                 {...methods.register("estimatedRisk")}
                 className="mr-4"
               />
-              <InfoIcon content="risks test tooltip" />
+              <InfoIcon content="" />
             </div>
 
             {methods.formState.errors.estimatedRisk?.message && (
@@ -275,19 +290,38 @@ export default function ProjectForm() {
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Project members</Label>
             <div className="flex items-center">
-              <Select options={options} 
-              className="mr-4 w-full"
-              isMulti
-              defaultValue={defaultValue}
-              value={selectedOption}
-              closeMenuOnSelect={false}
-              onChange={handleChange}
+              <Select options={options}
+                className="mr-4 w-full"
+                isMulti = {true}
+                defaultValue={defaultValue}
+                value={selectedOption}
+                closeMenuOnSelect={false}
+                onChange={(newValue) => handleChange(newValue as Option[])}
               />
-              <InfoIcon content="Emoji" />
+              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
             {methods.formState.errors.icon?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.icon?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">External Stakeholders</Label>
+            <div className="flex items-center">
+              <Textarea
+                {...methods.register("stakeholders")}
+                className="mr-4"
+                placeholder="Optional"
+              />
+              
+              <InfoIcon content="Who did you work with that is not a part of our team?" />
+            </div>
+
+            {methods.formState.errors.stakeholders?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.stakeholders?.message}
               </p>
             )}
           </div>

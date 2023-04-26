@@ -22,6 +22,12 @@ import { ActivityChangeSchema} from "~/schemas/activityTracker";
             endDate: input.endDate,
             changeType: input.changeType,
             activityId: input.id,
+            outcomeScore: input.outcomeScore,
+            effortScore: input.effortScore,
+            hours: input.hours,
+            status: input.status,
+            stakeholders: input.stakeholders,
+            members: input.members.join(','),
           }
         }
       );

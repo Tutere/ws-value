@@ -28,6 +28,7 @@ export default function Project() {
     suspense: true,
   });
 
+
   const { data: sessionData } = useSession();
   const isMemberFound = project?.members.some(member => {
     return member.userId === sessionData?.user.id;
@@ -40,6 +41,25 @@ export default function Project() {
       }, 3000);
     }
   }, [isMemberFound, router]);
+
+
+  //get list of users first, then filter against activity members to get names
+  const queryUsers = api.users.read.useQuery(undefined, {
+    suspense: true,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const users = queryUsers.data;
+
+
+  const activityMembers = activity?.members.flatMap((member) => //flatmap to get rid of nesting
+    users?.filter((user) =>
+      user.projects?.some((projectMember) => projectMember.id === member.projectMemberId)
+    )
+  );
+  console.log(activityMembers);  
 
   return (
     <>
@@ -70,7 +90,19 @@ export default function Project() {
         <Label className="font-medium">Outcome:</Label>
         <p className="ml-1">{activity?.valueCreated}</p>
       </div>
-      <div className="mt-5 flex gap-7">
+      <div className="flex flex-row">
+        <Label className="font-medium">Activity Members:</Label>
+        <p className="ml-1">
+          {activityMembers?.map((member) => member?.name).join(", ")}   
+        </p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Stakeholders Involved:</Label>
+        <p className="ml-1">
+          {activity?.stakeholders}   
+        </p>
+      </div>
+      <div className="mt-5 flex gap-7"> 
       <Link href={"/editActivity/" + id}>
         <Button variant={"default"}>
             Edit Activity

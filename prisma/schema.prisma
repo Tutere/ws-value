@@ -78,17 +78,31 @@ enum ProjectRole {
 }
 
 model ProjectMember {
-    id        String      @id @default(cuid())
-    createdAt DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
-    userId    String
-    projectId String
-    user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-    project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
-    role      ProjectRole @default(MEMBER)
+    id             String           @id @default(cuid())
+    createdAt      DateTime         @default(now())
+    updatedAt      DateTime         @updatedAt
+    userId         String
+    projectId      String
+    user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+    project        Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    role           ProjectRole      @default(MEMBER)
+    ActivityMember ActivityMember[]
 
     @@index([userId])
     @@index([projectId])
+}
+
+model ActivityMember {
+    id              String        @id @default(cuid())
+    createdAt       DateTime      @default(now())
+    updatedAt       DateTime      @updatedAt
+    members         ProjectMember @relation(fields: [projectMemberId], references: [id])
+    projectMemberId String
+    activity        Activity      @relation(fields: [activityId], references: [id], onDelete: Cascade)
+    activityId      String
+
+    @@index([projectMemberId])
+    @@index([activityId])
 }
 
 model Project {
@@ -98,39 +112,49 @@ model Project {
     updatedAt          DateTime        @updatedAt
     colour             String?
     name               String
-    description        String?
+    description        String?         @db.Text
     goal               String
     estimatedStart     DateTime        @default(now())
     estimatedEnd       DateTime?
-    trigger            String?
-    expectedMovement   String?
-    alternativeOptions String?
-    estimatedRisk      String?
+    trigger            String?         @db.Text
+    //shown as expected outcomes on the page
+    expectedMovement   String?         @db.Text
+    alternativeOptions String?         @db.Text
+    estimatedRisk      String?         @db.Text
     outcomeScore       Int?
     effortScore        Int?
     status             String
     actualStart        DateTime?
     actualEnd          DateTime?
-    lessonsLearnt      String?
-    retrospective      String?
+    lessonsLearnt      String?         @db.Text
+    retrospective      String?         @db.Text
     members            ProjectMember[]
     Activity           Activity[]
+    stakeholders       String?
+
     // ProjectTracker     ProjectTracker[]
     // ActivityTracker    ActivityTracker[]
+    StakeholderResponse StakeholderResponse[]
 }
 
 model Activity {
-    id                String    @id @default(cuid())
-    createdAt         DateTime  @default(now())
-    updatedAt         DateTime  @updatedAt
+    id                String           @id @default(cuid())
+    createdAt         DateTime         @default(now())
+    updatedAt         DateTime         @updatedAt
     projectId         String
-    project           Project   @relation(fields: [projectId], references: [id])
+    project           Project          @relation(fields: [projectId], references: [id])
     name              String
-    description       String
-    engagementPattern String
-    valueCreated      String?
+    description       String           @db.Text
+    engagementPattern String           @db.Text
+    valueCreated      String?          @db.Text
     startDate         DateTime?
     endDate           DateTime?
+    status            String
+    outcomeScore      Int?
+    effortScore       Int?
+    stakeholders      String?
+    members           ActivityMember[]
+    hours             Int?
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])
@@ -141,25 +165,28 @@ model ProjectTracker {
     changeType         String
     createdAt          DateTime  @default(now())
     name               String
-    description        String?
+    description        String?   @db.Text
     goal               String
     estimatedStart     DateTime  @default(now())
     estimatedEnd       DateTime?
-    trigger            String?
-    expectedMovement   String?
-    alternativeOptions String?
-    estimatedRisk      String?
+    trigger            String?   @db.Text
+    expectedMovement   String?   @db.Text
+    alternativeOptions String?   @db.Text
+    estimatedRisk      String?   @db.Text
     outcomeScore       Int?
     effortScore        Int?
     status             String
     actualStart        DateTime?
     actualEnd          DateTime?
-    lessonsLearnt      String?
-    retrospective      String?
+    lessonsLearnt      String?   @db.Text
+    retrospective      String?   @db.Text
     // project            Project   @relation(fields: [projectId], references: [id])
     projectId          String
     icon               String?
     colour             String?
+    members            String?   @db.Text
+    // Activity           Activity[]     *** Need to organise how these will be stored in projectTracker
+    stakeholders       String?
 
     // @@index([projectId])
 }
@@ -171,14 +198,34 @@ model ActivityTracker {
     projectId         String
     // project           Project   @relation(fields: [projectId], references: [id])
     name              String
-    description       String
-    engagementPattern String
+    description       String    @db.Text
+    engagementPattern String    @db.Text
     valueCreated      String?
     startDate         DateTime?
     endDate           DateTime?
     // activity          Activity  @relation(fields: [activityId], references: [id])
     activityId        String
+    status            String?
+    outcomeScore      Int?
+    effortScore       Int?
+    hours             Int?
+    stakeholders      String?
+    members           String?   @db.Text
 
     @@index([projectId])
     @@index([activityId])
+}
+
+model StakeholderResponse {
+    id               String   @id @default(cuid())
+    project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId        String
+    organisation     String
+    benefitsRating   Int?
+    experienceRating Int?
+    improvements     String?
+    complaints       String?
+    createdAt        DateTime @default(now())
+
+    @@index([projectId])
 }

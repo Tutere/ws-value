@@ -7,7 +7,6 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-
 export const activitiesRouter = createTRPCRouter({
   create: protectedProcedure
     .input(CreateActivitySchema)
@@ -21,6 +20,20 @@ export const activitiesRouter = createTRPCRouter({
           valueCreated: input.valueCreated,
           startDate: input.startDate,
           endDate: input.endDate,
+          status: input.status,
+          outcomeScore: input.outcomeScore,
+          effortScore: input.effortScore,
+          stakeholders: input.stakeholders,
+          hours: input.hours,     
+          members: {
+            createMany: {
+              data: input.members.map(member => {
+                return {
+                  projectMemberId: member,
+                }
+              })
+            }
+          },
         },
       });
     }),
@@ -32,8 +45,11 @@ export const activitiesRouter = createTRPCRouter({
       {
         where: {
           projectId: input.projectId,
-        }
-      }
+        },
+        include: {
+          members: true,
+        },
+      },
     );
   }),
 
@@ -58,7 +74,10 @@ export const activitiesRouter = createTRPCRouter({
       {
         where: {
           id: input.id,
-        }
+        },
+        include: {
+          members: true,
+        },
       }
     );
   }),
@@ -79,6 +98,19 @@ export const activitiesRouter = createTRPCRouter({
           valueCreated: input.valueCreated,
           startDate: input.startDate,
           endDate: input.endDate,
+          outcomeScore: input.outcomeScore,
+          effortScore: input.effortScore,
+          hours: input.hours,
+          stakeholders: input.stakeholders,
+          members: {
+            createMany: {
+              data: input.members.map(member => {
+                return {
+                  projectMemberId: member,
+                }
+              })
+            }
+          },
         }
       }
     );

@@ -92,7 +92,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
           description: project2?.description?.toString(),
           goal: project2?.goal?.toString(),
           estimatedStart: project2?.estimatedStart?.toISOString(),
-          estimatedEnd: project2?.estimatedEnd?.toISOString(),
+          estimatedEnd: project2?.estimatedEnd?.toISOString() || '',
           trigger: project2?.trigger?.toString(),
           expectedMovement: project2?.expectedMovement?.toString(),
           alternativeOptions: project2?.alternativeOptions?.toString(),
@@ -100,11 +100,13 @@ export function DeletionDialog(props: { object: string, id:string }) {
           outcomeScore: project2?.outcomeScore || 1,
           effortScore: project2?.effortScore || 1,
           actualStart: project2?.actualStart?.toISOString() || project2?.estimatedStart?.toISOString(),
-          actualEnd: project?.actualEnd?.toISOString() || project2?.estimatedEnd?.toISOString(),
+          actualEnd: project?.actualEnd?.toISOString() || '',
           lessonsLearnt: project2?.lessonsLearnt! || "",
           retrospective: project2?.retrospective! || "",
           status: project2?.status!,
           colour: project2?.colour!,
+          members: project2?.members?.map(member => member.userId),
+          stakeholders:project2?.stakeholders!,
         },
       });
 
@@ -131,6 +133,12 @@ export function DeletionDialog(props: { object: string, id:string }) {
           valueCreated: activity?.valueCreated?.toString(),
           startDate: activity?.startDate?.toISOString(),
           endDate: activity?.endDate?.toISOString(),
+          outcomeScore: activity?.outcomeScore!,
+          effortScore: activity?.effortScore!,
+          status: activity?.status!,
+          hours: activity?.hours!,
+          members: activity?.members?.map(member => member.projectMemberId),
+          stakeholders:project2?.stakeholders!,
         },
       });
 
@@ -151,6 +159,12 @@ export function DeletionDialog(props: { object: string, id:string }) {
           methodActivityTracker.setValue("valueCreated" , activity.valueCreated?.toString());
           methodActivityTracker.setValue("startDate" , activity.startDate?.toISOString()!);
           methodActivityTracker.setValue("endDate" , activity?.endDate?.toISOString()!);
+          methodActivityTracker.setValue("outcomeScore" , activity.outcomeScore);
+          methodActivityTracker.setValue("effortScore" , activity.effortScore);
+          methodActivityTracker.setValue("status" , activity.status);
+          methodActivityTracker.setValue("hours" , activity.hours);
+          methodActivityTracker.setValue("stakeholders" , activity.stakeholders!);
+          methodActivityTracker.setValue("members" , activity.members?.map(member => member.projectMemberId));
 
           mutationActivityracker.mutateAsync(methodActivityTracker.getValues())
 
