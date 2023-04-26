@@ -12,12 +12,11 @@ export default function stakeholderSurveyForm() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().stakeholderResponse;
-  const query = api.projects.read.useQuery(undefined, {
+  const query = api.projects.PublicFindByProjectId.useQuery({id:id}, {
     suspense: true,
   });
 
-  const projects = query.data;
-  const project = projects ? projects.find((p) => p.id === id) : null;
+  const project = query.data;
 
 
   const mutation = api.stakeholderResponse.create.useMutation({
