@@ -10,7 +10,8 @@ import { Textarea } from "src/components/ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
 import Select, { MultiValue } from 'react-select'
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
+
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
@@ -85,6 +86,21 @@ export default function ProjectForm() {
   };
 
   // ****************
+
+  //handling the exiting of a page (pop up confirmation)
+  useEffect(() => {
+    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+  
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, []);
 
   return (
     <>
