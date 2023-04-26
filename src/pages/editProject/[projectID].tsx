@@ -90,8 +90,8 @@ export default function ProjectForm() {
   
     const options = users?.map((user) => ({
       value: user.id,
-      label: user.name,
-    }));
+      label: user.name ?? "Error loading user",
+    })) ?? [];
   
     type Option = { label: string, value: string }
   
@@ -119,7 +119,7 @@ export default function ProjectForm() {
 
 
 
-    const handleChange = (options: readonly Option[]) => {
+    const handleChange = (options: Option[]) => {
       console.log(options);
       setSelectedOption(options); //not sure why there is an error here as it still works?
     };
@@ -169,7 +169,9 @@ export default function ProjectForm() {
       
     };
 
-
+  if (project === null || project === undefined ) {
+    return <p>Error finding project</p>
+  }
   return (
     <>
       {isMemberFound ? (
@@ -200,7 +202,7 @@ export default function ProjectForm() {
             <div>
               <Label htmlFor="name">Icon</Label>
               <div className="flex items-center">
-                <Input {...methods.register("icon")} className="mr-4" defaultValue={project?.icon} />
+                { project.icon? <Input {...methods.register("icon")} className="mr-4" defaultValue={project.icon}  /> :<Input {...methods.register("icon")} className="mr-4" />}
                 <InfoIcon content="Choose an Emoji, or stick with the default." />
               </div>
               {methods.formState.errors.icon?.message && (
@@ -213,7 +215,7 @@ export default function ProjectForm() {
             <div className="ml-5">
               <Label htmlFor="name">Colour</Label>
               <div className="flex items-center">
-                <Input {...methods.register("colour")} className="mr-4" defaultValue={project?.colour} />
+              { project.colour? <Input {...methods.register("colour")} className="mr-4" defaultValue={project.colour} /> :<Input {...methods.register("colour")} className="mr-4"/>}
                 <InfoIcon content="Hex code for a colour." />
               </div>
               {methods.formState.errors.colour?.message && (
@@ -379,7 +381,7 @@ export default function ProjectForm() {
                 defaultValue={defaultValues}
                 value={selectedOption}
                 closeMenuOnSelect={false}
-                onChange={handleChange}
+                onChange={(newValue) => handleChange(newValue as Option[])}
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>

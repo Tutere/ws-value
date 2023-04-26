@@ -69,7 +69,7 @@ export default function ProjectForm() {
   //set current logged in user as default value (will pre-load the dropdown)
   const defaultValue = options?.find((option) => option.value === sessionData?.user.id);
 
-  type Option = { label: string, value: string }
+  type Option = { label: string | null, value: string }
 
   const [selectedOption, setSelectedOption] = useState<Option[]>([]);
 
@@ -79,7 +79,7 @@ export default function ProjectForm() {
     selectedOption.push(user);
   }
 
-  const handleChange = (options: readonly Option[]) => {
+  const handleChange = (options: Option[]) => {
     console.log(options);
     setSelectedOption(options); //not sure why there is an error here as it still works?
   };
@@ -292,11 +292,11 @@ export default function ProjectForm() {
             <div className="flex items-center">
               <Select options={options}
                 className="mr-4 w-full"
-                isMulti
+                isMulti = {true}
                 defaultValue={defaultValue}
                 value={selectedOption}
                 closeMenuOnSelect={false}
-                onChange={handleChange}
+                onChange={(newValue) => handleChange(newValue as Option[])}
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>

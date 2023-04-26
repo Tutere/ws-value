@@ -88,10 +88,10 @@ const queryProjectmembers = api.projectmember.read.useQuery({id: project?.id!}, 
 
 const projectMembers = queryProjectmembers.data;
 
-const options = projectMembers?.map((projectMember) => ({
+const options: Option[] = projectMembers?.map((projectMember) => ({
   value: projectMember.id,
-  label: users?.find((item) => item.id === projectMember.userId)?.name
-}));
+  label: users?.find((item) => item.id === projectMember.userId)?.name ?? "Error loading user"
+})) ?? [];
 
 type Option = { label: string, value: string }
 
@@ -119,7 +119,7 @@ useEffect(() => {
 }, []);
 
 
-const handleChange = (options: readonly Option[]) => {
+const handleChange = (options: Option[]) => {
   console.log(options);
   setSelectedOption(options); //not sure why there is an error here as it still works?
 };
@@ -180,7 +180,7 @@ useEffect(() => {
 
 
 
-const handleChangeStakeholder = (options: readonly Option[]) => {
+const handleChangeStakeholder = (options:  Option[]) => {
   console.log(options);
   setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
 };
@@ -346,17 +346,17 @@ const handleChangeStakeholder = (options: readonly Option[]) => {
             <div className="flex items-center">
               <Select options={stakeholderOptions}
                 className="mr-4 w-full"
-                isMulti
+                isMulti = {true}
                 defaultValue={defaultValueStakeholder}
                 value={stakeholderSelectedOptions}
                 closeMenuOnSelect={false}
-                onChange={handleChangeStakeholder}
+                onChange={(newValue) => handleChangeStakeholder(newValue as Option[])}
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
-            {methods.formState.errors.icon?.message && (
+            {methods.formState.errors.members?.message && (
               <p className="text-red-700">
-                {methods.formState.errors.icon?.message}
+                {methods.formState.errors.members?.message}
               </p>
             )}
           </div>
@@ -381,11 +381,11 @@ const handleChangeStakeholder = (options: readonly Option[]) => {
             <div className="flex items-center">
               <Select options={options}
                 className="mr-4 w-full"
-                isMulti
+                isMulti = {true}
                 defaultValue={defaultValues}
                 value={selectedOption}
                 closeMenuOnSelect={false}
-                onChange={handleChange}
+                onChange={(newValue) => handleChange(newValue as Option[])}
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
