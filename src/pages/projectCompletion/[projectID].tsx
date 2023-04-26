@@ -59,7 +59,7 @@ export default function ProjectCompletion() {
   });
 
   //read in stakeholder survey responses
-  const querySurveyResponses = api.stakeholderResponse.read.useQuery({projectId:id}, {
+  const querySurveyResponses = api.stakeholderResponse.read.useQuery({id:id}, {
     suspense: true,
   });
 
@@ -222,7 +222,7 @@ export default function ProjectCompletion() {
         {stakeholderResponses?.length! > 0 ? (
           stakeholderResponses?.map((stakeholderResponse) => (
             <Link
-              href={"/activity/" + stakeholderResponse.id}
+              href={"/stakeholderResponse/" + stakeholderResponse.id}
               key={stakeholderResponse.id}
               className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
               style={{ backgroundColor: `#${project?.colour}` }}
