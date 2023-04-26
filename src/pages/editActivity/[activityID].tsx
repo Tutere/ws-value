@@ -121,7 +121,7 @@ useEffect(() => {
 
 const handleChange = (options: Option[]) => {
   console.log(options);
-  setSelectedOption(options); //not sure why there is an error here as it still works?
+  setSelectedOption(options); 
 };
 
 

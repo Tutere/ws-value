@@ -37,7 +37,7 @@ const Home: NextPage = () => {
                       <Link
                         href={"/" + project.id}
                         key={project.id}
-                        style={{ backgroundColor: `#${project.colour}` }}
+                        style={{ backgroundColor: `${project.colour}` }}
                         className="basis-60 overflow-hidden p-4 shadow sm:rounded-lg"
                       >
                         <div className="flex justify-start">

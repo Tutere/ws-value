@@ -127,8 +127,8 @@ export default function ProjectForm() {
             <div className="ml-5">
               <Label htmlFor="name">Colour</Label>
               <div className="flex items-center">
-                <Input type = "color" {...methods.register("colour")} className="mr-4" defaultValue={"cfdfdc"} />
-                <InfoIcon content="Hex code for a colour." />
+                <Input type = "color" {...methods.register("colour")} className="mr-4 w-20" value="#FFFFFF" />
+                <InfoIcon content="This colour is shown from the homepage." />
               </div>
               {methods.formState.errors.colour?.message && (
                 <p className="text-red-700">

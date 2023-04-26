@@ -105,6 +105,10 @@ const methodProjectTracker= useZodForm({
   },
 });
 
+if (project === null || project === undefined ) {
+  return <p>Error finding project</p>
+}
+
   return (
     <>
     {isMemberFound ? (
@@ -177,9 +181,10 @@ const methodProjectTracker= useZodForm({
         {activities &&
           activities.map((activity) => (
             <Link
+              style={{ backgroundColor: `${project.colour}` }}
               href={"/activity/" + activity.id}
               key={activity.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+              className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
             >
               <h3 className="text-xl font-bold">{activity.name}</h3>
               <p>{activity.description}</p>
