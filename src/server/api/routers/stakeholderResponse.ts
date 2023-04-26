@@ -7,7 +7,7 @@ import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/s
   } from "~/server/api/trpc";
   
   export const stakeholderResponseRouter = createTRPCRouter({
-    create: protectedProcedure
+    create: publicProcedure
       .input(CreateStakeholderResponseSchema)
       .mutation(({ ctx, input }) => {
         return ctx.prisma.stakeholderResponse.create({

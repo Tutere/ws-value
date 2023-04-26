@@ -96,6 +96,12 @@ export default function Project() {
           {activityMembers?.map((member) => member?.name).join(", ")}   
         </p>
       </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Stakeholders Involved:</Label>
+        <p className="ml-1">
+          {activity?.stakeholders}   
+        </p>
+      </div>
       <div className="mt-5 flex gap-7"> 
       <Link href={"/editActivity/" + id}>
         <Button variant={"default"}>

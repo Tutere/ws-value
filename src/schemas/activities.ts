@@ -41,9 +41,8 @@ export const ReadActivitySchema = z.object({
     status: z.string(),
     outcomeScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
     effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
-
     stakeholders: z.string().optional(),
-
     hours: z.preprocess((val) => Number(val), z.number()),
+    members: z.array(z.string()),
 
   });

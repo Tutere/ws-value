@@ -51,7 +51,6 @@ export default function Project() {
   });
 
   const users = queryUsers.data;
-  console.log(users);
 
 
   const projectMembers = project?.members.map((member) =>
@@ -101,6 +100,8 @@ const methodProjectTracker= useZodForm({
     retrospective: project?.retrospective!,
     status: project?.status!,
     colour: project?.colour!,
+    stakeholders: project?.stakeholders! || "",
+    members: project?.members.map(member => member.userId),
   },
 });
 

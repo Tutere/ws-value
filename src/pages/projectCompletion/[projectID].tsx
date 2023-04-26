@@ -24,7 +24,6 @@ export default function ProjectCompletion() {
   const projects = query.data;
   const project = projects ? projects.find((p) => p.id === id) : null;
 
-
   const mutation = api.projects.complete.useMutation({
     onSuccess: async () => {
       await utils.read.invalidate();
@@ -49,6 +48,8 @@ export default function ProjectCompletion() {
       expectedMovement: project?.expectedMovement?.toString(),
       alternativeOptions: project?.alternativeOptions?.toString(),
       estimatedRisk: project?.estimatedRisk?.toString(),
+      stakeholders: project?.stakeholders! || "",
+      members: project?.members.map(member => member.userId),
     },
   });
 
@@ -132,13 +133,16 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Actual Start Date</Label>
-          {/* default to todays date if nothing selected */}
-          <Input {...methods.register("actualStart")} type="date" defaultValue={
-                  project?.actualStart! &&
-                  project.actualStart.toISOString().slice(0, 10)
-                } />
+          
+          <div className="flex items-center">
+            <Input {...methods.register("actualStart")} type="date" className="mr-4" defaultValue={
+                    project?.actualStart! ?
+                    project.actualStart.toISOString().slice(0, 10) : project?.estimatedStart.toISOString().slice(0, 10)
+                  } />
+            <InfoIcon content="The date that the project started being worked on. Will default to the estimated start date provided during project setup"/>
+          </div>
 
           {methods.formState.errors.actualStart?.message && (
             <p className="text-red-700">
@@ -147,13 +151,15 @@ export default function ProjectCompletion() {
           )}
         </div>
 
-        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Actual End Date</Label>
-          {/* default to todays date if nothing selected */}
-          <Input {...methods.register("actualEnd")} type="date" defaultValue={
-                  project?.actualEnd! &&
-                  project.actualEnd.toISOString().slice(0, 10)
-                } />
+          <div className="flex items-center">
+            <Input {...methods.register("actualEnd")} className="mr-4" type="date" defaultValue={
+                    project?.actualEnd! ?
+                    project.actualEnd.toISOString().slice(0, 10) : project?.estimatedEnd!.toISOString().slice(0, 10)
+                  } />
+            <InfoIcon content="The date that the project was completed. Will default to the estimated end date provided during project setup"/>
+          </div>
 
           {methods.formState.errors.actualEnd?.message && (
             <p className="text-red-700">

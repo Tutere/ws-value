@@ -27,5 +27,32 @@ import {
         }
       });
     }),
+
+     //Delete all activity members linked to a project memeber (given userId of projectMember)
+  delete: protectedProcedure
+  .input(FindActivityMemberSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activityMember.deleteMany(
+      {
+        where: {
+          members: {
+            id:input.id,
+          }
+        }
+      }
+    );
+  }),
+
+  // deleteSpecific: protectedProcedure
+  // .input(FindActivityMemberSchema)
+  // .mutation(({ ctx, input }) => {
+  //   return ctx.prisma.activityMember.deleteMany(
+  //     {
+  //       where: {
+  //         id: input.id
+  //       }
+  //     }
+  //   );
+  // }),
   
   });

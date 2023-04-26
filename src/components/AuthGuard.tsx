@@ -6,17 +6,17 @@ import { useRouter } from "next/router";
 const AuthGuard = ({ children, }: { children: ReactNode, }) => {
   const { data: sessionData, status } = useSession();
 
-  // const router = useRouter();
-  // const isPublicPage = router.pathname.includes("stakeholderSurvey");
+  const router = useRouter();
+  const isPublicPage = router.pathname.includes("stakeholderSurvey");
 
   switch (status) {
     case "loading":
       return <div className="flex justify-center items-center h-screen text-7xl">
         ⏳</div>;
     case "unauthenticated":
-      // if (isPublicPage) {
-      //   return <div>{children}</div>;
-      // }
+      if (isPublicPage) {
+        return <div>{children}</div>;
+      }
       return (
         <div className="flex justify-center items-center h-screen">
           <Button

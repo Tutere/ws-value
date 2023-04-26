@@ -13,6 +13,7 @@ import { InfoIcon } from "~/components/ui/infoIcon";
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
 import Select, { MultiValue } from 'react-select'
 
+
 export default function Project() {
   const router = useRouter();
   const id = router.query.projectID as string;
@@ -101,12 +102,26 @@ export default function Project() {
     selectedOption.push(user);
   }
 
-  const handleChange = (options: readonly Option[]) => {
+  const handleChange = (options: Option[]) => {
     console.log(options);
     setSelectedOption(options); //not sure why there is an error here as it still works?
   };
 
   // ****************
+
+
+  //setup for stakeholder dropdown
+  const stakeholderOptions = project?.stakeholders?.split(',').map((stakeholder) => ({
+    value: stakeholder,
+    label: stakeholder,
+  }));
+
+  const [stakeholderSelectedOptions, setStakeholderSelectedOptions] = useState<Option[]>([]);
+
+  const handleChangeStakeholder = (options: Option[]) => {
+    console.log(options);
+    setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
+  };
 
   return (
     <>
@@ -120,11 +135,14 @@ export default function Project() {
           await Promise.all ([
             await mutation.mutateAsync({
               ...values,
-              members: selectedOption.map((option) => option.value)
+              members: selectedOption.map((option) => option.value),
+              stakeholders: stakeholderSelectedOptions.map((option) => option.value).join(','),
             }),
             await mutationActivityTracker.mutateAsync({
               ...values,
-              id: methods.getValues("id") // update id feild with the created activity's id
+              id: methods.getValues("id"), // update id feild with the created activity's id
+              members: selectedOption.map((option) => option.value),
+              stakeholders: stakeholderSelectedOptions.map((option) => option.value).join(','),
             })
           ])
           methods.reset();
@@ -163,19 +181,24 @@ export default function Project() {
         </div>
 
         <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">External Stakeholders Involved</Label>
-          <div className="flex items-center">
-            <Input {...methods.register("stakeholders")} className="mr-4" defaultValue={project?.stakeholders}/>
-            <InfoIcon content="stakeholders test tooltip"/>
+            <Label htmlFor="name">External Stakeholders Involved</Label>
+            <div className="flex items-center">
+              <Select options={stakeholderOptions}
+                className="mr-4 w-full"
+                isMulti
+                // defaultValue={defaultValue}
+                value={stakeholderSelectedOptions}
+                closeMenuOnSelect={false}
+                onChange={(newValue) => handleChangeStakeholder(newValue as Option[])}
+              />
+              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+            </div>
+            {methods.formState.errors.members?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.members?.message}
+              </p>
+            )}
           </div>
-          
-
-          {methods.formState.errors.description?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.description?.message}
-            </p>
-          )}
-        </div>
 
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Engagement Pattern</Label>
@@ -209,7 +232,9 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">Start Date</Label>
           {/* default to todays date if nothing selected */}
-          <Input {...methods.register("startDate")} type="date" />
+          <Input {...methods.register("startDate")} type="date" 
+          defaultValue={new Date().toISOString().slice(0,10)}
+          />
 
           {methods.formState.errors.startDate?.message && (
             <p className="text-red-700">
@@ -283,7 +308,7 @@ export default function Project() {
                 defaultValue={defaultValue}
                 value={selectedOption}
                 closeMenuOnSelect={false}
-                onChange={handleChange}
+                onChange={(newValue) => handleChange(newValue as Option[])}
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>

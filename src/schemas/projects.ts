@@ -29,7 +29,10 @@ export const CompleteProjectSchema = z.object({
   effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
   status: z.string(),
   actualStart: z.string().transform((val) => new Date(val).toISOString()),
-  actualEnd: z.string().transform((val) => new Date(val).toISOString()),
+  actualEnd: z
+  .string()
+  .transform((val) => val? new Date(val).toISOString(): null)
+  .nullable(),
   lessonsLearnt: z.string().optional(),
   retrospective: z.string().optional(),
   id: z.string().cuid(),
@@ -63,7 +66,8 @@ export const EditProjectSchema = z.object({
   retrospective: z.string().optional(),
   changeType: z.string(),
   colour: z.string().optional(),
-  stakeholders: z.string().optional()
+  stakeholders: z.string().optional(),
+  members: z.array(z.string()),
 });
 
 export const DeleteProjectSchema = z.object({
