@@ -98,7 +98,9 @@ export default function ProjectCompletion() {
     };
   }, []);
 
-
+  if (project === null || project === undefined ) {
+    return <p>Error finding project</p>
+  }
   return (
     <>
     {isMemberFound ? (
@@ -106,7 +108,7 @@ export default function ProjectCompletion() {
       <h2 className="mt-5 mb-5 text-2xl font-bold">Project Completion Page</h2>
       <div className="flex flex-row mb-5">
         <Label className="font-medium">Project Name:</Label>
-        <p className="ml-1">{project?.name}</p>
+        <p className="ml-1">{project.name}</p>
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
@@ -137,7 +139,7 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Lessons Learnt</Label>
           <div className="flex items-center">
-            <Textarea {...methods.register("lessonsLearnt")} className="mr-4" defaultValue={project?.lessonsLearnt!}/>
+            <Textarea {...methods.register("lessonsLearnt")} className="mr-4" defaultValue={project.lessonsLearnt!}/>
             <InfoIcon content="The knowledge gained from the process of conducting this activity that could be useful in the future iterations or similar work"/>
           </div> 
 
@@ -150,15 +152,15 @@ export default function ProjectCompletion() {
 
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Actual Start Date</Label>
-          
           <div className="flex items-center">
-            <Input {...methods.register("actualStart")} type="date" className="mr-4" defaultValue={
-                    project?.actualStart! ?
-                    project.actualStart.toISOString().slice(0, 10) : project?.estimatedStart.toISOString().slice(0, 10)
-                  } />
+            {project.actualStart?
+            <Input {...methods.register("actualStart")} type="date" className="mr-4" defaultValue={project.actualStart.toISOString().slice(0, 10)} />
+              :
+              <Input {...methods.register("actualStart")} type="date" className="mr-4" defaultValue={ project.estimatedStart.toISOString().slice(0, 10)
+              } />
+              }
             <InfoIcon content="The date that the project started being worked on. Will default to the estimated start date provided during project setup"/>
           </div>
-
           {methods.formState.errors.actualStart?.message && (
             <p className="text-red-700">
               {methods.formState.errors.actualStart?.message}
@@ -169,13 +171,13 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Actual End Date</Label>
           <div className="flex items-center">
-            <Input {...methods.register("actualEnd")} className="mr-4" type="date" defaultValue={
-                    project?.actualEnd! ?
-                    project.actualEnd.toISOString().slice(0, 10) : project?.estimatedEnd!.toISOString().slice(0, 10)
-                  } />
+            {project.actualEnd ?
+            <Input {...methods.register("actualEnd")} className="mr-4" type="date" defaultValue={project.actualEnd.toISOString().slice(0, 10)} />
+            :
+            <Input {...methods.register("actualEnd")} className="mr-4" type="date" defaultValue={project.estimatedEnd!.toISOString().slice(0, 10)} />
+            }
             <InfoIcon content="The date that the project was completed. Will default to the estimated end date provided during project setup"/>
           </div>
-
           {methods.formState.errors.actualEnd?.message && (
             <p className="text-red-700">
               {methods.formState.errors.actualEnd?.message}
@@ -186,11 +188,13 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("outcomeScore")} className="mr-4" defaultValue={project?.outcomeScore!} />
+            {project.outcomeScore?
+            <Input {...methods.register("outcomeScore")} className="mr-4" defaultValue={project.outcomeScore} />
+            :
+            <Input {...methods.register("outcomeScore")} className="mr-4"/>
+            }
             <InfoIcon content="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"/>
           </div>
-          
-
             {methods.formState.errors.outcomeScore?.message && (
             <p className="text-red-700">
               {methods.formState.errors.outcomeScore?.message}
@@ -201,11 +205,13 @@ export default function ProjectCompletion() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Effort Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("effortScore")} className="mr-4" defaultValue={project?.effortScore!}/>
+            {project.effortScore?
+            <Input {...methods.register("effortScore")} className="mr-4" defaultValue={project.effortScore}/>
+            :
+            <Input {...methods.register("effortScore")} className="mr-4" />
+            }
             <InfoIcon content="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"/>
           </div>
-          
-
             {methods.formState.errors.effortScore?.message && (
             <p className="text-red-700">
               {methods.formState.errors.effortScore?.message}
@@ -217,7 +223,7 @@ export default function ProjectCompletion() {
           <Label htmlFor="name">Stakeholder Survey Form: </Label>
           <div className="flex items-center">
             <Link className="mr-4 font-medium text-blue-600 hover:underline" 
-            href={"/stakeholderSurvey/" + project?.id}
+            href={"/stakeholderSurvey/" + project.id}
             rel="noopener noreferrer" 
             target="_blank"
             >
@@ -240,7 +246,7 @@ export default function ProjectCompletion() {
               href={"/stakeholderResponse/" + stakeholderResponse.id}
               key={stakeholderResponse.id}
               className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
-              style={{ backgroundColor: `#${project?.colour}` }}
+              style={{ backgroundColor: `#${project.colour}` }}
             >
               <h3 className="text-xl font-bold">{stakeholderResponse.organisation}</h3>
               <p>{"Benefits rating: " + stakeholderResponse.benefitsRating}</p>

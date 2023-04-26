@@ -48,13 +48,16 @@ export default function stakeholderSurveyForm() {
     };
   }, []);
 
+  if (project === null || project === undefined ) {
+    return <p>Error finding project</p>
+  }
   return (
     <>
     <div className="p-8 ">
       <h2 className="mt-5 mb-5 text-2xl font-bold">Stakeholder Survey Form</h2>
       <div className="flex flex-row mb-5">
         <Label className="font-medium">Project Name:</Label>
-        <p className="ml-1">{project?.name}</p>
+        <p className="ml-1">{project.name}</p>
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {

@@ -105,6 +105,9 @@ const methodProjectTracker= useZodForm({
   },
 });
 
+  if (project === null || project === undefined ) {
+    return <p>Error finding project</p>
+  }
   return (
     <>
     {isMemberFound ? (
@@ -112,19 +115,19 @@ const methodProjectTracker= useZodForm({
       <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
       <div className="flex flex-row">
         <Label className="font-medium">Project Name:</Label>
-        <p className="ml-1">{project?.name}</p>
+        <p className="ml-1">{project.name}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Goal:</Label>
-        <p className="ml-1">{project?.goal}</p>
+        <p className="ml-1">{project.goal}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Start Date:</Label>
-        <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
+        <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Description:</Label>
-        <p className="ml-1">{project?.description}</p>
+        <p className="ml-1">{project.description}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Project Members:</Label>
@@ -134,19 +137,19 @@ const methodProjectTracker= useZodForm({
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Stakeholders:</Label>
-        <p className="ml-1">{project?.stakeholders}</p>
+        <p className="ml-1">{project.stakeholders}</p>
       </div>
       <div className="mt-5 flex gap-7">
 
         
-      <Link href={"/projectCompletion/" + project?.id}>
+      <Link href={"/projectCompletion/" + project.id}>
         <Button variant={"default"}>
-            {project?.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
+            {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
 
         </Button>
       </Link>
 
-      <Link href={"/" + project?.id} className={project?.status=="Active" ? "hidden":""} >
+      <Link href={"/" + project?.id} className={project.status=="Active" ? "hidden":""} >
       <Button variant={"default"}  className="bg-green-500" 
       onClick={methods.handleSubmit(async (values) => {
         await Promise.all ([
@@ -162,7 +165,7 @@ const methodProjectTracker= useZodForm({
       </Link>
 
 
-      <Link href={"/editProject/" + project?.id}>
+      <Link href={"/editProject/" + project.id}>
         <Button variant={"default"}>
             Edit Project
         </Button>
@@ -187,8 +190,8 @@ const methodProjectTracker= useZodForm({
           ))}
       </div>
 
-      <Link href={"/newActivity/" + id } className={project?.status=="Complete"? "pointer-events-none":""}>
-        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project?.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
+      <Link href={"/newActivity/" + id } className={project.status=="Complete"? "pointer-events-none":""}>
+        <Button type="submit" variant={project.status=="Active"?"default":"subtle"} className={project?.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
         Add New Activity
         </Button>
       </Link>
