@@ -100,6 +100,8 @@ const methodProjectTracker= useZodForm({
     retrospective: project?.retrospective!,
     status: project?.status!,
     colour: project?.colour!,
+    stakeholders: project?.stakeholders! || "",
+    members: project?.members.map(member => member.userId),
   },
 });
 
