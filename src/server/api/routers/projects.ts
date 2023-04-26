@@ -141,6 +141,23 @@ export const projectsRouter = createTRPCRouter({
       });
     }),
 
+    findByStakeholderResponseId: protectedProcedure
+    .input(FindProjectByActivityIdSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.project.findFirst({
+        where: {
+          StakeholderResponse: {
+            some: {
+              id: input.id,
+            },
+          },
+        },
+        include: {
+          members: true,
+        },
+      });
+    }),
+
   findByProjectId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
     .query(({ ctx, input }) => {

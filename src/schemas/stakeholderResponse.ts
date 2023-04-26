@@ -12,7 +12,7 @@ export const CreateStakeholderResponseSchema = z.object({
 export type CreateStakeholderResponseSchema = z.infer<typeof CreateStakeholderResponseSchema>;
 
 export const ReadStakeholderResponseSchema = z.object({
-    projectId: z.string().cuid(),
+    id: z.string().cuid(),
 });
 
 export type ReadStakeholderResponseSchema = z.infer<typeof ReadStakeholderResponseSchema>;

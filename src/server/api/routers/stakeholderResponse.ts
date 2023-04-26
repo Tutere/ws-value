@@ -27,7 +27,27 @@ import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/s
     .query(({ ctx,input }) => {
       return ctx.prisma.stakeholderResponse.findMany({
         where: {
-          projectId: input.projectId,
+          projectId: input.id,
+        }
+      });
+    }),
+
+    readSpecific: protectedProcedure
+    .input(ReadStakeholderResponseSchema)
+    .query(({ ctx,input }) => {
+      return ctx.prisma.stakeholderResponse.findUnique({
+        where: {
+          id: input.id,
+        }
+      });
+    }),
+
+    delete: protectedProcedure
+    .input(ReadStakeholderResponseSchema)
+    .mutation(({ ctx,input }) => {
+      return ctx.prisma.stakeholderResponse.delete({
+        where: {
+          id: input.id,
         }
       });
     }),
