@@ -116,19 +116,19 @@ if (project === null || project === undefined ) {
       <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
       <div className="flex flex-row">
         <Label className="font-medium">Project Name:</Label>
-        <p className="ml-1">{project?.name}</p>
+        <p className="ml-1">{project.name}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Goal:</Label>
-        <p className="ml-1">{project?.goal}</p>
+        <p className="ml-1">{project.goal}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Start Date:</Label>
-        <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
+        <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Description:</Label>
-        <p className="ml-1">{project?.description}</p>
+        <p className="ml-1">{project.description}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Project Members:</Label>
@@ -143,14 +143,14 @@ if (project === null || project === undefined ) {
       <div className="mt-5 flex gap-7">
 
         
-      <Link href={"/projectCompletion/" + project?.id}>
+      <Link href={"/projectCompletion/" + project.id}>
         <Button variant={"default"}>
             {project?.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
 
         </Button>
       </Link>
 
-      <Link href={"/" + project?.id} className={project?.status=="Active" ? "hidden":""} >
+      <Link href={"/" + project?.id} className={project.status=="Active" ? "hidden":""} >
       <Button variant={"default"}  className="bg-green-500" 
       onClick={methods.handleSubmit(async (values) => {
         await Promise.all ([
@@ -187,13 +187,13 @@ if (project === null || project === undefined ) {
               className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
             >
               <h3 className="text-xl font-bold">{activity.name}</h3>
-              <p>{activity.description}</p>
+              <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
             </Link>
           ))}
       </div>
 
-      <Link href={"/newActivity/" + id } className={project?.status=="Complete"? "pointer-events-none":""}>
-        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project?.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
+      <Link href={"/newActivity/" + id } className={project.status=="Complete"? "pointer-events-none":""}>
+        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
         Add New Activity
         </Button>
       </Link>
