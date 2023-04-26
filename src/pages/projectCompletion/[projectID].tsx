@@ -174,7 +174,7 @@ export default function ProjectCompletion() {
             {project.actualEnd ?
             <Input {...methods.register("actualEnd")} className="mr-4" type="date" defaultValue={project.actualEnd.toISOString().slice(0, 10)} />
             :
-            <Input {...methods.register("actualEnd")} className="mr-4" type="date" defaultValue={project.estimatedEnd!.toISOString().slice(0, 10)} />
+            <Input {...methods.register("actualEnd")} className="mr-4" type="date" defaultValue={project.estimatedEnd? project.estimatedEnd.toISOString().slice(0, 10): ""} />
             }
             <InfoIcon content="The date that the project was completed. Will default to the estimated end date provided during project setup"/>
           </div>
