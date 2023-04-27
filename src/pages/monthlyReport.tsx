@@ -7,12 +7,16 @@ import { DateRange } from "react-day-picker"
 import { cn } from "~/utils/cn"
 import { Button } from  "~/components/ui/Button"
 import { Calendar } from "src/components/ui/calendar"
+import { useZodForm } from "~/hooks/useZodForm";
+import { FindProjectmemberSchema } from "~/schemas/projectmember";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "src/components/ui/popover"
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { Activity, ActivityMember } from "@prisma/client";
 
 export default function MonthlyReport({
   className,
@@ -22,21 +26,37 @@ export default function MonthlyReport({
     to: addDays(new Date(), 30),
     
   })
+  const { data: sessionData } = useSession();
 
-  const ActivitySummary = () => {
+  const { data: projectMembers } = api.projectmember.readByUserId.useQuery({id: sessionData?.user.id?? ""}, {
+    suspense: true,
+  });
 
-    // const query = api.activities.read.useQuery(undefined, {
-    //   suspense: true,
-    //   onError: (error) => {
-    //     console.error(error);
-    //   },
-    // })
+  const activityMembersList: ActivityMember[] = [];
+  const activities: ((Activity & { members: ActivityMember[]; }) | null | undefined)[] = [];
 
+  projectMembers?.forEach(element => { 
+    const { data: activityMembers } = api.activitymember.readByProjectMemberId.useQuery({id: element.id?? ""}, {
+      suspense: true,
+    });
 
-  }
-  
+    if (activityMembers && activityMembers?.length > 0) {
+      activityMembers.forEach(element => {
+        activityMembersList.push(element)
+      })
+    } 
+  });
 
-  
+  activityMembersList.forEach(element => {
+    const { data: activity } = api.activities.readSpecific.useQuery({id: element.activityId?? ""}, {
+      suspense: true,
+    });
+
+    activities.push(activity);
+  })
+
+  console.log(activities);
+
 
   return (
 
