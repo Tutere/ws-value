@@ -180,18 +180,19 @@ const methodProjectTracker= useZodForm({
         {activities &&
           activities.map((activity) => (
             <Link
+              style={{ backgroundColor: `${project.colour}` }}
               href={"/activity/" + activity.id}
               key={activity.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+              className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
             >
               <h3 className="text-xl font-bold">{activity.name}</h3>
-              <p>{activity.description}</p>
+              <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
             </Link>
           ))}
       </div>
 
       <Link href={"/newActivity/" + id } className={project.status=="Complete"? "pointer-events-none":""}>
-        <Button type="submit" variant={project.status=="Active"?"default":"subtle"} className={project?.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
+        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
         Add New Activity
         </Button>
       </Link>
