@@ -7,6 +7,7 @@ import { Label } from "@radix-ui/react-label";
 import { useZodForm } from "~/hooks/useZodForm";
 import {CreateStakeholderResponseSchema} from "~/schemas/stakeholderResponse";
 import { InfoIcon } from "~/components/ui/infoIcon";
+import { useEffect } from "react";
 
 export default function stakeholderSurveyForm() {
   const router = useRouter();
@@ -32,13 +33,31 @@ export default function stakeholderSurveyForm() {
     },
   });
 
+   //handling the exiting of a page (pop up confirmation)
+   useEffect(() => {
+    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+  
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, []);
+
+  if (project === null || project === undefined ) {
+    return <p>Error finding project</p>
+  }
   return (
     <>
     <div className="p-8 ">
       <h2 className="mt-5 mb-5 text-2xl font-bold">Stakeholder Survey Form</h2>
       <div className="flex flex-row mb-5">
         <Label className="font-medium">Project Name:</Label>
-        <p className="ml-1">{project?.name}</p>
+        <p className="ml-1">{project.name}</p>
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {

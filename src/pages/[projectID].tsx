@@ -105,10 +105,9 @@ const methodProjectTracker= useZodForm({
   },
 });
 
-if (project === null || project === undefined ) {
-  return <p>Error finding project</p>
-}
-
+  if (project === null || project === undefined ) {
+    return <p>Error finding project</p>
+  }
   return (
     <>
     {isMemberFound ? (
@@ -138,14 +137,14 @@ if (project === null || project === undefined ) {
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Stakeholders:</Label>
-        <p className="ml-1">{project?.stakeholders}</p>
+        <p className="ml-1">{project.stakeholders}</p>
       </div>
       <div className="mt-5 flex gap-7">
 
         
       <Link href={"/projectCompletion/" + project.id}>
         <Button variant={"default"}>
-            {project?.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
+            {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
 
         </Button>
       </Link>
@@ -166,7 +165,7 @@ if (project === null || project === undefined ) {
       </Link>
 
 
-      <Link href={"/editProject/" + project?.id}>
+      <Link href={"/editProject/" + project.id}>
         <Button variant={"default"}>
             Edit Project
         </Button>

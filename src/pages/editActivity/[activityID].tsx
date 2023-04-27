@@ -180,17 +180,39 @@ useEffect(() => {
 
 
 
-const handleChangeStakeholder = (options:  Option[]) => {
-  console.log(options);
-  setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
-};
+  const handleChangeStakeholder = (options:  Option[]) => {
+    console.log(options);
+    setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
+  };
 
+   //handling the exiting of a page (pop up confirmation)
+   useEffect(() => {
+    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+  
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, []);
+
+  if (activity === null || activity === undefined ) {
+    return <p>Error finding Activity</p>
+  }
+
+  if (project === null || project === undefined ) {
+    return <p>Error finding Activity</p>
+  }
 
   return (
     <>
     {isMemberFound ? (
     <div className="p-8">
-      <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
+      <h2 className="mb-5 text-3xl font-bold">Project: {project.name}</h2>
 
       <h2 className="mt-7 text-xl font-bold">Edit Activity</h2>
       <form
@@ -220,12 +242,13 @@ const handleChangeStakeholder = (options:  Option[]) => {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Name</Label>
           <div className="flex items-center">
-             <Input {...methods.register("name")} className="mr-4"
-             defaultValue={activity?.name}/>
+            {activity.name? 
+             <Input {...methods.register("name")} className="mr-4" defaultValue={activity.name}/>
+              :
+              <Input {...methods.register("name")} className="mr-4"/>
+             }
              <InfoIcon content="Name test tooltip"/>
           </div>
-         
-
           {methods.formState.errors.name?.message && (
             <p className="text-red-700">
               {methods.formState.errors.name?.message}
@@ -236,12 +259,13 @@ const handleChangeStakeholder = (options:  Option[]) => {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Description</Label>
           <div className="flex items-center">
-            <Textarea {...methods.register("description")} className="mr-4"
-            defaultValue={activity?.description}/>
+            {activity.description? 
+              <Textarea {...methods.register("description")} className="mr-4" defaultValue={activity.description}/>
+              :
+              <Textarea {...methods.register("description")} className="mr-4"/>
+            }
             <InfoIcon content="Description test tooltip"/>
           </div>
-          
-
           {methods.formState.errors.description?.message && (
             <p className="text-red-700">
               {methods.formState.errors.description?.message}
@@ -252,11 +276,14 @@ const handleChangeStakeholder = (options:  Option[]) => {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Engagement Pattern</Label>
           <div className="flex items-center">
+            {activity.engagementPattern?
             <Textarea {...methods.register("engagementPattern")} className="mr-4"
-            defaultValue={activity?.engagementPattern}/>
+            defaultValue={activity.engagementPattern}/>
+            :
+            <Textarea {...methods.register("engagementPattern")} className="mr-4"/>
+            }
             <InfoIcon content="Brief summary on how engaging were your stakeholders - where they proactive, reactive, passive etc."/>
           </div>
-          
           {methods.formState.errors.engagementPattern?.message && (
             <p className="text-red-700">
               {methods.formState.errors.engagementPattern?.message}
@@ -267,12 +294,14 @@ const handleChangeStakeholder = (options:  Option[]) => {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Value Created (Outcome)</Label>
           <div className="flex items-center">
+            {activity.valueCreated?
             <Textarea {...methods.register("valueCreated")} className="mr-4"
-            defaultValue={activity?.valueCreated!}/>
+            defaultValue={activity.valueCreated}/>
+            :
+            <Textarea {...methods.register("valueCreated")} className="mr-4"/>
+            }
             <InfoIcon content="Brief summary on the consequence/outcome that was achieved by carrying out this initiaitve."/>
           </div>
-          
-
           {methods.formState.errors.valueCreated?.message && (
             <p className="text-red-700">
               {methods.formState.errors.valueCreated?.message}
@@ -280,15 +309,17 @@ const handleChangeStakeholder = (options:  Option[]) => {
           )}
         </div>
 
-        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
+        <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Start Date</Label>
-          {/* default to todays date if nothing selected */}
-          <Input {...methods.register("startDate")} type="date" 
-          defaultValue={
-            activity?.startDate! &&
-            activity.startDate.toISOString().slice(0, 10)
-          }/>
-
+          <div className="flex items-center">
+            {activity.startDate? 
+              <Input {...methods.register("startDate")} type="date" className="mr-4"
+              defaultValue={activity.startDate.toISOString().slice(0, 10)}/>
+              :
+              <Input {...methods.register("startDate")} type="date" className="mr-4"/>
+            }
+            <InfoIcon content="Date that the activity was started."/>
+          </div>
           {methods.formState.errors.startDate?.message && (
             <p className="text-red-700">
               {methods.formState.errors.startDate?.message}
@@ -298,12 +329,15 @@ const handleChangeStakeholder = (options:  Option[]) => {
 
         <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
           <Label htmlFor="name">End Date</Label>
-          <Input {...methods.register("endDate")} type="date" 
-          defaultValue={
-            activity?.endDate! &&
-            activity.endDate.toISOString().slice(0, 10)
-          }/>
-
+          <div className="flex items-center">
+            {activity.endDate? 
+            <Input {...methods.register("endDate")} type="date"
+            defaultValue={activity.endDate.toISOString().slice(0, 10)}/>
+            :
+            <Input {...methods.register("endDate")} type="date"/>
+            } 
+            <InfoIcon content="Date that the activity ended."/>
+          </div>
           {methods.formState.errors.endDate?.message && (
             <p className="text-red-700">
               {methods.formState.errors.endDate?.message}
@@ -314,11 +348,13 @@ const handleChangeStakeholder = (options:  Option[]) => {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Outcome Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("outcomeScore")} className="mr-4"  defaultValue={activity?.outcomeScore!}/>
+            {activity.outcomeScore? 
+              <Input {...methods.register("outcomeScore")} className="mr-4"  defaultValue={activity.outcomeScore}/>
+              :
+              <Input {...methods.register("outcomeScore")} className="mr-4"/>
+            }
             <InfoIcon content="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"/>
           </div>
-          
-
             {methods.formState.errors.outcomeScore?.message && (
             <p className="text-red-700">
               {methods.formState.errors.outcomeScore?.message}
@@ -329,11 +365,13 @@ const handleChangeStakeholder = (options:  Option[]) => {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Effort Score (1-10) </Label>
           <div className="flex items-center">
-            <Input {...methods.register("effortScore")} className="mr-4" defaultValue={activity?.effortScore!}/>
+            {activity.effortScore? 
+            <Input {...methods.register("effortScore")} className="mr-4" defaultValue={activity.effortScore}/>
+            :
+            <Input {...methods.register("effortScore")} className="mr-4"/>
+            }
             <InfoIcon content="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"/>
           </div>
-          
-
             {methods.formState.errors.effortScore?.message && (
             <p className="text-red-700">
               {methods.formState.errors.effortScore?.message}
@@ -354,21 +392,18 @@ const handleChangeStakeholder = (options:  Option[]) => {
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
-            {methods.formState.errors.members?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.members?.message}
-              </p>
-            )}
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Hours taken to complete  </Label>
           <div className="flex items-center">
-            <Input {...methods.register("hours")} className="mr-4" defaultValue={activity?.hours!}/>
+            {activity.hours?
+              <Input {...methods.register("hours")} className="mr-4" defaultValue={activity.hours}/>
+              :
+              <Input {...methods.register("hours")} className="mr-4" />
+            }
             <InfoIcon content="How many hours has it taken to complete this activity?"/>
           </div>
-          
-
             {methods.formState.errors.effortScore?.message && (
             <p className="text-red-700">
               {methods.formState.errors.effortScore?.message}
@@ -389,14 +424,7 @@ const handleChangeStakeholder = (options:  Option[]) => {
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
-            {/* {methods.formState.errors.icon?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.icon?.message}
-              </p>
-            )} */}
           </div>
-
-
 
         <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
           {mutation.isLoading ? "Loading" : "Save Changes"}
