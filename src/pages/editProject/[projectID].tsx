@@ -409,7 +409,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">External Stakeholders</Label>
             <div className="flex items-center">
               {project.stakeholders? 
-                <Input {...methods.register("stakeholders")} className="mr-4" defaultValue={project?.stakeholders!}/> 
+                <Input {...methods.register("stakeholders")} className="mr-4" defaultValue={project.stakeholders!}/> 
                   :
                 <Input {...methods.register("stakeholders")}className="mr-4"/>
               }
@@ -418,6 +418,23 @@ export default function ProjectForm() {
             {methods.formState.errors.stakeholders?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Link to Project Initiation Document</Label>
+            <div className="flex items-center">
+              {project.pid? 
+                <Input {...methods.register("pid")} className="mr-4" placeholder="Optional" defaultValue={project.pid}/> 
+                  :
+                <Input {...methods.register("pid")}className="mr-4" placeholder="Optional"/>
+              }
+              <InfoIcon content="Link to the Project Inititiation Document for this project" />
+            </div>
+            {methods.formState.errors.pid?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.pid?.message}
               </p>
             )}
           </div>

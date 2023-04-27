@@ -139,9 +139,13 @@ const methodProjectTracker= useZodForm({
         <Label className="font-medium">Stakeholders:</Label>
         <p className="ml-1">{project.stakeholders}</p>
       </div>
-      <div className="mt-5 flex gap-7">
+      <div className="flex flex-row">
+        <Label className="font-medium">Link to Project Initiation Document:</Label>
+        <a className="ml-1 text-blue-600 hover:underline" href={project.pid?? ""} rel="noopener noreferrer" 
+            target="_blank">Click Here</a>
+      </div>
 
-        
+      <div className="mt-5 flex gap-7">
       <Link href={"/projectCompletion/" + project.id}>
         <Button variant={"default"}>
             {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
