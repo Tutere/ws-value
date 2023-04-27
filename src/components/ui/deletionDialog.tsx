@@ -16,6 +16,7 @@ import { Button } from "./Button";
 import { useState } from "react";
 import { ProjectChangeSchema } from "~/schemas/projectTracker";
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
+import { ReadStakeholderResponseSchema } from "~/schemas/stakeholderResponse";
 
 
 
@@ -42,7 +43,23 @@ export function DeletionDialog(props: { object: string, id:string }) {
           id: props.id,
         },
       });
-    
+
+      //stakeholderResponse handling
+      const mutationStakeholderResponse = api.stakeholderResponse.delete.useMutation();
+      const methodsStakeholderResponse = useZodForm({
+        schema: ReadStakeholderResponseSchema,
+        defaultValues: {
+          id: props.id,
+        },
+      });
+
+      const queryProjectByStakeholderRsponse = api.projects.findByStakeholderResponseId.useQuery({id:props.id}, {
+        suspense: true,
+      });
+     
+      const projectByStakeholderResponse = queryProjectByStakeholderRsponse.data;
+      console.log(projectByStakeholderResponse);
+      
       //activity handling
     const utilsActivities = api.useContext().activities;
     const mutationActivities = api.activities.delete.useMutation({
@@ -174,7 +191,13 @@ export function DeletionDialog(props: { object: string, id:string }) {
 
 
       const handleDelete = async () => {
-        if (props.object === "Activity") {
+        if (props.object === "Stakeholder Response") {
+          await Promise.all ([
+            await mutationStakeholderResponse.mutateAsync(methodsStakeholderResponse.getValues()),
+          ]);
+          router.push('/projectCompletion/' + projectByStakeholderResponse?.id); 
+        } 
+        else if (props.object === "Activity") {
           await Promise.all ([
             await mutationActivityracker.mutateAsync(methodActivityTracker.getValues()),
             await mutationSpecificActivy.mutateAsync(methodSpecificActivity.getValues()),
