@@ -256,16 +256,21 @@ export default function ProjectCompletion() {
       <div className="flex flex-row flex-wrap gap-5 py-2">
         {stakeholderResponses?.length! > 0 ? (
           stakeholderResponses?.map((stakeholderResponse) => (
-            <Link
-              href={"/stakeholderResponse/" + stakeholderResponse.id}
-              key={stakeholderResponse.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
-              style={{ backgroundColor: `#${project.colour}` }}
-            >
-              <h3 className="text-xl font-bold">{stakeholderResponse.organisation}</h3>
-              <p>{"Benefits rating: " + stakeholderResponse.benefitsRating}</p>
-              <p>{"Experience rating: " + stakeholderResponse.experienceRating}</p>
-            </Link>
+            <a 
+            className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+            style={{ backgroundColor: `${project.colour}` }}
+            onClick={() => setFormSubmitted(true)}> {/* wrapper to get around pop up */}
+              <Link
+                href={"/stakeholderResponse/" + stakeholderResponse.id}
+                key={stakeholderResponse.id}
+                // className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+                // style={{ backgroundColor: `${project.colour}` }}
+              >
+                <h3 className="text-xl font-bold">{stakeholderResponse.organisation}</h3>
+                <p>{"Benefits rating: " + stakeholderResponse.benefitsRating}</p>
+                <p>{"Experience rating: " + stakeholderResponse.experienceRating}</p>
+              </Link>
+            </a> 
           ))): (
             <div> No survey responses yet </div> 
           )}
