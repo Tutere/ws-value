@@ -124,19 +124,32 @@ export default function Project() {
   };
 
    //handling the exiting of a page (pop up confirmation)
-   useEffect(() => {
-    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  useEffect(() => {
+    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (formSubmitted) return;
       e.preventDefault();
-      e.returnValue = '';
+      return (e.returnValue = warningText);
     };
-  
-    window.addEventListener('beforeunload', beforeUnloadHandler);
-  
-    // Clean up the event listener when the component unmounts
+
+    const handleBrowseAway = () => {
+      if (formSubmitted) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
     };
-  }, []);
+
+  }, [formSubmitted]);
 
   return (
     <>
@@ -147,6 +160,7 @@ export default function Project() {
       <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
+          setFormSubmitted(true);
           await Promise.all ([
             await mutation.mutateAsync({
               ...values,

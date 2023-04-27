@@ -9,7 +9,7 @@ import { CreateActivitySchema } from "~/schemas/activities";
 import { CreateProjectSchema } from "~/schemas/projects";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {CompleteProjectSchema, EditProjectSchema} from "~/schemas/projects";
 import { InfoIcon } from "~/components/ui/infoIcon";
 
@@ -84,19 +84,32 @@ export default function ProjectCompletion() {
   /****   *******/
 
    //handling the exiting of a page (pop up confirmation)
-   useEffect(() => {
-    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  useEffect(() => {
+    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (formSubmitted) return;
       e.preventDefault();
-      e.returnValue = '';
+      return (e.returnValue = warningText);
     };
-  
-    window.addEventListener('beforeunload', beforeUnloadHandler);
-  
-    // Clean up the event listener when the component unmounts
+
+    const handleBrowseAway = () => {
+      if (formSubmitted) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
     };
-  }, []);
+
+  }, [formSubmitted]);
 
   if (project === null || project === undefined ) {
     return <p>Error finding project</p>
@@ -112,6 +125,7 @@ export default function ProjectCompletion() {
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
+          setFormSubmitted(true);
           await Promise.all ([
             mutation.mutateAsync(values),
             mutationProjecTracker.mutateAsync(values)
@@ -242,16 +256,21 @@ export default function ProjectCompletion() {
       <div className="flex flex-row flex-wrap gap-5 py-2">
         {stakeholderResponses?.length! > 0 ? (
           stakeholderResponses?.map((stakeholderResponse) => (
-            <Link
-              href={"/stakeholderResponse/" + stakeholderResponse.id}
-              key={stakeholderResponse.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
-              style={{ backgroundColor: `#${project.colour}` }}
-            >
-              <h3 className="text-xl font-bold">{stakeholderResponse.organisation}</h3>
-              <p>{"Benefits rating: " + stakeholderResponse.benefitsRating}</p>
-              <p>{"Experience rating: " + stakeholderResponse.experienceRating}</p>
-            </Link>
+            <a 
+            className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+            style={{ backgroundColor: `${project.colour}` }}
+            onClick={() => setFormSubmitted(true)}> {/* wrapper to get around pop up */}
+              <Link
+                href={"/stakeholderResponse/" + stakeholderResponse.id}
+                key={stakeholderResponse.id}
+                // className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+                // style={{ backgroundColor: `${project.colour}` }}
+              >
+                <h3 className="text-xl font-bold">{stakeholderResponse.organisation}</h3>
+                <p>{"Benefits rating: " + stakeholderResponse.benefitsRating}</p>
+                <p>{"Experience rating: " + stakeholderResponse.experienceRating}</p>
+              </Link>
+            </a> 
           ))): (
             <div> No survey responses yet </div> 
           )}
