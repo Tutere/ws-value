@@ -24,6 +24,8 @@ export default function MonthlyReport({
 
   return (
   <div>
+    {/* --------------------------------CALENDAR-------------------------------- */}
+
     <div className={cn("grid gap-2", className)}>
       <Popover>
         <PopoverTrigger asChild>
@@ -62,6 +64,7 @@ export default function MonthlyReport({
         </PopoverContent>
       </Popover>
     </div >
+    {/* --------------------------------PROJECTS + ACTIVITIES COMPLETED-------------------------------- */}
       <div className="m-8">
         <h1 className="text-3xl font-bold mb-12" >Completed Activities</h1>
         {/* this is where we map all the projects with activities within the time period selected */}
