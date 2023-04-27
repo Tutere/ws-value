@@ -88,20 +88,6 @@ export default function ProjectForm() {
   // ****************
 
   //handling the exiting of a page (pop up confirmation)
-  // useEffect(() => {
-  //   const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
-  //     e.preventDefault();
-  //     e.returnValue = '';
-  //   };
-  
-  //   window.addEventListener('beforeunload', beforeUnloadHandler);
-  
-  //   // Clean up the event listener when the component unmounts
-  //   return () => {
-  //     window.removeEventListener('beforeunload', beforeUnloadHandler);
-  //   };
-  // }, []);
-  
   const [formSubmitted, setFormSubmitted] = useState(false);
   useEffect(() => {
     const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
