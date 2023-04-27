@@ -140,9 +140,13 @@ const methodProjectTracker= useZodForm({
         <p className="ml-1">{project.stakeholders}</p>
       </div>
       <div className="flex flex-row">
-        <Label className="font-medium">Link to Project Initiation Document:</Label>
+        <Label className="font-medium">Link to Project Initiation Document: </Label>
+        {project.pid? 
         <a className="ml-1 text-blue-600 hover:underline" href={project.pid?? ""} rel="noopener noreferrer" 
             target="_blank">Click Here</a>
+        :
+        <p className="ml-1"> N/A</p>
+      }
       </div>
 
       <div className="mt-5 flex gap-7">
