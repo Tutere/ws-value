@@ -1,10 +1,9 @@
 "use client"
-
 import * as React from "react"
+import { api } from "~/utils/api";
 import { addDays, format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
-
 import { cn } from "~/utils/cn"
 import { Button } from  "~/components/ui/Button"
 import { Calendar } from "src/components/ui/calendar"
@@ -13,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "src/components/ui/popover"
+import { useRouter } from "next/router";
 
 export default function MonthlyReport({
   className,
@@ -20,10 +20,30 @@ export default function MonthlyReport({
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 30),
+    
   })
 
+  const ActivitySummary = () => {
+
+    // const query = api.activities.read.useQuery(undefined, {
+    //   suspense: true,
+    //   onError: (error) => {
+    //     console.error(error);
+    //   },
+    // })
+
+
+  }
+  
+
+  
+
   return (
+
   <div>
+
+
+    
     {/* --------------------------------CALENDAR-------------------------------- */}
 
     <div className={cn("grid gap-2", className)}>
@@ -52,7 +72,7 @@ export default function MonthlyReport({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-0" >
           <Calendar
             initialFocus
             mode="range"
@@ -64,6 +84,7 @@ export default function MonthlyReport({
         </PopoverContent>
       </Popover>
     </div >
+
     {/* --------------------------------PROJECTS + ACTIVITIES COMPLETED-------------------------------- */}
       <div className="m-8">
         <h1 className="text-3xl font-bold mb-12" >Completed Activities</h1>
