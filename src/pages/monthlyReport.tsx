@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "src/components/ui/popover"
 
-export default function CalendarDateRangePicker({
+export default function MonthlyReport({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -23,6 +23,7 @@ export default function CalendarDateRangePicker({
   })
 
   return (
+  <div>
     <div className={cn("grid gap-2", className)}>
       <Popover>
         <PopoverTrigger asChild>
@@ -60,6 +61,17 @@ export default function CalendarDateRangePicker({
           />
         </PopoverContent>
       </Popover>
-    </div>
+    </div >
+      <div className="m-8">
+        <h1 className="text-3xl font-bold mb-12" >Completed Activities</h1>
+        {/* this is where we map all the projects with activities within the time period selected */}
+        <p className="text-xl mb-5"><b>Project Title</b> with <b>Stakeholder Name</b></p>
+        {/* this is where we map all the activities for the project within the time period selected */}
+        <p><b>Activity Title</b></p>
+        <p><b>Completed On: </b> Date Completed </p>
+        <p className="my-5">Engagement + Outcome </p>
+      </div>
+
+  </div>
   )
 }
