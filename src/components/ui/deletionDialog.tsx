@@ -124,6 +124,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
           colour: project2?.colour!,
           members: project2?.members?.map(member => member.userId),
           stakeholders:project2?.stakeholders!,
+          pid:project2?.pid?? "",
         },
       });
 

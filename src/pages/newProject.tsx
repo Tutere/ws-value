@@ -143,7 +143,7 @@ export default function ProjectForm() {
             <div className="ml-5">
               <Label htmlFor="name">Colour</Label>
               <div className="flex items-center">
-                <Input type = "color" {...methods.register("colour")} className="mr-4 w-20" value="#FFFFFF" />
+                <Input type = "color" {...methods.register("colour")} className="mr-4 w-20" defaultValue="#FFFFFF" />
                 <InfoIcon content="This colour is shown from the homepage." />
               </div>
               {methods.formState.errors.colour?.message && (
@@ -330,14 +330,31 @@ export default function ProjectForm() {
                 {...methods.register("stakeholders")}
                 className="mr-4"
                 placeholder="Optional"
-              />
-              
+              />   
               <InfoIcon content="Who did you work with that is not a part of our team?" />
             </div>
 
             {methods.formState.errors.stakeholders?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Link to Project Initiation Document</Label>
+            <div className="flex items-center">
+              <Input
+                {...methods.register("pid")}
+                className="mr-4"
+                placeholder="Optional"
+              />
+              <InfoIcon content="Link to the Project Inititiation Document for this project" />
+            </div>
+
+            {methods.formState.errors.pid?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.pid?.message}
               </p>
             )}
           </div>

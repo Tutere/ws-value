@@ -131,6 +131,7 @@ model Project {
     members            ProjectMember[]
     Activity           Activity[]
     stakeholders       String?
+    pid                String?
 
     // ProjectTracker     ProjectTracker[]
     // ActivityTracker    ActivityTracker[]
@@ -187,6 +188,7 @@ model ProjectTracker {
     members            String?   @db.Text
     // Activity           Activity[]     *** Need to organise how these will be stored in projectTracker
     stakeholders       String?
+    pid                String?
 
     // @@index([projectId])
 }

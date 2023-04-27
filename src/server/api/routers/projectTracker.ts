@@ -34,6 +34,7 @@ import { ProjectChangeSchema, ProjectCreateSchema} from "~/schemas/projectTracke
             colour: input.colour,
             stakeholders: input.stakeholders,
             members: input.members.join(','),
+            pid: input.pid,
          },
        });
      }),
@@ -59,6 +60,7 @@ import { ProjectChangeSchema, ProjectCreateSchema} from "~/schemas/projectTracke
             colour: input.colour,
             stakeholders: input.stakeholders,
             members: input.members.join(','),
+            pid: input.pid,
          },
        });
      }),
