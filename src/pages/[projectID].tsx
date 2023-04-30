@@ -186,13 +186,20 @@ const methodProjectTracker= useZodForm({
       <h2 className="mt-10 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-row flex-wrap gap-5 py-2">
         {activities &&
-          activities.map((activity) => (
+          activities
+          .sort((a, b) => {
+            const aStartDate = a.startDate ? a.startDate.getTime() : new Date(0).getTime();
+            const bStartDate = b.startDate ? b.startDate.getTime() : new Date(0).getTime(); 
+            return bStartDate - aStartDate; // sort the activities array by startDate in descending order
+          })
+          .map((activity) => (
             <Link
               style={{ backgroundColor: `${project.colour}` }}
               href={"/activity/" + activity.id}
               key={activity.id}
               className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
             >
+              <p>{activity.startDate?.toISOString().slice(0, 10)}</p>
               <h3 className="text-xl font-bold">{activity.name}</h3>
               <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
             </Link>
