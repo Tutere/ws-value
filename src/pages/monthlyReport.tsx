@@ -26,11 +26,22 @@ export default function MonthlyReport({
     to: addDays(new Date(), 30),
     
   })
+
+  console.log(date?.from+""+ " TO "+ "" +date?.to)
+
   const { data: sessionData } = useSession();
 
   const { data: projectMembers } = api.projectmember.readByUserId.useQuery({id: sessionData?.user.id?? ""}, {
     suspense: true,
   });
+
+  const query = api.projects.read.useQuery(undefined, {
+    suspense: true,
+  });
+
+  const projects = query.data;
+
+  console.log(projects)
 
   const activityMembersList: ActivityMember[] = [];
   const activities: ((Activity & { members: ActivityMember[]; }) | null | undefined)[] = [];
@@ -55,15 +66,12 @@ export default function MonthlyReport({
     activities.push(activity);
   })
 
-  console.log(activities);
+  // console.log(activities);
 
 
   return (
 
-  <div>
-
-
-    
+  <div> 
     {/* --------------------------------CALENDAR-------------------------------- */}
 
     <div className={cn("grid gap-2", className)}>
@@ -81,11 +89,11 @@ export default function MonthlyReport({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(date.from, "dd LLL, y")} -{" "}
+                  {format(date.to, "dd LLL, y")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(date.from, "dd LLL, y")
               )
             ) : (
               <span>Pick a date</span>
@@ -105,15 +113,47 @@ export default function MonthlyReport({
       </Popover>
     </div >
 
-    {/* --------------------------------PROJECTS + ACTIVITIES COMPLETED-------------------------------- */}
+
+
+    {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
       <div className="m-8">
+        <>
         <h1 className="text-3xl font-bold mb-12" >Completed Activities</h1>
-        {/* this is where we map all the projects with activities within the time period selected */}
-        <p className="text-xl mb-5"><b>Project Title</b> with <b>Stakeholder Name</b></p>
-        {/* this is where we map all the activities for the project within the time period selected */}
-        <p><b>Activity Title</b></p>
-        <p><b>Completed On: </b> Date Completed </p>
-        <p className="my-5">Engagement + Outcome </p>
+
+      {projects && projects.map((project)=>{
+
+
+
+
+      return(
+        <>
+        <p className="text-xl mb-5"><b>{project.name}</b>
+        {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
+
+        {project.Activity.map((activity)=>{
+
+          return(
+            <div className="mb-5">
+            <p><b>{activity.name}</b></p>
+            <p><b>Completed On: </b> {activity.endDate?.toDateString()} </p>
+            <p className="my-5">{activity.engagementPattern} </p>
+            <p className="my-5">{activity.valueCreated} </p>
+
+            </div>
+          
+          )
+
+
+        })}
+
+        </>
+      )
+
+
+      })}
+
+
+        </>
       </div>
 
   </div>
