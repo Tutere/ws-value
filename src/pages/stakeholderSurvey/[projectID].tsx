@@ -83,9 +83,9 @@ export default function stakeholderSurveyForm() {
       >
 
         <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Stakeholder Name</Label>
+          <Label htmlFor="name">Name </Label>
           <div className="flex items-center">
-            <Input {...methods.register("organisation")} className="mr-4" />
+            <Input {...methods.register("organisation")} className="mr-4" placeholder="Optional" />
             <InfoIcon content="Name of the organisation, group or individual that this survey repsonse is on behalf of."/>
           </div>
           
