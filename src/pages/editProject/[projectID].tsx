@@ -420,7 +420,7 @@ export default function ProjectForm() {
           </div>
 
             <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">External Stakeholders</Label>
+            <Label htmlFor="name">Stakeholders</Label>
             <div className="flex items-center">
               {project.stakeholders? 
                 <Input {...methods.register("stakeholders")} className="mr-4" defaultValue={project.stakeholders!}/> 

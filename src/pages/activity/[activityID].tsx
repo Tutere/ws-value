@@ -93,7 +93,7 @@ export default function Project() {
         <Label className="font-medium">Outcome:</Label>
         <p className="ml-1">{activity.valueCreated}</p>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4">
         <Label className="font-medium">Activity Members:</Label>
         <p className="ml-1">
           {activityMembers?.map((member) => member?.name).join(", ")}   
