@@ -199,7 +199,6 @@ const methodProjectTracker= useZodForm({
               key={activity.id}
               className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
             >
-              <p>{activity.startDate?.toISOString().slice(0, 10)}</p>
               <h3 className="text-xl font-bold">{activity.name}</h3>
               <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
             </Link>

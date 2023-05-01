@@ -210,7 +210,7 @@ export default function Project() {
         </div>
 
         <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">External Stakeholders Involved</Label>
+            <Label htmlFor="name">Stakeholders Involved</Label>
             <div className="flex items-center">
               <Select options={stakeholderOptions}
                 className="mr-4 w-full"
