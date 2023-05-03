@@ -113,12 +113,11 @@ export default function MonthlyReport({
 
 
       <div className="m-8">
-        <>
           <h1 className="text-3xl font-bold mb-12" >Completed Activities</h1>
 
           {projects && projects.map((project) => {
             // if (project.Activity.length > 0) {
-              let showname = false;
+              let showName = false;
               
               project.Activity.forEach(activity => {
                 const activityEnd = activity.endDate?.getTime()
@@ -129,17 +128,15 @@ export default function MonthlyReport({
                 if (activityEnd && selectedEnd && selectedStart
                   && activityEnd <= selectedEnd
                   && activityEnd >= selectedStart) {
-                        showname = true;
+                    showName = true;
                       }
 
               });
 
-              if (showname) { //dont need to check if project.Activity lenght > 0 as already know by this stage
-
-              
+              if (showName) { //dont need to check if project.Activity lenght > 0 as already know by this stage
 
               return (
-                <>
+                <div>
                   <p className="text-xl mb-5"><b>{project.name}</b>
                     {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
 
@@ -179,12 +176,11 @@ export default function MonthlyReport({
 
 
                   })}
-                </>
+                </div>
               )
             }
 
           })}
-        </>
       </div>
     </div>
   )
