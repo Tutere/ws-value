@@ -3,7 +3,7 @@ import * as React from "react"
 import { useState } from 'react';
 import { api } from "~/utils/api";
 import { addDays, format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { Activity, Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 import { cn } from "~/utils/cn"
 import { Button } from "~/components/ui/Button"
@@ -117,12 +117,31 @@ export default function MonthlyReport({
           <h1 className="text-3xl font-bold mb-12" >Completed Activities</h1>
 
           {projects && projects.map((project) => {
-            if (project.Activity.length > 0) { 
+            // if (project.Activity.length > 0) {
+              let showname = false;
+              
+              project.Activity.forEach(activity => {
+                const activityEnd = activity.endDate?.getTime()
+                const selectedEnd = date?.to?.getTime()
+                const selectedStart = date?.from?.getTime()
+
+
+                if (activityEnd && selectedEnd && selectedStart
+                  && activityEnd <= selectedEnd
+                  && activityEnd >= selectedStart) {
+                        showname = true;
+                      }
+
+              });
+
+              if (showname) { //dont need to check if project.Activity lenght > 0 as already know by this stage
+
+              
 
               return (
                 <>
-                  {/* <p className="text-xl mb-5"><b>{project.name}</b>
-                    {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p> */}
+                  <p className="text-xl mb-5"><b>{project.name}</b>
+                    {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
 
                   {project.Activity.map((activity) => {
        
@@ -140,8 +159,8 @@ export default function MonthlyReport({
                       return (
                           <div className="mb-5 ml-5 w-1/2">
 
-                          <p className="text-xl mb-5"><b>{project.name}</b>
-                            {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
+                          {/* <p className="text-xl mb-5"><b>{project.name}</b>
+                            {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p> */}
 
                           <div >
                             <div className="flex">
@@ -155,9 +174,6 @@ export default function MonthlyReport({
                           </div>
                         </div>
                       )
-
-
-
 
                     }
 
