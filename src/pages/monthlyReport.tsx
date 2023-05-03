@@ -140,26 +140,18 @@ export default function MonthlyReport({
                   <p className="text-xl mb-5"><b>{project.name}</b>
                     {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
 
-                  {project.Activity.map((activity) => {
-       
-                    const activityEnd = activity.endDate?.getTime()
-                    const selectedEnd = date?.to?.getTime()
-                    const selectedStart = date?.from?.getTime()
+                    {project.Activity.map((activity) => {
+                      const activityEnd = activity.endDate?.getTime()
+                      const selectedEnd = date?.to?.getTime()
+                      const selectedStart = date?.from?.getTime()
 
 
-                    if (activityEnd && selectedEnd && selectedStart
-                      && activityEnd <= selectedEnd
-                      && activityEnd >= selectedStart) {
-
-             
+                      if (activityEnd && selectedEnd && selectedStart
+                        && activityEnd <= selectedEnd
+                        && activityEnd >= selectedStart) {
 
                       return (
                           <div className="mb-5 ml-5 w-1/2">
-
-                          {/* <p className="text-xl mb-5"><b>{project.name}</b>
-                            {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p> */}
-
-                          <div >
                             <div className="flex">
                               <div>{project.icon}</div>
                               <p className="ml-2"><b>{activity.name}</b></p>
@@ -168,13 +160,9 @@ export default function MonthlyReport({
                             <p className="">Completed: {activity.endDate?.toDateString()} </p>
                             <p className="mt-5">{activity.engagementPattern} </p>
                             <p className="mb-10">{activity.valueCreated} </p>
-                          </div>
                         </div>
                       )
-
                     }
-
-
                   })}
                 </div>
               )
