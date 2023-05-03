@@ -3,7 +3,7 @@ import * as React from "react"
 import { useState } from 'react';
 import { api } from "~/utils/api";
 import { addDays, format } from "date-fns"
-import { Activity, Calendar as CalendarIcon } from "lucide-react"
+import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 import { cn } from "~/utils/cn"
 import { Button } from "~/components/ui/Button"
@@ -64,10 +64,6 @@ export default function MonthlyReport({
     activities.push(activity);
   })
 
-
-
-  const [visible, setVisible] = useState(true);
-
   return (
 
     <div>
@@ -79,6 +75,7 @@ export default function MonthlyReport({
             <Button
               id="date"
               variant={"outline"}
+              
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {date?.from ? (
