@@ -8,7 +8,7 @@ import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
 
@@ -59,7 +59,12 @@ export default function Project() {
       user.projects?.some((projectMember) => projectMember.id === member.projectMemberId)
     )
   );
-  console.log(activityMembers); 
+  
+  //used for read more button
+const [isReadMoreShown, setIsReadMoreShown] = useState(false);
+const toggleReadMore = () => {
+  setIsReadMoreShown(prevState => !prevState)
+}
   
   if (activity === null || activity === undefined ) {
     return <p>Error finding activity</p>
@@ -69,43 +74,91 @@ export default function Project() {
     {isMemberFound ? (
     <div className="p-8 bg-white rounded-lg shadow-md">
       <h2 className="mb-5 text-3xl font-bold">Activity Details</h2>
-      <div className="flex flex-row mb-4">
+      {!isReadMoreShown ? (
+        <>
+        <div className="flex flex-row mb-4">
         <Label className="font-medium">Activity Name:</Label>
         <p className="ml-1">{activity.name}</p>
-      </div>
-      <div className="flex flex-row mb-4">
-        <Label className="font-medium">Desription:</Label>
-        <p className="ml-1">{activity.description}</p>
-      </div>
-      <div className="flex flex-row mb-4">
-        <Label className="font-medium">Start Date:</Label>
-        <p className="ml-1">{activity.startDate?.toLocaleDateString()}</p>
-      </div>
-      <div className="flex flex-row mb-4">
-        <Label className="font-medium">End Date:</Label>
-        <p className="ml-1">{activity.endDate?.toLocaleDateString()}</p>
-      </div>
-      <div className="flex flex-row mb-4 ">
-        <Label className="font-medium">Engagement Pattern:</Label>
-        <p className="ml-1">{activity.engagementPattern}</p>
-      </div>
-      <div className="flex flex-row mb-4">
-        <Label className="font-medium">Outcome:</Label>
-        <p className="ml-1">{activity.valueCreated}</p>
-      </div>
-      <div className="flex flex-row mb-4">
-        <Label className="font-medium">Activity Members:</Label>
-        <p className="ml-1">
-          {activityMembers?.map((member) => member?.name).join(", ")}   
-        </p>
-      </div>
-      <div className="flex flex-row">
-        <Label className="font-medium">Stakeholders Involved:</Label>
-        <p className="ml-1">
-          {activity?.stakeholders}   
-        </p>
-      </div>
-      <div className="mt-5 flex gap-7"> 
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Desription:</Label>
+          <p className="ml-1">{activity.description}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Value Created:</Label>
+          <p className="ml-1">{activity.valueCreated}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Outcome Score:</Label>
+          <p className="ml-1">{activity.outcomeScore}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Effort Score:</Label>
+          <p className="ml-1">{activity.effortScore}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Hours Spent on Activity:</Label>
+          <p className="ml-1">{activity.hours + " hours"}</p>
+        </div>
+        </>
+      ) : (
+        <>
+        <div className="flex flex-row mb-4">
+        <Label className="font-medium">Activity Name:</Label>
+        <p className="ml-1">{activity.name}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Desription:</Label>
+          <p className="ml-1">{activity.description}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Value Created:</Label>
+          <p className="ml-1">{activity.valueCreated}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Outcome Score:</Label>
+          <p className="ml-1">{activity.outcomeScore}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Effort Score:</Label>
+          <p className="ml-1">{activity.effortScore}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Hours Spent on Activity:</Label>
+          <p className="ml-1">{activity.hours + " hours"}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Start Date:</Label>
+          <p className="ml-1">{activity.startDate?.toLocaleDateString()}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">End Date:</Label>
+          <p className="ml-1">{activity.endDate?.toLocaleDateString()}</p>
+        </div>
+        <div className="flex flex-row mb-4 ">
+          <Label className="font-medium">Engagement Pattern:</Label>
+          <p className="ml-1">{activity.engagementPattern}</p>
+        </div>
+        <div className="flex flex-row mb-4">
+          <Label className="font-medium">Activity Members:</Label>
+          <p className="ml-1">
+            {activityMembers?.map((member) => member?.name).join(", ")}   
+          </p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Stakeholders Involved:</Label>
+          <p className="ml-1">
+            {activity?.stakeholders}   
+          </p>
+        </div>
+      </>
+      )
+    }
+      <Button variant={"subtle"} className="mt-2" onClick={toggleReadMore}> {!isReadMoreShown ? "See More.."
+        : "See Less..."}
+      </Button>
+      
+      <div className="mt-10 flex gap-7"> 
       <Link href={"/editActivity/" + id}>
         <Button variant={"default"}>
             Edit Activity
@@ -113,7 +166,6 @@ export default function Project() {
       </Link>
       <DeletionDialog object="Activity" id={id}></DeletionDialog>
       </div>
-
     </div>
     
     ): (
