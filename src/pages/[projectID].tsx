@@ -8,7 +8,7 @@ import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
 import { ActivateProjectSchema } from "~/schemas/projects";
@@ -105,6 +105,11 @@ const methodProjectTracker= useZodForm({
   },
 });
 
+const [isReadMoreShown, setIsReadMoreShown] = useState(false);
+const toggleReadMore = () => {
+  setIsReadMoreShown(prevState => !prevState)
+}
+  
   if (project === null || project === undefined ) {
     return <p>Error finding project</p>
   }
@@ -113,6 +118,46 @@ const methodProjectTracker= useZodForm({
     {isMemberFound ? (
     <div className="p-8">
       <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
+      {!isReadMoreShown ? (
+        <>
+        <div className="flex flex-row">
+          <Label className="font-medium">Project Name:</Label>
+          <p className="ml-1">{project.name}</p>
+        </div>
+        <div className="flex flex-row">
+        <Label className="font-medium">Goal:</Label>
+        <p className="ml-1">{project.goal}</p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Estimated Start Date:</Label>
+          <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Description:</Label>
+          <p className="ml-1">{project.description}</p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Project Members:</Label>
+          <p className="ml-1">
+            {projectMembers?.map((member) => member?.name).join(", ")}   
+          </p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Stakeholders:</Label>
+          <p className="ml-1">{project.stakeholders}</p>
+        </div>
+        <div className="flex flex-row">
+        <Label className="font-medium">Link to Project Initiation Document: </Label>
+        {project.pid? 
+        <a className="ml-1 text-blue-600 hover:underline" href={project.pid?? ""} rel="noopener noreferrer" 
+            target="_blank">Click Here</a>
+        :
+        <p className="ml-1"> N/A</p>
+      }
+      </div>
+        </>
+      ): (
+        <>
       <div className="flex flex-row">
         <Label className="font-medium">Project Name:</Label>
         <p className="ml-1">{project.name}</p>
@@ -122,7 +167,7 @@ const methodProjectTracker= useZodForm({
         <p className="ml-1">{project.goal}</p>
       </div>
       <div className="flex flex-row">
-        <Label className="font-medium">Start Date:</Label>
+        <Label className="font-medium">Estimated Start Date:</Label>
         <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
       </div>
       <div className="flex flex-row">
@@ -140,6 +185,22 @@ const methodProjectTracker= useZodForm({
         <p className="ml-1">{project.stakeholders}</p>
       </div>
       <div className="flex flex-row">
+        <Label className="font-medium">Trigger:</Label>
+        <p className="ml-1">{project.trigger === "" ? "N/A" : project.trigger}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Expected Outcome:</Label>
+        <p className="ml-1">{project.expectedMovement === "" ? "N/A" : project.expectedMovement}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Alternatives Considered:</Label>
+        <p className="ml-1">{project.alternativeOptions === "" ? "N/A" : project.alternativeOptions}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Estimated Risks:</Label>
+        <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
+      </div>
+      <div className="flex flex-row">
         <Label className="font-medium">Link to Project Initiation Document: </Label>
         {project.pid? 
         <a className="ml-1 text-blue-600 hover:underline" href={project.pid?? ""} rel="noopener noreferrer" 
@@ -148,6 +209,14 @@ const methodProjectTracker= useZodForm({
         <p className="ml-1"> N/A</p>
       }
       </div>
+     
+      </>
+
+      ) 
+      } 
+      <Button variant={"subtle"} className="mt-2" onClick={toggleReadMore}> {!isReadMoreShown ? "See More.."
+        : "See Less..."}
+      </Button>
 
       <div className="mt-5 flex gap-7">
       <Link href={"/projectCompletion/" + project.id}>
