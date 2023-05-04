@@ -8,7 +8,10 @@ export const ActivityChangeSchema = z.object({
     engagementPattern: z.string(),
     valueCreated: z.string().optional(),
     startDate: z.string().transform((val) => new Date(val).toISOString()),
-    endDate: z.string().transform((val) => new Date(val).toISOString()),
+    endDate: z
+    .string()
+    .transform((val) => val? new Date(val).toISOString(): null)
+    .nullable(),
     changeType: z.string(),
     outcomeScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),
     effortScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),

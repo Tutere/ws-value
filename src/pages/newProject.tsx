@@ -173,7 +173,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Name</Label>
             <div className="flex items-center">
               <Input {...methods.register("name")} className="mr-4" />
-              <InfoIcon content="Name of the person filling this information" />
+              <InfoIcon content="Name of this project" />
             </div>
             {methods.formState.errors.name?.message && (
               <p className="text-red-700">
@@ -222,8 +222,9 @@ export default function ProjectForm() {
               <Textarea
                 {...methods.register("expectedMovement")}
                 className="mr-4"
+                placeholder="Optional"
               />
-              <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
+              <InfoIcon content="Which outcomes do you expect from completing this project (if separate to your goal)?" />
             </div>
 
             {methods.formState.errors.expectedMovement?.message && (
@@ -268,7 +269,7 @@ export default function ProjectForm() {
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Trigger</Label>
             <div className="flex items-center">
-              <Textarea {...methods.register("trigger")} className="mr-4" />
+              <Textarea {...methods.register("trigger")} className="mr-4" placeholder="Optional"/>
               <InfoIcon content="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc" />
             </div>
             {methods.formState.errors.trigger?.message && (
@@ -289,6 +290,7 @@ export default function ProjectForm() {
               <Textarea
                 {...methods.register("alternativeOptions")}
                 className="mr-4"
+                placeholder="Optional"
               />
               <InfoIcon content="" />
             </div>
@@ -306,6 +308,7 @@ export default function ProjectForm() {
               <Textarea
                 {...methods.register("estimatedRisk")}
                 className="mr-4"
+                placeholder="Optional"
               />
               <InfoIcon content="" />
             </div>
