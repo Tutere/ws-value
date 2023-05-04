@@ -37,7 +37,16 @@ import {
         }
       });
     }),
+    
 
-
+    readByUserId: protectedProcedure
+    .input(FindProjectmemberSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.projectMember.findMany({
+        where: {
+          userId: input.id
+        }
+      });
+    }),
   
   });
