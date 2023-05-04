@@ -20,12 +20,12 @@ export default function MonthlyReport({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 30),
+    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
 
   })
 
-  // console.log(date?.from + "" + " TO " + "" + date?.to)
+  console.log(date?.from + "" + " TO " + "" + date?.to)
 
   const { data: sessionData } = useSession();
 
@@ -123,7 +123,7 @@ export default function MonthlyReport({
 
 
                 if (activityEnd && selectedEnd && selectedStart
-                  && activityEnd <= selectedEnd
+                  && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
                   && activityEnd >= selectedStart) {
                     showName = true;
                       }
@@ -144,7 +144,7 @@ export default function MonthlyReport({
 
 
                       if (activityEnd && selectedEnd && selectedStart
-                        && activityEnd <= selectedEnd
+                        && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
                         && activityEnd >= selectedStart) {
 
                       return (
