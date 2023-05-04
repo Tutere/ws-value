@@ -338,7 +338,7 @@ export default function ProjectForm() {
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Stakeholders</Label>
+            <Label htmlFor="name">Stakeholders (separate by comma)</Label>
             <div className="flex items-center">
               <Textarea
                 {...methods.register("stakeholders")}
