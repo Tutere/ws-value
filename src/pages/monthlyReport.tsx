@@ -137,7 +137,13 @@ export default function MonthlyReport({
                   <p className="text-xl mb-5"><b>{project.name}</b>
                     {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
 
-                    {project.Activity.map((activity) => {
+                    {project.Activity
+                    .sort((a,b) => {
+                      const aOutcomeScore = a.outcomeScore ? a.outcomeScore : 0;
+                      const bOutcomeScore = b.outcomeScore ? b.outcomeScore : 0;
+                      return bOutcomeScore - aOutcomeScore;
+                    })
+                    .map((activity) => {
                       const activityEnd = activity.endDate?.getTime()
                       const selectedEnd = date?.to?.getTime()
                       const selectedStart = date?.from?.getTime()
