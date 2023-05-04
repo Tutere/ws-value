@@ -7,7 +7,10 @@ export const CreateActivitySchema = z.object({
   engagementPattern: z.string(),
   valueCreated: z.string().optional(),
   startDate: z.string().transform((val) => new Date(val).toISOString()),
-  endDate: z.string().transform((val) => new Date(val).toISOString()),
+  endDate: z
+  .string()
+  .transform((val) => val? new Date(val).toISOString(): null)
+  .nullable(),
   id: z.string(), //for data lineage
   changeType: z.string(), //for data lineage
   status: z.string(),
@@ -36,7 +39,10 @@ export const ReadActivitySchema = z.object({
     engagementPattern: z.string(),
     valueCreated: z.string().optional(),
     startDate: z.string().transform((val) => new Date(val).toISOString()),
-    endDate: z.string().transform((val) => new Date(val).toISOString()),
+    endDate: z
+    .string()
+    .transform((val) => val? new Date(val).toISOString(): null)
+    .nullable(),
     changeType: z.string(),
     status: z.string(),
     outcomeScore: z.preprocess((val) => Number(val), z.number().min(1).max(10)),

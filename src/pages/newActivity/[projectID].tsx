@@ -219,6 +219,7 @@ export default function Project() {
                 value={stakeholderSelectedOptions}
                 closeMenuOnSelect={false}
                 onChange={(newValue) => handleChangeStakeholder(newValue as Option[])}
+                placeholder="Optional"
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
@@ -232,8 +233,8 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Engagement Pattern</Label>
           <div className="flex items-center">
-            <Textarea {...methods.register("engagementPattern")} className="mr-4"/>
-            <InfoIcon content="Brief summary on how engaging were your stakeholders - where they proactive, reactive, passive etc."/>
+            <Textarea {...methods.register("engagementPattern")} className="mr-4" placeholder="Optional"/>
+            <InfoIcon content="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."/>
           </div>
           
           {methods.formState.errors.engagementPattern?.message && (
@@ -247,7 +248,7 @@ export default function Project() {
           <Label htmlFor="name">Value Created (Outcome)</Label>
           <div className="flex items-center">
             <Textarea {...methods.register("valueCreated")} className="mr-4"/>
-            <InfoIcon content="Brief summary on the consequence/outcome that was achieved by carrying out this initiaitve."/>
+            <InfoIcon content="Brief statement on the outcome/value that was achieved by carrying out this activity."/>
           </div>
           
 
@@ -316,7 +317,7 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Hours taken to complete </Label>
           <div className="flex items-center">
-            <Input {...methods.register("hours")} className="mr-4"/>
+            <Input {...methods.register("hours")} className="mr-4" placeholder="Optional"/>
             <InfoIcon content="How many hours has it taken to complete this activity?"/>
           </div>
           
