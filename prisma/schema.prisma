@@ -202,7 +202,7 @@ model ActivityTracker {
     name              String
     description       String    @db.Text
     engagementPattern String    @db.Text
-    valueCreated      String?
+    valueCreated      String?   @db.Text
     startDate         DateTime?
     endDate           DateTime?
     // activity          Activity  @relation(fields: [activityId], references: [id])
