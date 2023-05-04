@@ -151,12 +151,15 @@ export default function MonthlyReport({
                           <div className="mb-5 ml-5 w-1/2">
                             <div className="flex">
                               <div>{project.icon}</div>
-                              <p className="ml-2"><b>{activity.name}</b></p>
+                              <p className="ml-2 font-bold">{activity.name}</p>
+                              <p className="ml-1"> - Completed: {activity.endDate?.toDateString()} </p>
                             </div>
 
-                            <p className="">Completed: {activity.endDate?.toDateString()} </p>
-                            <p className="mt-5">{activity.engagementPattern} </p>
-                            <p className="mb-10">{activity.valueCreated} </p>
+                            
+                            <p className="">Outcome Score: {activity.outcomeScore} </p>
+                            <p className="">Effort Score: {activity.effortScore} </p>
+                            <p className="">Hours spent: {activity.hours + " hours"} </p>
+                            <p className="mb-10 mt-5">Value Statement: {activity.valueCreated} </p>
                         </div>
                       )
                     }
