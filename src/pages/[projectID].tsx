@@ -105,6 +105,7 @@ const methodProjectTracker= useZodForm({
   },
 });
 
+//used for read more button
 const [isReadMoreShown, setIsReadMoreShown] = useState(false);
 const toggleReadMore = () => {
   setIsReadMoreShown(prevState => !prevState)
