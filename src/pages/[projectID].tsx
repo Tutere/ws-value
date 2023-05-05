@@ -215,11 +215,13 @@ const toggleReadMore = () => {
 
       ) 
       } 
-      <Button variant={"subtle"} className="mt-2" onClick={toggleReadMore}> {!isReadMoreShown ? "See More.."
-        : "See Less..."}
+      <Button variant={"subtle"}
+      size={"sm"}
+      className="mt-2" 
+      onClick={toggleReadMore}> {!isReadMoreShown ? "See More..": "See Less..."}
       </Button>
 
-      <div className="mt-5 flex gap-7">
+      <div className="mt-10 flex gap-7">
       <Link href={"/projectCompletion/" + project.id}>
         <Button variant={"default"}>
             {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
