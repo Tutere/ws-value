@@ -70,12 +70,13 @@ export default function MonthlyReport({
       {/* --------------------------------CALENDAR-------------------------------- */}
 
       <div className={cn("grid gap-2", className)}>
+      <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={"outline"}
-            className="mx-auto w-1/5 mt-8"
+            className="mx-auto w-1/5"
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {date?.from ? (
@@ -110,7 +111,7 @@ export default function MonthlyReport({
 
 
       <div className="m-8">
-          <h1 className="text-3xl font-bold mb-12" >Completed Activities</h1>
+          <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
 
           {projects && projects.map((project) => {
             // if (project.Activity.length > 0) {
