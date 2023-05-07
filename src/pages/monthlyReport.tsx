@@ -109,73 +109,106 @@ export default function MonthlyReport({
 
       {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
 
+      <div className="flex flex-row m-8 gap-10">
 
-      <div className="m-8">
-          <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
+        <div className="flex-[1] border-r-2">
+            <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
 
-          {projects && projects.map((project) => {
-            // if (project.Activity.length > 0) {
-              let showName = false;
-              
-              project.Activity.forEach(activity => {
-                const activityEnd = activity.endDate?.getTime()
-                const selectedEnd = date?.to?.getTime()
-                const selectedStart = date?.from?.getTime()
+            {projects && projects.map((project) => {
+              // if (project.Activity.length > 0) {
+                let showName = false;
+                
+                project.Activity.forEach(activity => {
+                  const activityEnd = activity.endDate?.getTime()
+                  const selectedEnd = date?.to?.getTime()
+                  const selectedStart = date?.from?.getTime()
 
 
-                if (activityEnd && selectedEnd && selectedStart
-                  && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-                  && activityEnd >= selectedStart) {
-                    showName = true;
+                  if (activityEnd && selectedEnd && selectedStart
+                    && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
+                    && activityEnd >= selectedStart) {
+                      showName = true;
+                        }
+
+                });
+
+                if (showName) { //dont need to check if project.Activity lenght > 0 as already know by this stage
+
+                return (
+                  <div>
+                    <p className="text-xl mb-5"><b>{project.name}</b>
+                      {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
+
+                      {project.Activity
+                      .sort((a,b) => {
+                        const aOutcomeScore = a.outcomeScore ? a.outcomeScore : 0;
+                        const bOutcomeScore = b.outcomeScore ? b.outcomeScore : 0;
+                        return bOutcomeScore - aOutcomeScore;
+                      })
+                      .map((activity) => {
+                        const activityEnd = activity.endDate?.getTime()
+                        const selectedEnd = date?.to?.getTime()
+                        const selectedStart = date?.from?.getTime()
+
+
+                        if (activityEnd && selectedEnd && selectedStart
+                          && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
+                          && activityEnd >= selectedStart) {
+
+                        return (
+                            <div className="mb-5 ml-5 w-3/4">
+                              <div className="flex">
+                                <div>{project.icon}</div>
+                                <p className="ml-2 font-bold">{activity.name}</p>
+                                <p className="ml-1"> - Completed: {activity.endDate?.toDateString()} </p>
+                              </div>
+
+                              
+                              <p className="">Outcome Score: {activity.outcomeScore} </p>
+                              <p className="">Effort Score: {activity.effortScore} </p>
+                              <p className="">Hours spent: {activity.hours + " hours"} </p>
+                              <p className="mb-10 mt-5">Value Statement: {activity.valueCreated} </p>
+                          </div>
+                        )
                       }
+                    })}
+                  </div>
+                )
+              }
 
-              });
+            })}
+        </div>
+        <div className="flex-1 ">
+          <h1 className="text-3xl font-bold mb-12" >Projects Completed</h1>
+          
+          {projects && projects.map((project) => {
 
-              if (showName) { //dont need to check if project.Activity lenght > 0 as already know by this stage
+            const projectEnd = project.actualEnd?.getTime()
+            const selectedEnd = date?.to?.getTime()
+            const selectedStart = date?.from?.getTime()
+
+            if (projectEnd && selectedEnd && selectedStart
+              && projectEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
+              && projectEnd >= selectedStart) {
 
               return (
-                <div>
-                  <p className="text-xl mb-5"><b>{project.name}</b>
-                    {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
-
-                    {project.Activity
-                    .sort((a,b) => {
-                      const aOutcomeScore = a.outcomeScore ? a.outcomeScore : 0;
-                      const bOutcomeScore = b.outcomeScore ? b.outcomeScore : 0;
-                      return bOutcomeScore - aOutcomeScore;
-                    })
-                    .map((activity) => {
-                      const activityEnd = activity.endDate?.getTime()
-                      const selectedEnd = date?.to?.getTime()
-                      const selectedStart = date?.from?.getTime()
-
-
-                      if (activityEnd && selectedEnd && selectedStart
-                        && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-                        && activityEnd >= selectedStart) {
-
-                      return (
-                          <div className="mb-5 ml-5 w-1/2">
-                            <div className="flex">
-                              <div>{project.icon}</div>
-                              <p className="ml-2 font-bold">{activity.name}</p>
-                              <p className="ml-1"> - Completed: {activity.endDate?.toDateString()} </p>
-                            </div>
-
-                            
-                            <p className="">Outcome Score: {activity.outcomeScore} </p>
-                            <p className="">Effort Score: {activity.effortScore} </p>
-                            <p className="">Hours spent: {activity.hours + " hours"} </p>
-                            <p className="mb-10 mt-5">Value Statement: {activity.valueCreated} </p>
-                        </div>
-                      )
-                    }
-                  })}
+                <>
+                <div className="flex mb-5">
+                  {project.icon}
+                  <p className="text-xl ml-2 font-bold">{project.name}</p>
+                  <p className="ml-1"> - Completed: {project.actualEnd?.toDateString()} </p>
                 </div>
+                <div className="mb-5 ml-5 w-3/4">     
+                    <p className="">Outcome Score: {project.outcomeScore} </p>
+                    <p className="">Effort Score: {project.effortScore} </p>
+                    <p className="">Retrospective: {project.retrospective} </p>
+                    <p className="mb-10">Lessons Learnt: {project.lessonsLearnt} </p>
+                </div>
+                </>
               )
             }
-
           })}
+        </div>
       </div>
     </div>
   )
