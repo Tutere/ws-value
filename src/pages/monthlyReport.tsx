@@ -193,7 +193,8 @@ export default function MonthlyReport({
 
             if (projectEnd && selectedEnd && selectedStart
               && projectEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-              && projectEnd >= selectedStart) {
+              && projectEnd >= selectedStart
+              &&project.status === "Complete") {
 
               return (
                 <>
