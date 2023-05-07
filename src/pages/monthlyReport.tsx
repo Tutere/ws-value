@@ -15,6 +15,7 @@ import {
 } from "src/components/ui/popover"
 import { useSession } from "next-auth/react";
 import { Activity, ActivityMember } from "@prisma/client";
+import Link from "next/link";
 
 export default function MonthlyReport({
   className,
@@ -136,8 +137,11 @@ export default function MonthlyReport({
 
                 return (
                   <div>
-                    <p className="text-xl mb-5"><b>{project.name}</b>
-                      {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</p>
+                    <Link className="text-xl mb-5 hover:underline" 
+                    href={"/" + project.id} 
+                    rel="noopener noreferrer" 
+                    target="_blank"><b>{project.name}</b>
+                      {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</Link>
 
                       {project.Activity
                       .sort((a,b) => {
@@ -195,7 +199,11 @@ export default function MonthlyReport({
                 <>
                 <div className="flex mb-5">
                   {project.icon}
-                  <p className="text-xl ml-2 font-bold">{project.name}</p>
+                  <Link className="text-xl ml-2 font-bold hover:underline"
+                   href={"/" + project.id} 
+                   rel="noopener noreferrer" 
+                   target="_blank"
+                  >{project.name}</Link>
                   <p className="ml-1"> - Completed: {project.actualEnd?.toDateString()} </p>
                 </div>
                 <div className="mb-5 ml-5 w-3/4">     
