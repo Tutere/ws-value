@@ -111,7 +111,7 @@ export default function MonthlyReport({
 
       <div className="flex flex-row m-8 gap-10">
 
-        <div className="flex-[1.5]">
+        <div className="flex-[1] border-r-2">
             <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
 
             {projects && projects.map((project) => {
