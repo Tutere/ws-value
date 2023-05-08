@@ -147,7 +147,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
           projectId: activity?.projectId.toString(),
           name: activity?.name?.toString(),
           description: activity?.description?.toString(),
-          engagementPattern: activity?.engagementPattern.toString(),
+          engagementPattern: activity?.engagementPattern?.toString(),
           valueCreated: activity?.valueCreated?.toString(),
           startDate: activity?.startDate?.toISOString(),
           endDate: activity?.endDate?.toISOString(),
@@ -173,7 +173,7 @@ export function DeletionDialog(props: { object: string, id:string }) {
           methodActivityTracker.setValue("projectId" , activity.projectId);
           methodActivityTracker.setValue("name" , activity.name);
           methodActivityTracker.setValue("description" , activity.description);
-          methodActivityTracker.setValue("engagementPattern" , activity.engagementPattern);
+          methodActivityTracker.setValue("engagementPattern" , activity.engagementPattern?? "");
           methodActivityTracker.setValue("valueCreated" , activity.valueCreated?.toString());
           methodActivityTracker.setValue("startDate" , activity.startDate?.toISOString()!);
           methodActivityTracker.setValue("endDate" , activity?.endDate?.toISOString()!);
