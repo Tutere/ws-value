@@ -16,6 +16,7 @@ import {
 import { useSession } from "next-auth/react";
 import { Activity, ActivityMember } from "@prisma/client";
 import Link from "next/link";
+import { DatePicker } from "~/components/ui/datePicker";
 
 export default function MonthlyReport({
   className,
@@ -71,41 +72,9 @@ export default function MonthlyReport({
       {/* --------------------------------CALENDAR-------------------------------- */}
 
       <div className={cn("grid gap-2", className)}>
-      <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            id="date"
-            variant={"outline"}
-            className="mx-auto w-1/5"
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "dd LLL, y")} -{" "}
-                  {format(date.to, "dd LLL, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
-            ) : (
-              <span>Pick a date</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
-            numberOfMonths={2}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+        <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
+        <DatePicker date={date} setDate={setDate} />
+      </div>
 
 
       {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
