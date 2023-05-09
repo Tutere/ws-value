@@ -9,24 +9,33 @@ interface TextAreaProps<T extends FieldValues> {
   infoContent: string;
   methods: UseFormReturn<T, any>;
   label: string;
-  methodsField: Path <T>;
+  methodsField: Path<T>;
   placeHolder: string;
+  defaultValue: string;
 }
 
-export function TextAreaSection<T extends FieldValues>(props: TextAreaProps<T>) {
+export function TextAreaSection<T extends FieldValues>(
+  props: TextAreaProps<T>
+) {
   return (
     <div className="grid w-full max-w-md items-center gap-1.5">
       <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
       <div className="flex items-center">
-        <Textarea {...props.methods.register(props.methodsField)} className="mr-4" placeholder={props.placeHolder}/>
+        <Textarea
+          {...props.methods.register(props.methodsField)}
+          className="mr-4"
+          placeholder={props.placeHolder}
+          defaultValue={props.defaultValue}
+        />
         <InfoIcon content={props.infoContent} />
       </div>
       {props.methods.formState.errors[props.methodsField]?.message && (
         <p className="text-red-700">
-          {props.methods.formState.errors[props.methodsField]?.message?.toString()}
+          {props.methods.formState.errors[
+            props.methodsField
+          ]?.message?.toString()}
         </p>
       )}
     </div>
   );
 }
-  
