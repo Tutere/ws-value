@@ -11,6 +11,8 @@ import { InfoIcon } from "src/components/ui/infoIcon";
 import { useRouter } from "next/router";
 import Select, { MultiValue } from 'react-select'
 import { SetStateAction, useEffect, useState } from "react";
+import { InputSection } from "~/components/ui/inputSection";
+import { TextAreaSection } from "~/components/ui/TextAreaSection";
 
 
 export default function ProjectForm() {
@@ -169,156 +171,83 @@ export default function ProjectForm() {
           </div>
 
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Name</Label>
-            <div className="flex items-center">
-              <Input {...methods.register("name")} className="mr-4" />
-              <InfoIcon content="Name of this project" />
-            </div>
-            {methods.formState.errors.name?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.name?.message}
-              </p>
-            )}
-          </div>
+          <InputSection
+          label="Name"
+          methods={methods}
+          infoContent="Name of this project"
+          methodsField="name"
+          placeHolder=""
+          type=""
+          defaultValue=""
+          />
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Description</Label>
-            <div className="flex items-center">
-              <Textarea
-                placeholder="Optional"
-                {...methods.register("description")}
-                className="mr-4"
-              />
-              <InfoIcon content="A brief summary describing the initiative" />
-            </div>
+          <TextAreaSection
+          label="Description"
+          methods={methods}
+          infoContent="A brief summary describing the initiative"
+          methodsField="description"
+          placeHolder="Optional"
+          />
 
-            {methods.formState.errors.description?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.description?.message}
-              </p>
-            )}
-          </div>
-
-
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Goal</Label>
-            <div className="flex items-center">
-              <Textarea {...methods.register("goal")} className="mr-4" />
-              <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
-            </div>
-            {methods.formState.errors.goal?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.goal?.message}
-              </p>
-            )}
-          </div>
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
-
-            <Label htmlFor="name">Expected Outcomes</Label>
-            <div className="flex items-center">
-              <Textarea
-                {...methods.register("expectedMovement")}
-                className="mr-4"
-                placeholder="Optional"
-              />
-              <InfoIcon content="Which outcomes do you expect from completing this project (if separate to your goal)?" />
-            </div>
-
-            {methods.formState.errors.expectedMovement?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.expectedMovement?.message}
-              </p>
-            )}
-          </div>
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
-
-            <Label htmlFor="name">Estimated Start Date</Label>
-            {/* default to todays date if nothing selected */}
-            <div className="flex items-center">
-            <Input {...methods.register("estimatedStart")} type="date" 
-            className="mr-4"  
-            defaultValue={new Date().toISOString().slice(0,10)}
-            />
-            <InfoIcon content="The date that is estimated for the project to start being worked on" />
-            </div>
-            {methods.formState.errors.estimatedStart?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.estimatedStart?.message}
-              </p>
-            )}
-          </div>
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
+          <TextAreaSection
+          label="Goal"
+          methods={methods}
+          infoContent="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound."
+          methodsField="goal"
+          placeHolder=""
+          />
           
-            <Label htmlFor="name">Estimated End Date</Label>
-            <div className="flex items-center">
-            <Input {...methods.register("estimatedEnd")} type="date" className="mr-4" />
-            <InfoIcon content="The date that is estimated for the project to be completed" />
-              </div>
-            {methods.formState.errors.estimatedEnd?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.estimatedEnd?.message}
-              </p>
-            )}
-          </div>
+          <TextAreaSection
+          label="Expected Outcomes"
+          methods={methods}
+          infoContent="Which outcomes do you expect from completing this project (if separate to your goal)?"
+          methodsField="expectedMovement"
+          placeHolder="Optional"
+          />
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Trigger</Label>
-            <div className="flex items-center">
-              <Textarea {...methods.register("trigger")} className="mr-4" placeholder="Optional"/>
-              <InfoIcon content="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc" />
-            </div>
-            {methods.formState.errors.trigger?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.trigger?.message}
-              </p>
-            )}
-          </div>
+          <InputSection
+          label="Estimated Start Date"
+          methods={methods}
+          infoContent="The date that is estimated for the project to start being worked on"
+          methodsField="estimatedStart"
+          placeHolder=""
+          type="date"
+          defaultValue={new Date().toISOString().slice(0,10)}
+          />
 
+          <InputSection
+          label="Estimated End Date"
+          methods={methods}
+          infoContent="The date that is estimated for the project to be completed"
+          methodsField="estimatedEnd"
+          placeHolder=""
+          type="date"
+          defaultValue=""
+          />
+          
+          <TextAreaSection
+          label="Trigger"
+          methods={methods}
+          infoContent="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc"
+          methodsField="trigger"
+          placeHolder="Optional"
+          />
 
+          <TextAreaSection
+          label="Alternative Options or Solutions Considered"
+          methods={methods}
+          infoContent=""
+          methodsField="alternativeOptions"
+          placeHolder="Optional"
+          />
 
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">
-              Alternative Options or Solutions Considered
-            </Label>
-            <div className="flex items-center">
-              <Textarea
-                {...methods.register("alternativeOptions")}
-                className="mr-4"
-                placeholder="Optional"
-              />
-              <InfoIcon content="" />
-            </div>
-
-            {methods.formState.errors.alternativeOptions?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.alternativeOptions?.message}
-              </p>
-            )}
-          </div>
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Estimated Risks/Concerns/Bottleknecks</Label>
-            <div className="flex items-center">
-              <Textarea
-                {...methods.register("estimatedRisk")}
-                className="mr-4"
-                placeholder="Optional"
-              />
-              <InfoIcon content="" />
-            </div>
-
-            {methods.formState.errors.estimatedRisk?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.estimatedRisk?.message}
-              </p>
-            )}
-          </div>
+          <TextAreaSection
+          label="Estimated Risks/Concerns/Bottleknecks"
+          methods={methods}
+          infoContent=""
+          methodsField="estimatedRisk"
+          placeHolder="Optional"
+          />
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Project members</Label>
@@ -340,41 +269,23 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Stakeholders (separate by comma)</Label>
-            <div className="flex items-center">
-              <Textarea
-                {...methods.register("stakeholders")}
-                className="mr-4"
-                placeholder="Optional"
-              />   
-              <InfoIcon content="Who did you work with that is not a part of our team?" />
-            </div>
+          <TextAreaSection
+          label="Stakeholders (separate by comma)"
+          methods={methods}
+          infoContent=""
+          methodsField="stakeholders"
+          placeHolder="Optional"
+          />
 
-            {methods.formState.errors.stakeholders?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.stakeholders?.message}
-              </p>
-            )}
-          </div>
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Link to Project Initiation Document</Label>
-            <div className="flex items-center">
-              <Input
-                {...methods.register("pid")}
-                className="mr-4"
-                placeholder="Optional"
-              />
-              <InfoIcon content="Link to the Project Inititiation Document for this project" />
-            </div>
-
-            {methods.formState.errors.pid?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.pid?.message}
-              </p>
-            )}
-          </div>
+          <InputSection
+          label="Link to Project Initiation Document"
+          methods={methods}
+          infoContent=""
+          methodsField="pid"
+          placeHolder="Optional"
+          type=""
+          defaultValue=""
+          />
 
 
           <Button
