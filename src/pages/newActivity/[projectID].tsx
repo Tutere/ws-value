@@ -11,8 +11,9 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
-import Select, { MultiValue } from 'react-select'
-
+import Select, { MultiValue } from "react-select";
+import { InputSection } from "~/components/ui/inputSection";
+import { TextAreaSection } from "~/components/ui/TextAreaSection";
 
 export default function Project() {
   const router = useRouter();
@@ -25,11 +26,10 @@ export default function Project() {
   const projects = query.data;
   const project = projects ? projects.find((p) => p.id === id) : null;
 
-
   const mutation = api.activities.create.useMutation({
     onSuccess: async (data) => {
       console.log(data.id);
-      methods.setValue("id" , data.id);
+      methods.setValue("id", data.id);
       await utils.read.invalidate();
     },
   });
@@ -39,14 +39,14 @@ export default function Project() {
     defaultValues: {
       projectId: project?.id.toString(),
       changeType: "Create",
-      id: "",//placeholder before getting id from newly created activity 
+      id: "", //placeholder before getting id from newly created activity
       status: "Active",
       members: [],
     },
   });
 
   const { data: sessionData } = useSession();
-  const isMemberFound = project?.members.some(member => {
+  const isMemberFound = project?.members.some((member) => {
     return member.userId === sessionData?.user.id;
   });
 
@@ -58,46 +58,56 @@ export default function Project() {
     }
   }, [isMemberFound, router]);
 
-   /****  For Data lineage *******/
-   const mutationActivityTracker = api.activityTracker.edit.useMutation();
+  /****  For Data lineage *******/
+  const mutationActivityTracker = api.activityTracker.edit.useMutation();
 
-    // *** get users for later searching ***//
-    const queryUsers = api.users.read.useQuery(undefined, {
-      suspense: true,
-      onError: (error) => {
-        console.error(error);
-      },
-    });
-  
-    const users = queryUsers.data;
-
-// ****** get project members for dropdown selection **********
-  const queryProjectmembers = api.projectmember.read.useQuery({id: id}, {
+  // *** get users for later searching ***//
+  const queryUsers = api.users.read.useQuery(undefined, {
     suspense: true,
     onError: (error) => {
       console.error(error);
     },
   });
 
+  const users = queryUsers.data;
+
+  // ****** get project members for dropdown selection **********
+  const queryProjectmembers = api.projectmember.read.useQuery(
+    { id: id },
+    {
+      suspense: true,
+      onError: (error) => {
+        console.error(error);
+      },
+    }
+  );
+
   const projectMembers = queryProjectmembers.data;
 
   const options = projectMembers?.map((projectMember) => ({
     value: projectMember.id,
-    label: users?.find((item) => item.id === projectMember.userId)?.name
+    label: users?.find((item) => item.id === projectMember.userId)?.name,
   }));
 
   //current logged in user
-  const currentUser = projectMembers?.find((projectMember) => projectMember.userId === sessionData?.user.id);
+  const currentUser = projectMembers?.find(
+    (projectMember) => projectMember.userId === sessionData?.user.id
+  );
 
   //set current logged in user as default value (will pre-load the dropdown)
-  const defaultValue = options?.find((option) => option.value === currentUser?.id);
+  const defaultValue = options?.find(
+    (option) => option.value === currentUser?.id
+  );
 
-  type Option = { label: string, value: string }
+  type Option = { label: string; value: string };
 
   const [selectedOption, setSelectedOption] = useState<Option[]>([]);
 
   //turn logged in (default) user to type Option, then add to selectedOption/dropdown
-  const user: Option = { label: defaultValue?.label!, value: defaultValue?.value! }
+  const user: Option = {
+    label: defaultValue?.label!,
+    value: defaultValue?.value!,
+  };
   if (selectedOption.length === 0) {
     selectedOption.push(user);
   }
@@ -109,24 +119,28 @@ export default function Project() {
 
   // ****************
 
-
   //setup for stakeholder dropdown
-  const stakeholderOptions = project?.stakeholders?.split(',').map((stakeholder) => ({
-    value: stakeholder,
-    label: stakeholder,
-  }));
+  const stakeholderOptions = project?.stakeholders
+    ?.split(",")
+    .map((stakeholder) => ({
+      value: stakeholder,
+      label: stakeholder,
+    }));
 
-  const [stakeholderSelectedOptions, setStakeholderSelectedOptions] = useState<Option[]>([]);
+  const [stakeholderSelectedOptions, setStakeholderSelectedOptions] = useState<
+    Option[]
+  >([]);
 
   const handleChangeStakeholder = (options: Option[]) => {
     console.log(options);
     setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
   };
 
-   //handling the exiting of a page (pop up confirmation)
+  //handling the exiting of a page (pop up confirmation)
   const [formSubmitted, setFormSubmitted] = useState(false);
   useEffect(() => {
-    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+    const warningText =
+      "You have unsaved changes - are you sure you wish to leave this page?";
 
     const handleWindowClose = (e: BeforeUnloadEvent) => {
       if (formSubmitted) return;
@@ -137,230 +151,199 @@ export default function Project() {
     const handleBrowseAway = () => {
       if (formSubmitted) return;
       if (window.confirm(warningText)) return;
-      router.events.emit('routeChangeError');
-      throw 'routeChange aborted.';
+      router.events.emit("routeChangeError");
+      throw "routeChange aborted.";
     };
 
-    window.addEventListener('beforeunload', handleWindowClose);
-    router.events.on('routeChangeStart', handleBrowseAway);
+    window.addEventListener("beforeunload", handleWindowClose);
+    router.events.on("routeChangeStart", handleBrowseAway);
 
     return () => {
-      window.removeEventListener('beforeunload', handleWindowClose);
-      router.events.off('routeChangeStart', handleBrowseAway);
+      window.removeEventListener("beforeunload", handleWindowClose);
+      router.events.off("routeChangeStart", handleBrowseAway);
     };
-
   }, [formSubmitted]);
 
   return (
     <>
-    {isMemberFound ? (    
-    <div className="p-8">
-      <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
+      {isMemberFound ? (
+        <div className="p-8">
+          <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
 
-      <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
-      <form
-        onSubmit={methods.handleSubmit(async (values) => {
-          setFormSubmitted(true);
-          await Promise.all ([
-            await mutation.mutateAsync({
-              ...values,
-              members: selectedOption.map((option) => option.value),
-              stakeholders: stakeholderSelectedOptions.map((option) => option.value).join(','),
-            }),
-            await mutationActivityTracker.mutateAsync({
-              ...values,
-              id: methods.getValues("id"), // update id feild with the created activity's id
-              members: selectedOption.map((option) => option.value),
-              stakeholders: stakeholderSelectedOptions.map((option) => option.value).join(','),
-            })
-          ])
-          methods.reset();
-          router.push('/' + id);
-        })}
-        className="space-y-2"
-      >
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Name</Label>
-          <div className="flex items-center">
-             <Input {...methods.register("name")} className="mr-4"/>
-             <InfoIcon content="Name test tooltip"/>
-          </div>
-         
+          <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
+          <form
+            onSubmit={methods.handleSubmit(async (values) => {
+              setFormSubmitted(true);
+              await Promise.all([
+                await mutation.mutateAsync({
+                  ...values,
+                  members: selectedOption.map((option) => option.value),
+                  stakeholders: stakeholderSelectedOptions
+                    .map((option) => option.value)
+                    .join(","),
+                }),
+                await mutationActivityTracker.mutateAsync({
+                  ...values,
+                  id: methods.getValues("id"), // update id feild with the created activity's id
+                  members: selectedOption.map((option) => option.value),
+                  stakeholders: stakeholderSelectedOptions
+                    .map((option) => option.value)
+                    .join(","),
+                }),
+              ]);
+              methods.reset();
+              router.push("/" + id);
+            })}
+            className="space-y-2"
+          >
+            <InputSection
+              label="Name"
+              methods={methods}
+              infoContent="Name for the activity"
+              methodsField="name"
+              placeHolder=""
+              type=""
+              defaultValue=""
+            />
 
-          {methods.formState.errors.name?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.name?.message}
-            </p>
-          )}
-        </div>
+            <TextAreaSection
+              label="Description"
+              methods={methods}
+              infoContent="Description of the activity"
+              methodsField="description"
+              placeHolder=""
+              defaultValue=""
+            />
 
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Description</Label>
-          <div className="flex items-center">
-            <Textarea {...methods.register("description")} className="mr-4"/>
-            <InfoIcon content="Description test tooltip"/>
-          </div>
-          
-
-          {methods.formState.errors.description?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.description?.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Stakeholders Involved</Label>
-            <div className="flex items-center">
-              <Select options={stakeholderOptions}
-                className="mr-4 w-full"
-                isMulti
-                // defaultValue={defaultValue}
-                value={stakeholderSelectedOptions}
-                closeMenuOnSelect={false}
-                onChange={(newValue) => handleChangeStakeholder(newValue as Option[])}
-                placeholder="Optional"
-              />
-              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+            <div className="grid w-full max-w-md items-center gap-1.5">
+              <Label htmlFor="name">Stakeholders Involved</Label>
+              <div className="flex items-center">
+                <Select
+                  options={stakeholderOptions}
+                  className="mr-4 w-full"
+                  isMulti
+                  // defaultValue={defaultValue}
+                  value={stakeholderSelectedOptions}
+                  closeMenuOnSelect={false}
+                  onChange={(newValue) =>
+                    handleChangeStakeholder(newValue as Option[])
+                  }
+                  placeholder="Optional"
+                />
+                <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+              </div>
+              {methods.formState.errors.members?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.members?.message}
+                </p>
+              )}
             </div>
-            {methods.formState.errors.members?.message && (
-              <p className="text-red-700">
-                {methods.formState.errors.members?.message}
-              </p>
-            )}
-          </div>
 
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Engagement Pattern</Label>
-          <div className="flex items-center">
-            <Textarea {...methods.register("engagementPattern")} className="mr-4" placeholder="Optional"/>
-            <InfoIcon content="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."/>
-          </div>
-          
-          {methods.formState.errors.engagementPattern?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.engagementPattern?.message}
-            </p>
-          )}
-        </div>
-        
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Value Created (Outcome)</Label>
-          <div className="flex items-center">
-            <Textarea {...methods.register("valueCreated")} className="mr-4"/>
-            <InfoIcon content="Brief statement on the outcome/value that was achieved by carrying out this activity."/>
-          </div>
-          
+            <TextAreaSection
+              label="Engagement Pattern"
+              methods={methods}
+              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
+              methodsField="engagementPattern"
+              placeHolder="Optional"
+              defaultValue=""
+            />
 
-          {methods.formState.errors.valueCreated?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.valueCreated?.message}
-            </p>
-          )}
-        </div>
+            <TextAreaSection
+              label="Value Created (Outcome)"
+              methods={methods}
+              infoContent="Brief statement on the outcome/value that was achieved by carrying out this activity."
+              methodsField="valueCreated"
+              placeHolder=""
+              defaultValue=""
+            />
 
-        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
-          <Label htmlFor="name">Start Date</Label>
-          {/* default to todays date if nothing selected */}
-          <Input {...methods.register("startDate")} type="date" 
-          defaultValue={new Date().toISOString().slice(0,10)}
-          />
+            <InputSection
+              label="Start Date"
+              methods={methods}
+              infoContent="The date that work was started for the activity"
+              methodsField="startDate"
+              placeHolder=""
+              type="date"
+              defaultValue={new Date().toISOString().slice(0, 10)}
+            />
 
-          {methods.formState.errors.startDate?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.startDate?.message}
-            </p>
-          )}
-        </div>
+            <InputSection
+              label="End Date"
+              methods={methods}
+              infoContent="The date that work was finished for the activity"
+              methodsField="endDate"
+              placeHolder=""
+              type="date"
+              defaultValue=""
+            />
 
-        <div className="grid w-full max-w-md items-center gap-1.5 pr-8">
-          <Label htmlFor="name">End Date</Label>
-          <Input {...methods.register("endDate")} type="date" />
+            <InputSection
+              label="Outcome Score (1-10)"
+              methods={methods}
+              infoContent="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"
+              methodsField="outcomeScore"
+              placeHolder=""
+              defaultValue=""
+              type=""
+            />
 
-          {methods.formState.errors.endDate?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.endDate?.message}
-            </p>
-          )}
-        </div>
+            <InputSection
+              label="Effort Score (1-10) "
+              methods={methods}
+              infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"
+              methodsField="effortScore"
+              placeHolder=""
+              defaultValue=""
+              type=""
+            />
 
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Outcome Score (1-10) </Label>
-          <div className="flex items-center">
-            <Input {...methods.register("outcomeScore")} className="mr-4" />
-            <InfoIcon content="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"/>
-          </div>
-          
+            <InputSection
+              label="Hours taken to complete"
+              methods={methods}
+              infoContent="How many hours has it taken to complete this activity?"
+              methodsField="hours"
+              placeHolder="Optional"
+              defaultValue=""
+              type=""
+            />
 
-          {methods.formState.errors.outcomeScore?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.outcomeScore?.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Effort Score (1-10) </Label>
-          <div className="flex items-center">
-            <Input {...methods.register("effortScore")} className="mr-4"/>
-            <InfoIcon content="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"/>
-          </div>
-          
-
-            {methods.formState.errors.effortScore?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.effortScore?.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Hours taken to complete </Label>
-          <div className="flex items-center">
-            <Input {...methods.register("hours")} className="mr-4" placeholder="Optional"/>
-            <InfoIcon content="How many hours has it taken to complete this activity?"/>
-          </div>
-          
-
-            {methods.formState.errors.effortScore?.message && (
-            <p className="text-red-700">
-              {methods.formState.errors.effortScore?.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Activity members</Label>
-            <div className="flex items-center">
-              <Select options={options}
-                className="mr-4 w-full"
-                isMulti
-                defaultValue={defaultValue}
-                value={selectedOption}
-                closeMenuOnSelect={false}
-                onChange={(newValue) => handleChange(newValue as Option[])}
-              />
-              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
-            </div>
-            {/* {methods.formState.errors.icon?.message && (
+            <div className="grid w-full max-w-md items-center gap-1.5">
+              <Label htmlFor="name">Activity members</Label>
+              <div className="flex items-center">
+                <Select
+                  options={options}
+                  className="mr-4 w-full"
+                  isMulti
+                  defaultValue={defaultValue}
+                  value={selectedOption}
+                  closeMenuOnSelect={false}
+                  onChange={(newValue) => handleChange(newValue as Option[])}
+                />
+                <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+              </div>
+              {/* {methods.formState.errors.icon?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.icon?.message}
               </p>
             )} */}
-          </div>
+            </div>
 
-
-        <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
-          {mutation.isLoading ? "Loading" : "Add Activity"}
-        </Button>
-      </form>
-    </div>
-    ): (
-      <div className="p-8">
-        <p>You are not a member of this project. Redirecting to homepage...</p>
-      </div>
-      )
-    }
+            <Button
+              type="submit"
+              variant={"default"}
+              disabled={mutation.isLoading}
+            >
+              {mutation.isLoading ? "Loading" : "Add Activity"}
+            </Button>
+          </form>
+        </div>
+      ) : (
+        <div className="p-8">
+          <p>
+            You are not a member of this project. Redirecting to homepage...
+          </p>
+        </div>
+      )}
     </>
   );
 }
