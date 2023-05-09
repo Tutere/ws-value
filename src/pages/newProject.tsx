@@ -187,6 +187,7 @@ export default function ProjectForm() {
           infoContent="A brief summary describing the initiative"
           methodsField="description"
           placeHolder="Optional"
+          defaultValue=""
           />
 
           <TextAreaSection
@@ -195,6 +196,7 @@ export default function ProjectForm() {
           infoContent="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound."
           methodsField="goal"
           placeHolder=""
+          defaultValue=""
           />
           
           <TextAreaSection
@@ -203,6 +205,7 @@ export default function ProjectForm() {
           infoContent="Which outcomes do you expect from completing this project (if separate to your goal)?"
           methodsField="expectedMovement"
           placeHolder="Optional"
+          defaultValue=""
           />
 
           <InputSection
@@ -231,6 +234,7 @@ export default function ProjectForm() {
           infoContent="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc"
           methodsField="trigger"
           placeHolder="Optional"
+          defaultValue=""
           />
 
           <TextAreaSection
@@ -239,6 +243,7 @@ export default function ProjectForm() {
           infoContent=""
           methodsField="alternativeOptions"
           placeHolder="Optional"
+          defaultValue=""
           />
 
           <TextAreaSection
@@ -247,6 +252,7 @@ export default function ProjectForm() {
           infoContent=""
           methodsField="estimatedRisk"
           placeHolder="Optional"
+          defaultValue=""
           />
 
           <div className="grid w-full max-w-md items-center gap-1.5">
@@ -275,6 +281,7 @@ export default function ProjectForm() {
           infoContent=""
           methodsField="stakeholders"
           placeHolder="Optional"
+          defaultValue=""
           />
 
           <InputSection
