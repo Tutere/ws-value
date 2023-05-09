@@ -32,6 +32,7 @@ export const projectsRouter = createTRPCRouter({
           estimatedRisk: input.estimatedRisk,
           status: input.status,
           stakeholders: input.stakeholders,
+          pid: input.pid,
           members: {
             createMany: {
               data: input.members.map(member => {
@@ -57,6 +58,7 @@ export const projectsRouter = createTRPCRouter({
       },
       include: {
         members: true,
+        Activity:true,
       },
     });
   }),
@@ -100,6 +102,7 @@ export const projectsRouter = createTRPCRouter({
           alternativeOptions: input.alternativeOptions,
           estimatedRisk: input.estimatedRisk,
           stakeholders: input.stakeholders,
+          pid: input.pid,
           members: {
             createMany: {
               data: input.members.map(member => {

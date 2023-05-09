@@ -170,19 +170,32 @@ export default function ProjectForm() {
     };
 
    //handling the exiting of a page (pop up confirmation)
-   useEffect(() => {
-    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  useEffect(() => {
+    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (formSubmitted) return;
       e.preventDefault();
-      e.returnValue = '';
+      return (e.returnValue = warningText);
     };
-  
-    window.addEventListener('beforeunload', beforeUnloadHandler);
-  
-    // Clean up the event listener when the component unmounts
+
+    const handleBrowseAway = () => {
+      if (formSubmitted) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
     };
-  }, []);
+
+  }, [formSubmitted]);
 
   if (project === null || project === undefined ) {
     return <p>Error finding project</p>
@@ -194,6 +207,7 @@ export default function ProjectForm() {
           <h2 className="py-2 text-2xl font-bold">Edit Project</h2>
           <form
             onSubmit={methods.handleSubmit(async (values) => {
+              setFormSubmitted(true);
               await console.log(methods.getValues())
               await console.log(selectedOption);
               await handleProjectMemberDeletions();
@@ -406,10 +420,10 @@ export default function ProjectForm() {
           </div>
 
             <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">External Stakeholders</Label>
+            <Label htmlFor="name">Stakeholders</Label>
             <div className="flex items-center">
               {project.stakeholders? 
-                <Input {...methods.register("stakeholders")} className="mr-4" defaultValue={project?.stakeholders!}/> 
+                <Input {...methods.register("stakeholders")} className="mr-4" defaultValue={project.stakeholders!}/> 
                   :
                 <Input {...methods.register("stakeholders")}className="mr-4"/>
               }
@@ -418,6 +432,23 @@ export default function ProjectForm() {
             {methods.formState.errors.stakeholders?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Link to Project Initiation Document</Label>
+            <div className="flex items-center">
+              {project.pid? 
+                <Input {...methods.register("pid")} className="mr-4" placeholder="Optional" defaultValue={project.pid}/> 
+                  :
+                <Input {...methods.register("pid")}className="mr-4" placeholder="Optional"/>
+              }
+              <InfoIcon content="Link to the Project Inititiation Document for this project" />
+            </div>
+            {methods.formState.errors.pid?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.pid?.message}
               </p>
             )}
           </div>

@@ -7,7 +7,7 @@ import { Label } from "@radix-ui/react-label";
 import { useZodForm } from "~/hooks/useZodForm";
 import {CreateStakeholderResponseSchema} from "~/schemas/stakeholderResponse";
 import { InfoIcon } from "~/components/ui/infoIcon";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function stakeholderSurveyForm() {
   const router = useRouter();
@@ -33,20 +33,33 @@ export default function stakeholderSurveyForm() {
     },
   });
 
-   //handling the exiting of a page (pop up confirmation)
-   useEffect(() => {
-    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+  //handling the exiting of a page (pop up confirmation)
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  useEffect(() => {
+    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (formSubmitted) return;
       e.preventDefault();
-      e.returnValue = '';
+      return (e.returnValue = warningText);
     };
-  
-    window.addEventListener('beforeunload', beforeUnloadHandler);
-  
-    // Clean up the event listener when the component unmounts
+
+    const handleBrowseAway = () => {
+      if (formSubmitted) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
     };
-  }, []);
+
+  }, [formSubmitted]);
 
   if (project === null || project === undefined ) {
     return <p>Error finding project</p>
@@ -61,6 +74,7 @@ export default function stakeholderSurveyForm() {
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
+          setFormSubmitted(true);
           await mutation.mutateAsync(values);
           methods.reset();
           router.push('/stakeholderSurvey/completionPage');
@@ -69,9 +83,9 @@ export default function stakeholderSurveyForm() {
       >
 
         <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Stakeholder Name</Label>
+          <Label htmlFor="name">Name </Label>
           <div className="flex items-center">
-            <Input {...methods.register("organisation")} className="mr-4" />
+            <Input {...methods.register("organisation")} className="mr-4" placeholder="Optional" />
             <InfoIcon content="Name of the organisation, group or individual that this survey repsonse is on behalf of."/>
           </div>
           

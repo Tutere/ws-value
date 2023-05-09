@@ -88,19 +88,32 @@ export default function ProjectForm() {
   // ****************
 
   //handling the exiting of a page (pop up confirmation)
+  const [formSubmitted, setFormSubmitted] = useState(false);
   useEffect(() => {
-    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (formSubmitted) return;
       e.preventDefault();
-      e.returnValue = '';
+      return (e.returnValue = warningText);
     };
-  
-    window.addEventListener('beforeunload', beforeUnloadHandler);
-  
-    // Clean up the event listener when the component unmounts
+
+    const handleBrowseAway = () => {
+      if (formSubmitted) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
     };
-  }, []);
+
+  }, [formSubmitted]);
 
   return (
     <>
@@ -108,6 +121,7 @@ export default function ProjectForm() {
         <h2 className="py-2 text-2xl font-bold">Start A New Project</h2>
         <form
           onSubmit={methods.handleSubmit(async (values) => {
+            setFormSubmitted(true);
             await console.log(selectedOption);
             await Promise.all([
               await mutation.mutateAsync({
@@ -143,7 +157,7 @@ export default function ProjectForm() {
             <div className="ml-5">
               <Label htmlFor="name">Colour</Label>
               <div className="flex items-center">
-                <Input type = "color" {...methods.register("colour")} className="mr-4 w-20" value="#FFFFFF" />
+                <Input type = "color" {...methods.register("colour")} className="mr-4 w-20" defaultValue="#FFFFFF" />
                 <InfoIcon content="This colour is shown from the homepage." />
               </div>
               {methods.formState.errors.colour?.message && (
@@ -159,7 +173,7 @@ export default function ProjectForm() {
             <Label htmlFor="name">Name</Label>
             <div className="flex items-center">
               <Input {...methods.register("name")} className="mr-4" />
-              <InfoIcon content="Name of the person filling this information" />
+              <InfoIcon content="Name of this project" />
             </div>
             {methods.formState.errors.name?.message && (
               <p className="text-red-700">
@@ -208,8 +222,9 @@ export default function ProjectForm() {
               <Textarea
                 {...methods.register("expectedMovement")}
                 className="mr-4"
+                placeholder="Optional"
               />
-              <InfoIcon content="This is very abstract concept. With your initiative, (brief summary) where you able to create a desired movement for the stakeholders, wider H&S community and NZ workforce. E.g., I presented the product to the union, and they are taking to forward to another PCBU to trial this as a part of their tool box sessions. " />
+              <InfoIcon content="Which outcomes do you expect from completing this project (if separate to your goal)?" />
             </div>
 
             {methods.formState.errors.expectedMovement?.message && (
@@ -254,7 +269,7 @@ export default function ProjectForm() {
           <div className="grid w-full max-w-md items-center gap-1.5">
             <Label htmlFor="name">Trigger</Label>
             <div className="flex items-center">
-              <Textarea {...methods.register("trigger")} className="mr-4" />
+              <Textarea {...methods.register("trigger")} className="mr-4" placeholder="Optional"/>
               <InfoIcon content="What was the trigger to kick start this initiative - add information on the back story, context, any due diligence etc" />
             </div>
             {methods.formState.errors.trigger?.message && (
@@ -275,6 +290,7 @@ export default function ProjectForm() {
               <Textarea
                 {...methods.register("alternativeOptions")}
                 className="mr-4"
+                placeholder="Optional"
               />
               <InfoIcon content="" />
             </div>
@@ -292,6 +308,7 @@ export default function ProjectForm() {
               <Textarea
                 {...methods.register("estimatedRisk")}
                 className="mr-4"
+                placeholder="Optional"
               />
               <InfoIcon content="" />
             </div>
@@ -324,20 +341,37 @@ export default function ProjectForm() {
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">External Stakeholders</Label>
+            <Label htmlFor="name">Stakeholders (separate by comma)</Label>
             <div className="flex items-center">
               <Textarea
                 {...methods.register("stakeholders")}
                 className="mr-4"
                 placeholder="Optional"
-              />
-              
+              />   
               <InfoIcon content="Who did you work with that is not a part of our team?" />
             </div>
 
             {methods.formState.errors.stakeholders?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.stakeholders?.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Link to Project Initiation Document</Label>
+            <div className="flex items-center">
+              <Input
+                {...methods.register("pid")}
+                className="mr-4"
+                placeholder="Optional"
+              />
+              <InfoIcon content="Link to the Project Inititiation Document for this project" />
+            </div>
+
+            {methods.formState.errors.pid?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.pid?.message}
               </p>
             )}
           </div>

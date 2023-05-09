@@ -124,19 +124,32 @@ export default function Project() {
   };
 
    //handling the exiting of a page (pop up confirmation)
-   useEffect(() => {
-    const beforeUnloadHandler = (e: { preventDefault: () => void; returnValue: string; }) => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  useEffect(() => {
+    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (formSubmitted) return;
       e.preventDefault();
-      e.returnValue = '';
+      return (e.returnValue = warningText);
     };
-  
-    window.addEventListener('beforeunload', beforeUnloadHandler);
-  
-    // Clean up the event listener when the component unmounts
+
+    const handleBrowseAway = () => {
+      if (formSubmitted) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
     };
-  }, []);
+
+  }, [formSubmitted]);
 
   return (
     <>
@@ -147,6 +160,7 @@ export default function Project() {
       <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
+          setFormSubmitted(true);
           await Promise.all ([
             await mutation.mutateAsync({
               ...values,
@@ -196,7 +210,7 @@ export default function Project() {
         </div>
 
         <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">External Stakeholders Involved</Label>
+            <Label htmlFor="name">Stakeholders Involved</Label>
             <div className="flex items-center">
               <Select options={stakeholderOptions}
                 className="mr-4 w-full"
@@ -205,6 +219,7 @@ export default function Project() {
                 value={stakeholderSelectedOptions}
                 closeMenuOnSelect={false}
                 onChange={(newValue) => handleChangeStakeholder(newValue as Option[])}
+                placeholder="Optional"
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>
@@ -218,8 +233,8 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Engagement Pattern</Label>
           <div className="flex items-center">
-            <Textarea {...methods.register("engagementPattern")} className="mr-4"/>
-            <InfoIcon content="Brief summary on how engaging were your stakeholders - where they proactive, reactive, passive etc."/>
+            <Textarea {...methods.register("engagementPattern")} className="mr-4" placeholder="Optional"/>
+            <InfoIcon content="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."/>
           </div>
           
           {methods.formState.errors.engagementPattern?.message && (
@@ -233,7 +248,7 @@ export default function Project() {
           <Label htmlFor="name">Value Created (Outcome)</Label>
           <div className="flex items-center">
             <Textarea {...methods.register("valueCreated")} className="mr-4"/>
-            <InfoIcon content="Brief summary on the consequence/outcome that was achieved by carrying out this initiaitve."/>
+            <InfoIcon content="Brief statement on the outcome/value that was achieved by carrying out this activity."/>
           </div>
           
 
@@ -302,7 +317,7 @@ export default function Project() {
         <div className="grid w-full max-w-md items-center gap-1.5">
           <Label htmlFor="name">Hours taken to complete </Label>
           <div className="flex items-center">
-            <Input {...methods.register("hours")} className="mr-4"/>
+            <Input {...methods.register("hours")} className="mr-4" placeholder="Optional"/>
             <InfoIcon content="How many hours has it taken to complete this activity?"/>
           </div>
           

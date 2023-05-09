@@ -43,6 +43,16 @@ import {
     );
   }),
 
+  readByProjectMemberId: protectedProcedure
+    .input(FindActivityMemberSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.activityMember.findMany({
+        where: {
+          projectMemberId: input.id
+        }
+      });
+    }),
+
   // deleteSpecific: protectedProcedure
   // .input(FindActivityMemberSchema)
   // .mutation(({ ctx, input }) => {
