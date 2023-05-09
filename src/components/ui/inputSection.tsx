@@ -8,31 +8,35 @@ interface InputSectionProps<T extends FieldValues> {
   infoContent: string;
   methods: UseFormReturn<T, any>;
   label: string;
-  methodsField: Path <T>;
+  methodsField: Path<T>;
   placeHolder: string;
   type: string;
-  defaultValue:string;
+  defaultValue: string | number;
 }
 
-export function InputSection<T extends FieldValues>(props: InputSectionProps<T>) {
+export function InputSection<T extends FieldValues>(
+  props: InputSectionProps<T>
+) {
   return (
     <div className="grid w-full max-w-md items-center gap-1.5">
       <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
       <div className="flex items-center">
-        <Input {...props.methods.register(props.methodsField)} 
-        className="mr-4" 
-        placeholder={props.placeHolder}
-        type={props.type}
-        defaultValue={props.defaultValue}
+        <Input
+          {...props.methods.register(props.methodsField)}
+          className="mr-4"
+          placeholder={props.placeHolder}
+          type={props.type}
+          defaultValue={props.defaultValue}
         />
         <InfoIcon content={props.infoContent} />
       </div>
       {props.methods.formState.errors[props.methodsField]?.message && (
         <p className="text-red-700">
-          {props.methods.formState.errors[props.methodsField]?.message?.toString()}
+          {props.methods.formState.errors[
+            props.methodsField
+          ]?.message?.toString()}
         </p>
       )}
     </div>
   );
 }
-  
