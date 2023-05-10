@@ -28,6 +28,20 @@ import {
         },
       });
     }),
+
+    findUsersByProjectMemberId: protectedProcedure
+    .input(FindUserSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findMany({
+        where: {
+          projects: {
+            some: {
+              id: input.id,
+            },
+          },
+        },
+      });
+    }),
   
   });
   
