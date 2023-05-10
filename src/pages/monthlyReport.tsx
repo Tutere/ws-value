@@ -64,6 +64,7 @@ export default function MonthlyReport({
     });
 
     activities.push(activity);
+    console.log(activity);
   })
 
   return (
@@ -128,6 +129,19 @@ export default function MonthlyReport({
                           && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
                           && activityEnd >= selectedStart) {
 
+                            //get activity member names for later use
+                            const contributorNames: (string | null)[] = [];
+                            //list of projectMembers linked to this projecy
+                            const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
+                            //of those projectMembers find which ones are linked to this activity then get their name
+                            projectMembersOfActivity?.forEach(element => {
+                              element.ActivityMember.forEach(am => {
+                                if (activity.id === am.activityId) {
+                                  contributorNames.push(element.user.name);
+                                }
+                              })
+                            });
+
                         return (
                             <div className="mb-5 ml-5 w-3/4">
                               <div className="flex">
@@ -138,8 +152,8 @@ export default function MonthlyReport({
 
                               
                               <p className="">Outcome Score: {activity.outcomeScore} </p>
-                              <p className="">Effort Score: {activity.effortScore} </p>
-                              <p className="">Hours spent: {activity.hours + " hours"} </p>
+                              <p className="">Contributors: {contributorNames.join(", ")} </p>
+                              <p className="">Stakeholders Involved: {activity.stakeholders === "" ? "N/A" : activity.stakeholders} </p>
                               <p className="mb-10 mt-5">Value Statement: {activity.valueCreated} </p>
                           </div>
                         )
