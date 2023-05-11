@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "src/components/ui/popover"
 import { useSession } from "next-auth/react";
-import { Activity, ActivityMember } from "@prisma/client";
+import { Activity, ActivityMember, Project, ProjectMember } from "@prisma/client";
 import Link from "next/link";
 import { DatePicker } from "~/components/ui/datePicker";
 import { TextAreaSection } from "~/components/ui/TextAreaSection";
@@ -71,6 +71,68 @@ export default function MonthlyReport({
     activities.push(activity);
     // console.log(activity);
   })
+
+  //setup for all activities and projects in date range
+
+  const projectsInDateRange: (Project & { Activity: Activity[]; members: ProjectMember[]; })[] = [];
+  const activitiesInRange: Activity[] = [];
+
+  {projects && projects.map((project) => {
+
+    const projectEnd = project.actualEnd?.getTime()
+    const selectedEnd = date?.to?.getTime()
+    const selectedStart = date?.from?.getTime()
+
+    if (projectEnd && selectedEnd && selectedStart
+      && projectEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
+      && projectEnd >= selectedStart
+      &&project.status === "Complete") {
+        projectsInDateRange.push(project);
+  
+
+    {project.Activity
+      .map((activity) => {
+        const activityEnd = activity.endDate?.getTime();
+        const selectedEnd = date?.to?.getTime();
+        const selectedStart = date?.from?.getTime();
+        console.log(activityEnd);
+        console.log(selectedEnd);
+        console.log(selectedStart);
+
+        if (activityEnd && selectedEnd && selectedStart
+          && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
+          && activityEnd >= selectedStart) {
+            
+
+            activitiesInRange.push(activity);
+            
+            //get contributor names and push with activity
+            const projectMembersOfActivity: any[] = []
+            project.members.forEach(pm => {
+              if (pm.projectId === activity.projectId) {
+                projectMembersOfActivity.push(pm);
+              }
+            })
+
+            // const contributorNames = []
+            // projectMembersOfActivity?.forEach(element => {
+            //   element.ActivityMember.forEach(am => {
+            //     if (activity.id === am.activityId) {
+            //       contributorNames.push(element.user.name);
+            //       projMemIds.push(element.id);
+            //     }
+            //   })
+            // });
+            // console.log(projectMembersOfActivity);
+
+            // activitiesInRange.push({activity: activity, projectMembers: projectMembersOfActivity});
+
+    }})
+  
+  }}})}
+
+  console.log(activitiesInRange);
+  console.log(projectsInDateRange);
 
   return (
 
