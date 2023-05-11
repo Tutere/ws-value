@@ -21,6 +21,7 @@ import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { useZodForm } from "~/hooks/useZodForm";
 import { ReportCommentSchema } from "~/schemas/activities";
 import { buttonVariants } from "~/components/ui/Button"
+import { ActivityChangeSchema } from "~/schemas/activityTracker";
 
 export default function MonthlyReport({
   className,
@@ -31,7 +32,7 @@ export default function MonthlyReport({
 
   })
 
-  console.log(date?.from + "" + " TO " + "" + date?.to)
+  // console.log(date?.from + "" + " TO " + "" + date?.to)
 
   const { data: sessionData } = useSession();
 
@@ -45,7 +46,7 @@ export default function MonthlyReport({
 
   const projects = query.data;
 
-  console.log(projects)
+  // console.log(projects)
 
   const activityMembersList: ActivityMember[] = [];
   const activities: ((Activity & { members: ActivityMember[]; }) | null | undefined)[] = [];
@@ -68,7 +69,7 @@ export default function MonthlyReport({
     });
 
     activities.push(activity);
-    console.log(activity);
+    // console.log(activity);
   })
 
   return (
@@ -139,10 +140,12 @@ export default function MonthlyReport({
                             //list of projectMembers linked to this projecy
                             const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
                             //of those projectMembers find which ones are linked to this activity then get their name
+                            const projMemIds: string[] = []; //for lineage
                             projectMembersOfActivity?.forEach(element => {
                               element.ActivityMember.forEach(am => {
                                 if (activity.id === am.activityId) {
                                   contributorNames.push(element.user.name);
+                                  projMemIds.push(element.id);
                                 }
                               })
                             });
@@ -164,13 +167,46 @@ export default function MonthlyReport({
                               },
                             });
 
+
+                            //lineage
+                            const mutationActivityTracker = api.activityTracker.edit.useMutation({
+                            
+                            });
+
+                            const methodsActivityTracker = useZodForm({
+                              schema: ActivityChangeSchema,
+                              defaultValues: {
+                                changeType: "Edit",
+                                id: activity?.id,
+                                projectId: activity?.projectId.toString(),
+                                name: activity?.name?.toString(),
+                                description: activity?.description?.toString(),
+                                engagementPattern: activity?.engagementPattern?.toString(),
+                                valueCreated: activity?.valueCreated?.toString(),
+                                startDate: activity?.startDate?.toISOString(),
+                                endDate: activity?.endDate?.toISOString() || "",
+                                outcomeScore: activity?.outcomeScore!,
+                                effortScore: activity?.effortScore!,
+                                status: activity?.status!,
+                                hours: activity?.hours!,
+                                members: projMemIds,
+                                stakeholders: project?.stakeholders!,
+                                reportComments:activity?.reportComments?? "",
+                                
+                              },
+                            });
+
+
                         return (
                           <form
                             onSubmit={methods.handleSubmit(async (values) => {
                               await setCommentSaved(true);
-                              await setComments(methods.getValues("reportComment"))
+                              await setComments(methods.getValues("reportComment"));
+                              await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
                               await Promise.all([
                                 await mutation.mutateAsync(values),
+                                await(console.log(methodsActivityTracker.getValues())),
+                                await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
                               ]);
                               methods.reset();
                             })}
@@ -218,7 +254,7 @@ export default function MonthlyReport({
                                 <>
                                 <p className="">Optional Comments: {comments}{" "}</p>
                                 <button
-                                  className={cn (buttonVariants({ variant: "subtle" }),)}
+                                  className={cn (buttonVariants({ variant: "subtle" }),"mt-2")}
                                   onClick={() => setCommentSaved(!commentsSaved)}
                                 >
                                 Edit Comments

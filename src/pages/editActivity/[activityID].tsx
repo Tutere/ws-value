@@ -49,6 +49,7 @@ export default function Project() {
       changeType: "Edit",
       status: project?.status!,
       members: [],
+      reportComments: activity?.reportComments?? "",
     },
   });
 

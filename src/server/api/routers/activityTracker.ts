@@ -28,6 +28,7 @@ import { ActivityChangeSchema} from "~/schemas/activityTracker";
             status: input.status,
             stakeholders: input.stakeholders,
             members: input.members.join(','),
+            reportComments:input.reportComments,
           }
         }
       );
