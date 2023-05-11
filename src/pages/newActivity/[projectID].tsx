@@ -26,6 +26,16 @@ export default function Project() {
       }
     }
   });
+  useEffect(() => {
+    const query = api.projects.FindByProjectId.useQuery({id:id}, {
+      onError: (error) => {
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
+      }
+    });
+  }, []);
+
 
   const project = query.data;
 
@@ -159,7 +169,6 @@ export default function Project() {
 
   return (
     <>
-      (
         <div className="p-8">
           <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
 
@@ -330,7 +339,6 @@ export default function Project() {
             </Button>
           </form>
         </div>
-      )
     </>
   );
 }
