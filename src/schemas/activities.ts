@@ -52,3 +52,8 @@ export const ReadActivitySchema = z.object({
     members: z.array(z.string()),
 
   });
+
+  export const ReportCommentSchema = z.object({
+    id: z.string().cuid(),
+    reportComment: z.string(),
+  });
