@@ -140,7 +140,7 @@ export default function MonthlyReport({
                             //list of projectMembers linked to this projecy
                             const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
                             //of those projectMembers find which ones are linked to this activity then get their name
-                            const projMemIds: string[] = []; //for lineage
+                            const projMemIds: string[] = []; //for lineage work below
                             projectMembersOfActivity?.forEach(element => {
                               element.ActivityMember.forEach(am => {
                                 if (activity.id === am.activityId) {
