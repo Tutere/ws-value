@@ -170,6 +170,7 @@ export function DeletionDialog(props: { object: string; id: string }) {
       hours: activity?.hours!,
       members: activity?.members?.map((member) => member.projectMemberId),
       stakeholders: project2?.stakeholders!,
+      reportComments:activity?.reportComments?? "",
     },
   });
 
@@ -209,10 +210,8 @@ export function DeletionDialog(props: { object: string; id: string }) {
       methodActivityTracker.setValue("status", activity.status);
       methodActivityTracker.setValue("hours", activity.hours);
       methodActivityTracker.setValue("stakeholders", activity.stakeholders!);
-      methodActivityTracker.setValue(
-        "members",
-        activity.members?.map((member) => member.projectMemberId)
-      );
+      methodActivityTracker.setValue("members",activity.members?.map((member) => member.projectMemberId));
+      methodActivityTracker.setValue("reportComments", activity.reportComments?? "");
 
       mutationActivityracker.mutateAsync(methodActivityTracker.getValues());
     });

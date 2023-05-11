@@ -156,6 +156,7 @@ model Activity {
     stakeholders      String?
     members           ActivityMember[]
     hours             Int?
+    reportComments    String?          @db.Text
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])
@@ -213,6 +214,7 @@ model ActivityTracker {
     hours             Int?
     stakeholders      String?
     members           String?   @db.Text
+    reportComments    String?   @db.Text
 
     @@index([projectId])
     @@index([activityId])

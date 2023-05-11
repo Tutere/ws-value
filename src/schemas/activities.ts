@@ -50,5 +50,10 @@ export const ReadActivitySchema = z.object({
     stakeholders: z.string().optional(),
     hours: z.preprocess((val) => Number(val), z.number()),
     members: z.array(z.string()),
+    reportComments: z.string().optional(),
+  });
 
+  export const ReportCommentSchema = z.object({
+    id: z.string().cuid(),
+    reportComment: z.string(),
   });
