@@ -1,30 +1,33 @@
+import { Label } from "@radix-ui/react-label";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Select, { MultiValue } from "react-select";
+import { TextAreaSection } from "~/components/ui/TextAreaSection";
+import { InfoIcon } from "~/components/ui/infoIcon";
+import { InputSection } from "~/components/ui/inputSection";
+import { useZodForm } from "~/hooks/useZodForm";
+import { CreateActivitySchema } from "~/schemas/activities";
+import { ActivityChangeSchema } from "~/schemas/activityTracker";
 import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/TextArea";
-import { Label } from "@radix-ui/react-label";
-import { useZodForm } from "~/hooks/useZodForm";
-import { CreateActivitySchema } from "~/schemas/activities";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { InfoIcon } from "~/components/ui/infoIcon";
-import { ActivityChangeSchema } from "~/schemas/activityTracker";
-import Select, { MultiValue } from "react-select";
-import { InputSection } from "~/components/ui/inputSection";
-import { TextAreaSection } from "~/components/ui/TextAreaSection";
 
 export default function Project() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
-  const query = api.projects.read.useQuery(undefined, {
-    suspense: true,
+  const query = api.projects.FindByProjectId.useQuery({id:id}, {
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        router.push("/");
+      }
+    }
   });
 
-  const projects = query.data;
-  const project = projects ? projects.find((p) => p.id === id) : null;
+  const project = query.data;
 
   const mutation = api.activities.create.useMutation({
     onSuccess: async (data) => {
@@ -46,17 +49,7 @@ export default function Project() {
   });
 
   const { data: sessionData } = useSession();
-  const isMemberFound = project?.members.some((member) => {
-    return member.userId === sessionData?.user.id;
-  });
 
-  useEffect(() => {
-    if (!isMemberFound) {
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
-    }
-  }, [isMemberFound, router]);
 
   /****  For Data lineage *******/
   const mutationActivityTracker = api.activityTracker.edit.useMutation();
@@ -166,7 +159,7 @@ export default function Project() {
 
   return (
     <>
-      {isMemberFound ? (
+      (
         <div className="p-8">
           <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
 
@@ -337,13 +330,7 @@ export default function Project() {
             </Button>
           </form>
         </div>
-      ) : (
-        <div className="p-8">
-          <p>
-            You are not a member of this project. Redirecting to homepage...
-          </p>
-        </div>
-      )}
+      )
     </>
   );
 }
