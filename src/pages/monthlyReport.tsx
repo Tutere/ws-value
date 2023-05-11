@@ -17,6 +17,11 @@ import { useSession } from "next-auth/react";
 import { Activity, ActivityMember } from "@prisma/client";
 import Link from "next/link";
 import { DatePicker } from "~/components/ui/datePicker";
+import { TextAreaSection } from "~/components/ui/TextAreaSection";
+import { useZodForm } from "~/hooks/useZodForm";
+import { ReportCommentSchema } from "~/schemas/activities";
+import { buttonVariants } from "~/components/ui/Button"
+import { ActivityChangeSchema } from "~/schemas/activityTracker";
 
 export default function MonthlyReport({
   className,
@@ -27,7 +32,7 @@ export default function MonthlyReport({
 
   })
 
-  console.log(date?.from + "" + " TO " + "" + date?.to)
+  // console.log(date?.from + "" + " TO " + "" + date?.to)
 
   const { data: sessionData } = useSession();
 
@@ -41,7 +46,7 @@ export default function MonthlyReport({
 
   const projects = query.data;
 
-  console.log(projects)
+  // console.log(projects)
 
   const activityMembersList: ActivityMember[] = [];
   const activities: ((Activity & { members: ActivityMember[]; }) | null | undefined)[] = [];
@@ -64,6 +69,7 @@ export default function MonthlyReport({
     });
 
     activities.push(activity);
+    // console.log(activity);
   })
 
   return (
@@ -83,6 +89,7 @@ export default function MonthlyReport({
 
         <div className="flex-[1] border-r-2">
             <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
+            
 
             {projects && projects.map((project) => {
               // if (project.Activity.length > 0) {
@@ -128,21 +135,136 @@ export default function MonthlyReport({
                           && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
                           && activityEnd >= selectedStart) {
 
+                            //get activity member names for later use
+                            const contributorNames: (string | null)[] = [];
+                            //list of projectMembers linked to this projecy
+                            const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
+                            //of those projectMembers find which ones are linked to this activity then get their name
+                            const projMemIds: string[] = []; //for lineage work below
+                            projectMembersOfActivity?.forEach(element => {
+                              element.ActivityMember.forEach(am => {
+                                if (activity.id === am.activityId) {
+                                  contributorNames.push(element.user.name);
+                                  projMemIds.push(element.id);
+                                }
+                              })
+                            });
+
+                            //setup for reportCOmments of each activity
+                            const [commentsSaved, setCommentSaved] = useState(activity.reportComments === null || activity.reportComments === "" ? false : true);
+                            //to render comment changes on screen without refreshing
+                            const [comments,setComments] = useState(activity.reportComments?? "")
+
+                            const mutation = api.activities.reportComments.useMutation({
+                            
+                            });
+
+                            const methods = useZodForm({
+                              schema: ReportCommentSchema,
+                              defaultValues: {
+                                id: activity.id, 
+                              
+                              },
+                            });
+
+
+                            //lineage
+                            const mutationActivityTracker = api.activityTracker.edit.useMutation({
+                            
+                            });
+
+                            const methodsActivityTracker = useZodForm({
+                              schema: ActivityChangeSchema,
+                              defaultValues: {
+                                changeType: "Edit",
+                                id: activity?.id,
+                                projectId: activity?.projectId.toString(),
+                                name: activity?.name?.toString(),
+                                description: activity?.description?.toString(),
+                                engagementPattern: activity?.engagementPattern?.toString(),
+                                valueCreated: activity?.valueCreated?.toString(),
+                                startDate: activity?.startDate?.toISOString(),
+                                endDate: activity?.endDate?.toISOString() || "",
+                                outcomeScore: activity?.outcomeScore!,
+                                effortScore: activity?.effortScore!,
+                                status: activity?.status!,
+                                hours: activity?.hours!,
+                                members: projMemIds,
+                                stakeholders: project?.stakeholders!,
+                                reportComments:activity?.reportComments?? "",
+                                
+                              },
+                            });
+
+
                         return (
+                          <form
+                            onSubmit={methods.handleSubmit(async (values) => {
+                              await setCommentSaved(true);
+                              await setComments(methods.getValues("reportComment"));
+                              await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
+                              await Promise.all([
+                                await mutation.mutateAsync(values),
+                                await(console.log(methodsActivityTracker.getValues())),
+                                await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
+                              ]);
+                              methods.reset();
+                            })}
+                          >
                             <div className="mb-5 ml-5 w-3/4">
                               <div className="flex">
                                 <div>{project.icon}</div>
-                                <p className="ml-2 font-bold">{activity.name}</p>
-                                <p className="ml-1"> - Completed: {activity.endDate?.toDateString()} </p>
+                                <p className="ml-2 font-bold">
+                                  {activity.name}
+                                </p>
+                                <p className="ml-1">
+                                  {" "}
+                                  - Completed:{" "}
+                                  {activity.endDate?.toDateString()}{" "}
+                                </p>
                               </div>
 
+                              <p className="">Outcome Score: {activity.outcomeScore}{" "}</p>
+                              <p className="">Contributors: {contributorNames.join(", ")}{" "}</p>
+                              <p className="">Stakeholders Involved:{" "} {activity.stakeholders === "" ? "N/A" : activity.stakeholders}{" "}</p>
+                              <p className="mb-5 mt-5">Value Statement: {activity.valueCreated}{" "}</p>
+
+                              {commentsSaved === false || comments === ""? (
+                                <>
+                                <TextAreaSection
+                                  infoContent="These comments will be used for your monthly report"
+                                  methods={methods}
+                                  label="Optional Comments for this activity:"
+                                  methodsField="reportComment"
+                                  placeHolder=""
+                                  defaultValue={comments}
+                                /> 
+                                <Button
+                                type="submit"
+                                variant={"default"}
+                                disabled={mutation.isLoading}
+                                className="mt-2"
+                              >
+                                {mutation.isLoading
+                                  ? "Loading"
+                                  : "Save Comments"}
+                              </Button>   
+                              </>                    
+                              ) : (
+                                <>
+                                <p className="">Optional Comments: {comments}{" "}</p>
+                                <button
+                                  className={cn (buttonVariants({ variant: "subtle" }),"mt-2")}
+                                  onClick={() => setCommentSaved(!commentsSaved)}
+                                >
+                                Edit Comments
+                              </button>
+                              </>
+                              )}
                               
-                              <p className="">Outcome Score: {activity.outcomeScore} </p>
-                              <p className="">Effort Score: {activity.effortScore} </p>
-                              <p className="">Hours spent: {activity.hours + " hours"} </p>
-                              <p className="mb-10 mt-5">Value Statement: {activity.valueCreated} </p>
-                          </div>
-                        )
+                            </div>
+                          </form>
+                        );
                       }
                     })}
                   </div>
@@ -150,6 +272,7 @@ export default function MonthlyReport({
               }
 
             })}
+            
         </div>
         <div className="flex-1 ">
           <h1 className="text-3xl font-bold mb-12" >Projects Completed</h1>

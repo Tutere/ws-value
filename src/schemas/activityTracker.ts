@@ -18,7 +18,8 @@ export const ActivityChangeSchema = z.object({
     hours: z.preprocess((val) => Number(val), z.number()),
     status: z.string(),
     members: z.array(z.string()),
-    stakeholders: z.string().optional()
+    stakeholders: z.string().optional(),
+    reportComments: z.string().optional(),
 });
 
 export type ActivityChangeSchema = z.infer<typeof ActivityChangeSchema>;

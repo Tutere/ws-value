@@ -1,5 +1,5 @@
 import { CreateActivitySchema, ReadActivitySchema,
-  ReadSpecificActivitySchema, EditActivitySchema  } from "~/schemas/activities";
+  ReadSpecificActivitySchema, EditActivitySchema, ReportCommentSchema  } from "~/schemas/activities";
 
 
 import {
@@ -112,6 +112,21 @@ export const activitiesRouter = createTRPCRouter({
               })
             }
           },
+        }
+      }
+    );
+  }),
+
+  reportComments: protectedProcedure
+  .input(ReportCommentSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.update(
+      {
+        where: {
+          id: input.id,
+        },
+        data: {
+          reportComments: input.reportComment,
         }
       }
     );
