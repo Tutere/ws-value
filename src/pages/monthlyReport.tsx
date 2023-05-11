@@ -149,7 +149,7 @@ export default function MonthlyReport({
 
                             //setup for reportCOmments of each activity
                             const [commentsSaved, setCommentSaved] = useState(activity.reportComments === null || activity.reportComments === "" ? false : true);
-                            //to render on screen
+                            //to render comment changes on screen without refreshing
                             const [comments,setComments] = useState(activity.reportComments?? "")
 
                             const mutation = api.activities.reportComments.useMutation({
