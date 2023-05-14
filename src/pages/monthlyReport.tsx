@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "src/components/ui/popover"
 import { useSession } from "next-auth/react";
-import { Activity, ActivityMember, Project, ProjectMember } from "@prisma/client";
+import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/client";
 import Link from "next/link";
 import { DatePicker } from "~/components/ui/datePicker";
 import { TextAreaSection } from "~/components/ui/TextAreaSection";
@@ -22,6 +22,9 @@ import { useZodForm } from "~/hooks/useZodForm";
 import { ReportCommentSchema } from "~/schemas/activities";
 import { buttonVariants } from "~/components/ui/Button"
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
+import { Label } from "@radix-ui/react-label";
+import { Textarea } from "~/components/ui/TextArea";
+import { InfoIcon } from "~/components/ui/infoIcon";
 
 export default function MonthlyReport({
   className,
@@ -75,9 +78,9 @@ export default function MonthlyReport({
   //setup for all activities and projects in date range
 
   const projectsInDateRange: (Project & { Activity: Activity[]; members: ProjectMember[]; })[] = [];
-  const activitiesInRange: Activity[] = [];
+  const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
 
-  {projects && projects.map((project) => {
+  projects && projects.map((project) => {
 
     const projectEnd = project.actualEnd?.getTime()
     const selectedEnd = date?.to?.getTime()
@@ -88,51 +91,116 @@ export default function MonthlyReport({
       && projectEnd >= selectedStart
       &&project.status === "Complete") {
         projectsInDateRange.push(project);
-  
+    }
+  })
 
-    {project.Activity
+  projects && projects.map((project) => {
+    let activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[] = [];
+
+    project.Activity
       .map((activity) => {
         const activityEnd = activity.endDate?.getTime();
         const selectedEnd = date?.to?.getTime();
         const selectedStart = date?.from?.getTime();
-        console.log(activityEnd);
-        console.log(selectedEnd);
-        console.log(selectedStart);
 
         if (activityEnd && selectedEnd && selectedStart
           && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
           && activityEnd >= selectedStart) {
             
+          const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
+          const [commentsSaved, setCommentSaved] = useState(activity.reportComments === null || activity.reportComments === "" ? false : true);
+          //to render comment changes on screen without refreshing
+          const [comments,setComments] = useState(activity.reportComments?? "")
 
-            activitiesInRange.push(activity);
-            
-            //get contributor names and push with activity
-            const projectMembersOfActivity: any[] = []
-            project.members.forEach(pm => {
-              if (pm.projectId === activity.projectId) {
-                projectMembersOfActivity.push(pm);
-              }
-            })
+          activitiesInRange.push({activity: activity, projectMembers: projectMembersOfActivity,commentSaved:commentsSaved, setCommentSaved: setCommentSaved,comments:comments, setComments:setComments});
 
-            // const contributorNames = []
-            // projectMembersOfActivity?.forEach(element => {
-            //   element.ActivityMember.forEach(am => {
-            //     if (activity.id === am.activityId) {
-            //       contributorNames.push(element.user.name);
-            //       projMemIds.push(element.id);
-            //     }
-            //   })
-            // });
-            // console.log(projectMembersOfActivity);
-
-            // activitiesInRange.push({activity: activity, projectMembers: projectMembersOfActivity});
-
-    }})
+        }
+      })
+      if (activitiesInRange.length > 0) (
+        projectsWithActivitiesInRange.push({project:project, activitiesInRange:activitiesInRange})
+      )
   
-  }}})}
+  })
 
-  console.log(activitiesInRange);
+  console.log(projectsWithActivitiesInRange);
   console.log(projectsInDateRange);
+
+
+  //Setup for report comment saving and lineage
+  // const mutation = api.activities.reportComments.useMutation({
+                            
+  // });
+
+  // const methods = useZodForm({
+  //   schema: ReportCommentSchema,
+  //   defaultValues: {
+  //     id: "", 
+    
+  //   },
+  // });
+
+  // const setValues = async (activity: Activity, comment:string) => {
+  //   methods.setValue("id",activity.id);
+  //   methods.setValue("reportComment",comment);
+  // }
+
+  //lineage
+  // const mutationActivityTracker = api.activityTracker.edit.useMutation({
+                            
+  // });
+
+  // const methodsActivityTracker = useZodForm({
+  //   schema: ActivityChangeSchema,
+  //   defaultValues: {
+  //     changeType: "Edit",
+  //     // id: activity?.id,
+  //     // projectId: activity?.projectId.toString(),
+  //     // name: activity?.name?.toString(),
+  //     // description: activity?.description?.toString(),
+  //     // engagementPattern: activity?.engagementPattern?.toString(),
+  //     // valueCreated: activity?.valueCreated?.toString(),
+  //     // startDate: activity?.startDate?.toISOString(),
+  //     // endDate: activity?.endDate?.toISOString() || "",
+  //     // outcomeScore: activity?.outcomeScore!,
+  //     // effortScore: activity?.effortScore!,
+  //     // status: activity?.status!,
+  //     // hours: activity?.hours!,
+  //     // members: projMemIds,
+  //     // stakeholders: project?.stakeholders!,
+  //     // reportComments:activity?.reportComments?? "", 
+  //   },
+  // });
+
+  // const setValuesTracking = async (activity: Activity, projMemIds: string[]) => {
+  //   methodsActivityTracker.setValue("id", activity.id);
+  //     methodsActivityTracker.setValue("projectId", activity.projectId);
+  //     methodsActivityTracker.setValue("name", activity.name);
+  //     methodsActivityTracker.setValue("description", activity.description);
+  //     methodsActivityTracker.setValue(
+  //       "engagementPattern",
+  //       activity.engagementPattern ?? ""
+  //     );
+  //     methodsActivityTracker.setValue(
+  //       "valueCreated",
+  //       activity.valueCreated?.toString()
+  //     );
+  //     methodsActivityTracker.setValue(
+  //       "startDate",
+  //       activity.startDate?.toISOString()!
+  //     );
+  //     methodsActivityTracker.setValue(
+  //       "endDate",
+  //       activity?.endDate?.toISOString() || ""
+  //     );
+  //     methodsActivityTracker.setValue("outcomeScore", activity.outcomeScore);
+  //     methodsActivityTracker.setValue("effortScore", activity.effortScore);
+  //     methodsActivityTracker.setValue("status", activity.status);
+  //     methodsActivityTracker.setValue("hours", activity.hours);
+  //     methodsActivityTracker.setValue("stakeholders", activity.stakeholders!);
+  //     methodsActivityTracker.setValue("members",projMemIds);
+  //     methodsActivityTracker.setValue("reportComments", activity.reportComments?? "");
+  // } 
+
 
   return (
 
@@ -153,42 +221,21 @@ export default function MonthlyReport({
             <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
             
 
-            {projects && projects.map((project) => {
-              // if (project.Activity.length > 0) {
-                let showName = false;
-                
-                project.Activity.forEach(activity => {
-                  const activityEnd = activity.endDate?.getTime()
-                  const selectedEnd = date?.to?.getTime()
-                  const selectedStart = date?.from?.getTime()
-
-
-                  if (activityEnd && selectedEnd && selectedStart
-                    && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-                    && activityEnd >= selectedStart) {
-                      showName = true;
-                        }
-
-                });
-
-                if (showName) { //dont need to check if project.Activity lenght > 0 as already know by this stage
+            {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
                 return (
                   <div>
                     <Link className="text-xl mb-5 hover:underline" 
-                    href={"/" + project.id} 
+                    href={"/" + project.project.id} 
                     rel="noopener noreferrer" 
-                    target="_blank"><b>{project.name}</b>
-                      {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</Link>
+                    target="_blank"><b>{project.project.name}</b>
+                      {project.project.stakeholders && <span> with <b>{project.project.stakeholders}</b></span>}</Link>
 
-                      {project.Activity
-                      .sort((a,b) => {
-                        const aOutcomeScore = a.outcomeScore ? a.outcomeScore : 0;
-                        const bOutcomeScore = b.outcomeScore ? b.outcomeScore : 0;
-                        return bOutcomeScore - aOutcomeScore;
-                      })
-                      .map((activity) => {
-                        const activityEnd = activity.endDate?.getTime()
+                      {project.activitiesInRange
+
+                      .map((activity, index) => {
+                        
+                        const activityEnd = activity.activity.endDate?.getTime()
                         const selectedEnd = date?.to?.getTime()
                         const selectedStart = date?.from?.getTime()
 
@@ -199,125 +246,102 @@ export default function MonthlyReport({
 
                             //get activity member names for later use
                             const contributorNames: (string | null)[] = [];
-                            //list of projectMembers linked to this projecy
-                            const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
-                            //of those projectMembers find which ones are linked to this activity then get their name
-                            const projMemIds: string[] = []; //for lineage work below
-                            projectMembersOfActivity?.forEach(element => {
-                              element.ActivityMember.forEach(am => {
-                                if (activity.id === am.activityId) {
-                                  contributorNames.push(element.user.name);
-                                  projMemIds.push(element.id);
-                                }
-                              })
-                            });
 
-                            //setup for reportCOmments of each activity
-                            const [commentsSaved, setCommentSaved] = useState(activity.reportComments === null || activity.reportComments === "" ? false : true);
-                            //to render comment changes on screen without refreshing
-                            const [comments,setComments] = useState(activity.reportComments?? "")
-
-                            const mutation = api.activities.reportComments.useMutation({
-                            
-                            });
-
-                            const methods = useZodForm({
-                              schema: ReportCommentSchema,
-                              defaultValues: {
-                                id: activity.id, 
-                              
-                              },
-                            });
-
-
-                            //lineage
-                            const mutationActivityTracker = api.activityTracker.edit.useMutation({
-                            
-                            });
-
-                            const methodsActivityTracker = useZodForm({
-                              schema: ActivityChangeSchema,
-                              defaultValues: {
-                                changeType: "Edit",
-                                id: activity?.id,
-                                projectId: activity?.projectId.toString(),
-                                name: activity?.name?.toString(),
-                                description: activity?.description?.toString(),
-                                engagementPattern: activity?.engagementPattern?.toString(),
-                                valueCreated: activity?.valueCreated?.toString(),
-                                startDate: activity?.startDate?.toISOString(),
-                                endDate: activity?.endDate?.toISOString() || "",
-                                outcomeScore: activity?.outcomeScore!,
-                                effortScore: activity?.effortScore!,
-                                status: activity?.status!,
-                                hours: activity?.hours!,
-                                members: projMemIds,
-                                stakeholders: project?.stakeholders!,
-                                reportComments:activity?.reportComments?? "",
-                                
-                              },
-                            });
-
+                            //for lineage work below
+                            const projMemIds: string[] = []; 
+                        
+                            project.activitiesInRange.forEach(act => {
+                              if (act.activity.id === activity.activity.id) {
+                                act.projectMembers?.forEach(pm => {
+                                  contributorNames.push(pm.user.name);
+                                  projMemIds.push(pm.id);
+                                })
+                              }
+                            })
 
                         return (
                           <form
-                            onSubmit={methods.handleSubmit(async (values) => {
-                              await setCommentSaved(true);
-                              await setComments(methods.getValues("reportComment"));
-                              await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
+                            // onSubmit={methods.handleSubmit(async (values) => {
+                              onSubmit={async (e) => {
+                                e.preventDefault();
+                              // e.preventDefault();
+                              await console.log(activity.comments);
+                              await activity.setCommentSaved(true);
+                              // await activityInFocus?.setComments(methods.getValues("reportComment"));
+                              // await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
+                              // await setValues(activity.activity,activity.comments);
+                              // await setValuesTracking(activityInFocus?.activity!,projMemIds);
                               await Promise.all([
-                                await mutation.mutateAsync(values),
-                                await(console.log(methodsActivityTracker.getValues())),
-                                await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
+                                // await mutation.mutateAsync(methods.getValues()),
+                                // await(console.log(methodsActivityTracker.getValues())),
+                                // await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
                               ]);
-                              methods.reset();
-                            })}
+                              // methods.reset();
+                              // methodsActivityTracker.reset();
+                            }}
                           >
                             <div className="mb-5 ml-5 w-3/4">
                               <div className="flex">
-                                <div>{project.icon}</div>
+                                <div>{project.project.icon}</div>
                                 <p className="ml-2 font-bold">
-                                  {activity.name}
+                                  {activity.activity.name}
                                 </p>
                                 <p className="ml-1">
                                   {" "}
                                   - Completed:{" "}
-                                  {activity.endDate?.toDateString()}{" "}
+                                  {activity.activity.endDate?.toDateString()}{" "}
                                 </p>
                               </div>
 
-                              <p className="">Outcome Score: {activity.outcomeScore}{" "}</p>
+                              <p className="">Outcome Score: {activity.activity.outcomeScore}{" "}</p>
                               <p className="">Contributors: {contributorNames.join(", ")}{" "}</p>
-                              <p className="">Stakeholders Involved:{" "} {activity.stakeholders === "" ? "N/A" : activity.stakeholders}{" "}</p>
-                              <p className="mb-5 mt-5">Value Statement: {activity.valueCreated}{" "}</p>
+                              <p className="">Stakeholders Involved:{" "} {activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders}{" "}</p>
+                              <p className="mb-5 mt-5">Value Statement: {activity.activity.valueCreated}{" "}</p>
 
-                              {commentsSaved === false || comments === ""? (
+                              {activity?.commentSaved === false || activity?.comments === ""? (
                                 <>
-                                <TextAreaSection
-                                  infoContent="These comments will be used for your monthly report"
-                                  methods={methods}
-                                  label="Optional Comments for this activity:"
-                                  methodsField="reportComment"
-                                  placeHolder=""
-                                  defaultValue={comments}
-                                /> 
+
+                              <div className="grid w-full max-w-md items-center gap-1.5">
+                                  <Label htmlFor="reportComment">Optional Comments for Activity</Label>
+                                  <div className="flex items-center">
+                                      <Textarea
+                                      // {...methods.register("reportComment")}
+                                        className="mr-4"
+                                        placeholder=""
+                                        defaultValue={activity.comments}
+                                        onChange={(e) => activity.setComments(e.target.value)}
+                                      />
+                                      <InfoIcon content="These comments will be used for your monthly report" />
+                                  </div>
+                                   
+                              </div>
+
                                 <Button
                                 type="submit"
                                 variant={"default"}
-                                disabled={mutation.isLoading}
+                                // disabled={mutation.isLoading}
                                 className="mt-2"
+                                // onClick={() => console.log(activity.comments)}
                               >
-                                {mutation.isLoading
+                                {/* {mutation.isLoading
                                   ? "Loading"
-                                  : "Save Comments"}
+                                  : "Save Comments"} */}
                               </Button>   
+
+                              {/* <button
+                                type="submit"
+                                className={cn (buttonVariants({ variant: "default" }),"mt-2")}
+                                onClick={() => console.log(activity.comments)}
+                                >
+                                Edit Comments
+                              </button> */}
                               </>                    
                               ) : (
                                 <>
-                                <p className="">Optional Comments: {comments}{" "}</p>
+                                <p className="">Optional Comments: {activity?.comments}{" "}</p>
                                 <button
                                   className={cn (buttonVariants({ variant: "subtle" }),"mt-2")}
-                                  onClick={() => setCommentSaved(!commentsSaved)}
+                                  onClick={() => project.activitiesInRange[index]?.setCommentSaved(!(project.activitiesInRange[index]?.commentSaved))}
                                 >
                                 Edit Comments
                               </button>
@@ -331,7 +355,7 @@ export default function MonthlyReport({
                     })}
                   </div>
                 )
-              }
+              // }
 
             })}
             

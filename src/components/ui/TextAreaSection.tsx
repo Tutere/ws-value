@@ -17,6 +17,7 @@ interface TextAreaProps<T extends FieldValues> {
 export function TextAreaSection<T extends FieldValues>(
   props: TextAreaProps<T>
 ) {
+  console.log(props.defaultValue);
   return (
     <div className="grid w-full max-w-md items-center gap-1.5">
       <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
