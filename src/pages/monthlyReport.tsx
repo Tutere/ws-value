@@ -363,7 +363,7 @@ export default function MonthlyReport({
                                   <Label htmlFor="reportComment">Optional Comments for Activity</Label>
                                   <div className="flex items-center">
                                       <Textarea
-                                        className="mr-4"
+                                        className="mr-4 whitespace-pre"
                                         placeholder=""
                                         defaultValue={activity.comments}
                                         onChange={(e) => activity.setComments(e.target.value)}
@@ -387,7 +387,7 @@ export default function MonthlyReport({
                               </>                    
                               ) : (
                                 <>
-                                <p className="">Optional Comments: {activity?.comments}{" "}</p>
+                                <p className="whitespace-pre-wrap">Optional Comments: {activity?.comments}{" "}</p>
                                 <button
                                   className={cn (buttonVariants({ variant: "subtle" }),"mt-2")}
                                   onClick={() => project.activitiesInRange[index]?.setCommentSaved(!(project.activitiesInRange[index]?.commentSaved))}
