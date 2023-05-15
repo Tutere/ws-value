@@ -86,7 +86,7 @@ export default function MonthlyReport({
     // console.log(activity);
   })
 
-  //all projects and activities (so all hooks used each render)
+  // get all projects and their activities (so all hooks used each render)
   const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
   
   const getProjectMembersOfActivity = (activity: any) => {
@@ -98,7 +98,7 @@ export default function MonthlyReport({
     const [comments, setComments] = useState(activity.reportComments ?? "");
     const [commentsSaved, setCommentSaved] = useState(
       activity.reportComments === null || activity.reportComments === "" ? false : true
-    );
+    ); //to check if a report comment has already been added
   
     return {
       comments,
@@ -108,6 +108,7 @@ export default function MonthlyReport({
     };
   };
 
+  //add all activities to each project, along with fields and states for later user
   projects && projects.map((project) => {
     const activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[] = [];
     
@@ -152,39 +153,7 @@ export default function MonthlyReport({
         projectsInDateRange.push(project);
     }
   })
-
-  // const filterActivitiesInRange = (project: { Activity: any[]; }) => {
-  //   const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; }[] = [];
   
-  //   project.Activity.forEach((activity: { endDate: { getTime: () => any; }; projectId: any; reportComments: string | null; }) => {
-  //     const activityEnd = activity.endDate?.getTime();
-  //     const selectedEnd = date?.to?.getTime();
-  //     const selectedStart = date?.from?.getTime();
-  
-  //     if (
-  //       activityEnd &&
-  //       selectedEnd &&
-  //       selectedStart &&
-  //       activityEnd <= selectedEnd + 86400000 &&
-  //       activityEnd >= selectedStart
-  //     ) {
-  //       const projectMembersOfActivity = getProjectMembersOfActivity(activity);
-  //       const { comments, setComments, commentsSaved, setCommentSaved } = useActivityComments( activity);
-  
-  //       activitiesInRange.push({
-  //         activity: activity,
-  //         projectMembers: projectMembersOfActivity,
-  //         commentSaved: commentsSaved,
-  //         setCommentSaved: setCommentSaved,
-  //         comments: comments,
-  //         setComments: setComments,
-  //       });
-  //     }
-  //   });
-  
-  //   return activitiesInRange;
-  // };
-
   allProjectsAndActivities && allProjectsAndActivities.map((element) => {
     const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; }[] = [];
 
@@ -234,62 +203,62 @@ export default function MonthlyReport({
     await mutation.mutateAsync(methods.getValues());
   }
 
-  //lineage
-  // const mutationActivityTracker = api.activityTracker.edit.useMutation({
+  // lineage
+  const mutationActivityTracker = api.activityTracker.edit.useMutation({
                             
-  // });
+  });
 
-  // const methodsActivityTracker = useZodForm({
-  //   schema: ActivityChangeSchema,
-  //   defaultValues: {
-  //     changeType: "Edit",
-  //     // id: activity?.id,
-  //     // projectId: activity?.projectId.toString(),
-  //     // name: activity?.name?.toString(),
-  //     // description: activity?.description?.toString(),
-  //     // engagementPattern: activity?.engagementPattern?.toString(),
-  //     // valueCreated: activity?.valueCreated?.toString(),
-  //     // startDate: activity?.startDate?.toISOString(),
-  //     // endDate: activity?.endDate?.toISOString() || "",
-  //     // outcomeScore: activity?.outcomeScore!,
-  //     // effortScore: activity?.effortScore!,
-  //     // status: activity?.status!,
-  //     // hours: activity?.hours!,
-  //     // members: projMemIds,
-  //     // stakeholders: project?.stakeholders!,
-  //     // reportComments:activity?.reportComments?? "", 
-  //   },
-  // });
+  const methodsActivityTracker = useZodForm({
+    schema: ActivityChangeSchema,
+    defaultValues: {
+      changeType: "Edit",
+      // id: activity?.id,
+      // projectId: activity?.projectId.toString(),
+      // name: activity?.name?.toString(),
+      // description: activity?.description?.toString(),
+      // engagementPattern: activity?.engagementPattern?.toString(),
+      // valueCreated: activity?.valueCreated?.toString(),
+      // startDate: activity?.startDate?.toISOString(),
+      // endDate: activity?.endDate?.toISOString() || "",
+      // outcomeScore: activity?.outcomeScore!,
+      // effortScore: activity?.effortScore!,
+      // status: activity?.status!,
+      // hours: activity?.hours!,
+      // members: projMemIds,
+      // stakeholders: project?.stakeholders!,
+      // reportComments:activity?.reportComments?? "", 
+    },
+  });
 
-  // const setValuesTracking = async (activity: Activity, projMemIds: string[]) => {
-  //   methodsActivityTracker.setValue("id", activity.id);
-  //     methodsActivityTracker.setValue("projectId", activity.projectId);
-  //     methodsActivityTracker.setValue("name", activity.name);
-  //     methodsActivityTracker.setValue("description", activity.description);
-  //     methodsActivityTracker.setValue(
-  //       "engagementPattern",
-  //       activity.engagementPattern ?? ""
-  //     );
-  //     methodsActivityTracker.setValue(
-  //       "valueCreated",
-  //       activity.valueCreated?.toString()
-  //     );
-  //     methodsActivityTracker.setValue(
-  //       "startDate",
-  //       activity.startDate?.toISOString()!
-  //     );
-  //     methodsActivityTracker.setValue(
-  //       "endDate",
-  //       activity?.endDate?.toISOString() || ""
-  //     );
-  //     methodsActivityTracker.setValue("outcomeScore", activity.outcomeScore);
-  //     methodsActivityTracker.setValue("effortScore", activity.effortScore);
-  //     methodsActivityTracker.setValue("status", activity.status);
-  //     methodsActivityTracker.setValue("hours", activity.hours);
-  //     methodsActivityTracker.setValue("stakeholders", activity.stakeholders!);
-  //     methodsActivityTracker.setValue("members",projMemIds);
-  //     methodsActivityTracker.setValue("reportComments", activity.reportComments?? "");
-  // } 
+  const setValuesTracking = async (activity: Activity, projMemIds: string[], comments: string,) => {
+    methodsActivityTracker.setValue("id", activity.id);
+      methodsActivityTracker.setValue("projectId", activity.projectId);
+      methodsActivityTracker.setValue("name", activity.name);
+      methodsActivityTracker.setValue("description", activity.description);
+      methodsActivityTracker.setValue(
+        "engagementPattern",
+        activity.engagementPattern ?? ""
+      );
+      methodsActivityTracker.setValue(
+        "valueCreated",
+        activity.valueCreated?.toString()
+      );
+      methodsActivityTracker.setValue(
+        "startDate",
+        activity.startDate?.toISOString()!
+      );
+      methodsActivityTracker.setValue(
+        "endDate",
+        activity?.endDate?.toISOString() || ""
+      );
+      methodsActivityTracker.setValue("outcomeScore", activity.outcomeScore);
+      methodsActivityTracker.setValue("effortScore", activity.effortScore);
+      methodsActivityTracker.setValue("status", activity.status);
+      methodsActivityTracker.setValue("hours", activity.hours);
+      methodsActivityTracker.setValue("stakeholders", activity.stakeholders!);
+      methodsActivityTracker.setValue("members",projMemIds);
+      methodsActivityTracker.setValue("reportComments", comments);
+  } 
 
   
 
@@ -357,14 +326,13 @@ export default function MonthlyReport({
                               e.preventDefault();
                               await console.log(activity.comments);
                               await activity.setCommentSaved(true);
-                              // await activityInFocus?.setComments(methods.getValues("reportComment"));
                               // await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
                               await setValues(activity.activity,activity.comments);
-                              // await setValuesTracking(activityInFocus?.activity!,projMemIds);
+                              await setValuesTracking(activity.activity,projMemIds, activity.comments);
                               await Promise.all([
                                 // await mutation.mutateAsync(methods.getValues()),
-                                // await(console.log(methodsActivityTracker.getValues())),
-                                // await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
+                                await(console.log(methodsActivityTracker.getValues())),
+                                await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
                               ]);
                               // methods.reset();
                               // methodsActivityTracker.reset();
@@ -395,7 +363,6 @@ export default function MonthlyReport({
                                   <Label htmlFor="reportComment">Optional Comments for Activity</Label>
                                   <div className="flex items-center">
                                       <Textarea
-                                      // {...methods.register("reportComment")}
                                         className="mr-4"
                                         placeholder=""
                                         defaultValue={activity.comments}
