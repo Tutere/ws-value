@@ -49,6 +49,10 @@ import {
       return ctx.prisma.projectMember.findMany({
         where: {
           userId: input.id
+        },
+        include: {
+          user:true,
+          ActivityMember:true,
         }
       });
     }),

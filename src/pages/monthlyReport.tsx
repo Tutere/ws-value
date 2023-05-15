@@ -1,27 +1,19 @@
-"use client"
-import * as React from "react"
-import { useState } from 'react';
-import { api } from "~/utils/api";
-import { addDays, format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { DateRange } from "react-day-picker"
-import { cn } from "~/utils/cn"
-import { Button } from "~/components/ui/Button"
-import { Calendar } from "src/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "src/components/ui/popover"
+import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/client";
+import { Label } from "@radix-ui/react-label";
 import { useSession } from "next-auth/react";
-import { Activity, ActivityMember } from "@prisma/client";
 import Link from "next/link";
+import * as React from "react";
+import { useState } from 'react';
+import { DateRange } from "react-day-picker";
+import { Button, buttonVariants } from "~/components/ui/Button";
+import { Textarea } from "~/components/ui/TextArea";
 import { DatePicker } from "~/components/ui/datePicker";
-import { TextAreaSection } from "~/components/ui/TextAreaSection";
+import { InfoIcon } from "~/components/ui/infoIcon";
 import { useZodForm } from "~/hooks/useZodForm";
 import { ReportCommentSchema } from "~/schemas/activities";
-import { buttonVariants } from "~/components/ui/Button"
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
+import { api } from "~/utils/api";
+import { cn } from "~/utils/cn";
 
 export default function MonthlyReport({
   className,
@@ -31,8 +23,6 @@ export default function MonthlyReport({
     to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
 
   })
-
-  // console.log(date?.from + "" + " TO " + "" + date?.to)
 
   const { data: sessionData } = useSession();
 
@@ -46,7 +36,15 @@ export default function MonthlyReport({
 
   const projects = query.data;
 
-  // console.log(projects)
+  const mutation = api.activities.reportComments.useMutation();
+
+  const methods = useZodForm({
+    schema: ReportCommentSchema,
+    defaultValues: {
+      id: "", 
+    
+    },
+  });
 
   const activityMembersList: ActivityMember[] = [];
   const activities: ((Activity & { members: ActivityMember[]; }) | null | undefined)[] = [];
@@ -69,11 +67,146 @@ export default function MonthlyReport({
     });
 
     activities.push(activity);
-    // console.log(activity);
   })
 
-  return (
+  // get all projects and their activities (so all hooks used each render)
+  const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
+  
+  const getProjectMembersOfActivity = (activity: any) => {
+     return api.projectmember.read.useQuery({ id: activity.projectId }).data;
+    
+  };
 
+  const useActivityComments = (activity: { reportComments: string | null; }) => {
+    const [comments, setComments] = useState(activity.reportComments ?? "");
+    const [commentsSaved, setCommentSaved] = useState(
+      activity.reportComments === null || activity.reportComments === "" ? false : true
+    ); //to check if a report comment has already been added
+  
+    return {
+      comments,
+      setComments,
+      commentsSaved,
+      setCommentSaved,
+    };
+  };
+
+  //add all activities to each project, along with fields and states for later user
+  projects && projects.map((project) => {
+    const activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[] = [];
+    
+    project.Activity.forEach(activity => {
+      const projectMembersOfActivity = getProjectMembersOfActivity(activity);
+      const { comments, setComments, commentsSaved, setCommentSaved } = useActivityComments( activity);
+
+      activities.push({
+        activity: activity,
+        projectMembers: projectMembersOfActivity,
+        commentSaved: commentsSaved,
+        setCommentSaved: setCommentSaved,
+        comments: comments,
+        setComments: setComments,
+      });
+    })
+
+
+    if (activities.length > 0) {
+      allProjectsAndActivities.push({
+        project: project,
+        activities: activities,
+      });
+    }
+  });
+
+  //setup for all activities and projects in date range
+
+  const projectsInDateRange: (Project & { Activity: Activity[]; members: ProjectMember[]; })[] = [];
+  const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
+
+  projects && projects.map((project) => {
+
+    const projectEnd = project.actualEnd?.getTime()
+    const selectedEnd = date?.to?.getTime()
+    const selectedStart = date?.from?.getTime()
+
+    if (projectEnd && selectedEnd && selectedStart
+      && projectEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
+      && projectEnd >= selectedStart
+      &&project.status === "Complete") {
+        projectsInDateRange.push(project);
+    }
+  })
+  
+  allProjectsAndActivities && allProjectsAndActivities.map((element) => {
+    const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; }[] = [];
+
+    element.activities.forEach(activity => {
+    const activityEnd = activity.activity.endDate?.getTime();
+    const selectedEnd = date?.to?.getTime();
+    const selectedStart = date?.from?.getTime();
+
+    if (
+          activityEnd &&
+          selectedEnd &&
+          selectedStart &&
+          activityEnd <= selectedEnd + 86400000 &&
+          activityEnd >= selectedStart
+        ) {
+
+          activitiesInRange.push(activity)
+    }});
+    
+    if (activitiesInRange.length > 0) {
+      projectsWithActivitiesInRange.push({
+        project: element.project,
+        activitiesInRange: activitiesInRange,
+      });
+    }
+  });
+
+  console.log(projectsWithActivitiesInRange);
+  console.log(projectsInDateRange);
+
+
+  const setValues = async (activity: Activity, comment:string) => {
+    await methods.setValue("id",activity.id);
+    await methods.setValue("reportComment",comment);
+
+    await mutation.mutateAsync(methods.getValues());
+  }
+
+  // lineage
+  const mutationActivityTracker = api.activityTracker.edit.useMutation({
+                            
+  });
+
+  const methodsActivityTracker = useZodForm({
+    schema: ActivityChangeSchema,
+    defaultValues: {
+      changeType: "Edit",
+    },
+  });
+
+  const setValuesTracking = async (activity: Activity, projMemIds: string[], comments: string,) => {
+    methodsActivityTracker.setValue("id", activity.id);
+      methodsActivityTracker.setValue("projectId", activity.projectId);
+      methodsActivityTracker.setValue("name", activity.name);
+      methodsActivityTracker.setValue("description", activity.description);
+      methodsActivityTracker.setValue("engagementPattern",activity.engagementPattern ?? "");
+      methodsActivityTracker.setValue("valueCreated",activity.valueCreated?.toString());
+      methodsActivityTracker.setValue("startDate",activity.startDate?.toISOString()!);
+      methodsActivityTracker.setValue("endDate",activity?.endDate?.toISOString() || "");
+      methodsActivityTracker.setValue("outcomeScore", activity.outcomeScore);
+      methodsActivityTracker.setValue("effortScore", activity.effortScore);
+      methodsActivityTracker.setValue("status", activity.status);
+      methodsActivityTracker.setValue("hours", activity.hours);
+      methodsActivityTracker.setValue("stakeholders", activity.stakeholders!);
+      methodsActivityTracker.setValue("members",projMemIds);
+      methodsActivityTracker.setValue("reportComments", comments);
+  } 
+
+
+  return (
     <div>
       {/* --------------------------------CALENDAR-------------------------------- */}
 
@@ -84,166 +217,96 @@ export default function MonthlyReport({
 
 
       {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
-
       <div className="flex flex-row m-8 gap-10">
-
         <div className="flex-[1] border-r-2">
             <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
             
-
-            {projects && projects.map((project) => {
-              // if (project.Activity.length > 0) {
-                let showName = false;
-                
-                project.Activity.forEach(activity => {
-                  const activityEnd = activity.endDate?.getTime()
-                  const selectedEnd = date?.to?.getTime()
-                  const selectedStart = date?.from?.getTime()
-
-
-                  if (activityEnd && selectedEnd && selectedStart
-                    && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-                    && activityEnd >= selectedStart) {
-                      showName = true;
-                        }
-
-                });
-
-                if (showName) { //dont need to check if project.Activity lenght > 0 as already know by this stage
+            {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
                 return (
                   <div>
                     <Link className="text-xl mb-5 hover:underline" 
-                    href={"/" + project.id} 
+                    href={"/" + project.project.id} 
                     rel="noopener noreferrer" 
-                    target="_blank"><b>{project.name}</b>
-                      {project.stakeholders && <span> with <b>{project.stakeholders}</b></span>}</Link>
+                    target="_blank"><b>{project.project.name}</b>
+                      {project.project.stakeholders && <span> with <b>{project.project.stakeholders}</b></span>}</Link>
 
-                      {project.Activity
-                      .sort((a,b) => {
-                        const aOutcomeScore = a.outcomeScore ? a.outcomeScore : 0;
-                        const bOutcomeScore = b.outcomeScore ? b.outcomeScore : 0;
-                        return bOutcomeScore - aOutcomeScore;
-                      })
-                      .map((activity) => {
-                        const activityEnd = activity.endDate?.getTime()
-                        const selectedEnd = date?.to?.getTime()
-                        const selectedStart = date?.from?.getTime()
+                      {project.activitiesInRange
 
-
-                        if (activityEnd && selectedEnd && selectedStart
-                          && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-                          && activityEnd >= selectedStart) {
-
+                      .map((activity, index) => {
+                        
                             //get activity member names for later use
                             const contributorNames: (string | null)[] = [];
-                            //list of projectMembers linked to this projecy
-                            const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
-                            //of those projectMembers find which ones are linked to this activity then get their name
-                            const projMemIds: string[] = []; //for lineage work below
-                            projectMembersOfActivity?.forEach(element => {
-                              element.ActivityMember.forEach(am => {
-                                if (activity.id === am.activityId) {
-                                  contributorNames.push(element.user.name);
-                                  projMemIds.push(element.id);
-                                }
-                              })
-                            });
 
-                            //setup for reportCOmments of each activity
-                            const [commentsSaved, setCommentSaved] = useState(activity.reportComments === null || activity.reportComments === "" ? false : true);
-                            //to render comment changes on screen without refreshing
-                            const [comments,setComments] = useState(activity.reportComments?? "")
-
-                            const mutation = api.activities.reportComments.useMutation({
-                            
-                            });
-
-                            const methods = useZodForm({
-                              schema: ReportCommentSchema,
-                              defaultValues: {
-                                id: activity.id, 
-                              
-                              },
-                            });
-
-
-                            //lineage
-                            const mutationActivityTracker = api.activityTracker.edit.useMutation({
-                            
-                            });
-
-                            const methodsActivityTracker = useZodForm({
-                              schema: ActivityChangeSchema,
-                              defaultValues: {
-                                changeType: "Edit",
-                                id: activity?.id,
-                                projectId: activity?.projectId.toString(),
-                                name: activity?.name?.toString(),
-                                description: activity?.description?.toString(),
-                                engagementPattern: activity?.engagementPattern?.toString(),
-                                valueCreated: activity?.valueCreated?.toString(),
-                                startDate: activity?.startDate?.toISOString(),
-                                endDate: activity?.endDate?.toISOString() || "",
-                                outcomeScore: activity?.outcomeScore!,
-                                effortScore: activity?.effortScore!,
-                                status: activity?.status!,
-                                hours: activity?.hours!,
-                                members: projMemIds,
-                                stakeholders: project?.stakeholders!,
-                                reportComments:activity?.reportComments?? "",
-                                
-                              },
-                            });
-
+                            //for lineage work below
+                            const projMemIds: string[] = []; 
+                        
+                            project.activitiesInRange.forEach(act => {
+                              if (act.activity.id === activity.activity.id) {
+                                act.projectMembers?.forEach(pm => {
+                                  contributorNames.push(pm.user.name);
+                                  projMemIds.push(pm.id);
+                                })
+                              }
+                            })
 
                         return (
                           <form
-                            onSubmit={methods.handleSubmit(async (values) => {
-                              await setCommentSaved(true);
-                              await setComments(methods.getValues("reportComment"));
-                              await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
+                              onSubmit={async (e) => {
+                              e.preventDefault();
+                              await console.log(activity.comments);
+                              await activity.setCommentSaved(true);
+                              await setValues(activity.activity,activity.comments);
+                              await setValuesTracking(activity.activity,projMemIds, activity.comments);
                               await Promise.all([
-                                await mutation.mutateAsync(values),
                                 await(console.log(methodsActivityTracker.getValues())),
                                 await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
                               ]);
-                              methods.reset();
-                            })}
+                              // methods.reset();
+                              // methodsActivityTracker.reset();
+                            }}
                           >
                             <div className="mb-5 ml-5 w-3/4">
                               <div className="flex">
-                                <div>{project.icon}</div>
+                                <div>{project.project.icon}</div>
                                 <p className="ml-2 font-bold">
-                                  {activity.name}
+                                  {activity.activity.name}
                                 </p>
                                 <p className="ml-1">
                                   {" "}
                                   - Completed:{" "}
-                                  {activity.endDate?.toDateString()}{" "}
+                                  {activity.activity.endDate?.toDateString()}{" "}
                                 </p>
                               </div>
 
-                              <p className="">Outcome Score: {activity.outcomeScore}{" "}</p>
+                              <p className="">Outcome Score: {activity.activity.outcomeScore}{" "}</p>
                               <p className="">Contributors: {contributorNames.join(", ")}{" "}</p>
-                              <p className="">Stakeholders Involved:{" "} {activity.stakeholders === "" ? "N/A" : activity.stakeholders}{" "}</p>
-                              <p className="mb-5 mt-5">Value Statement: {activity.valueCreated}{" "}</p>
+                              <p className="">Stakeholders Involved:{" "} {activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders}{" "}</p>
+                              <p className="mb-5 mt-5">Value Statement: {activity.activity.valueCreated}{" "}</p>
 
-                              {commentsSaved === false || comments === ""? (
+                              {activity?.commentSaved === false || activity?.comments === ""? (
                                 <>
-                                <TextAreaSection
-                                  infoContent="These comments will be used for your monthly report"
-                                  methods={methods}
-                                  label="Optional Comments for this activity:"
-                                  methodsField="reportComment"
-                                  placeHolder=""
-                                  defaultValue={comments}
-                                /> 
+
+                              <div className="grid w-full max-w-md items-center gap-1.5">
+                                  <Label htmlFor="reportComment">Optional Comments for Activity</Label>
+                                  <div className="flex items-center">
+                                      <Textarea
+                                        className="mr-4 whitespace-pre"
+                                        placeholder=""
+                                        defaultValue={activity.comments}
+                                        onChange={(e) => activity.setComments(e.target.value)}
+                                      />
+                                      <InfoIcon content="These comments will be used for your monthly report" />
+                                  </div>
+                                   
+                              </div>
+
                                 <Button
                                 type="submit"
                                 variant={"default"}
                                 disabled={mutation.isLoading}
                                 className="mt-2"
+                                onClick={() => console.log(activity.comments)}
                               >
                                 {mutation.isLoading
                                   ? "Loading"
@@ -252,10 +315,10 @@ export default function MonthlyReport({
                               </>                    
                               ) : (
                                 <>
-                                <p className="">Optional Comments: {comments}{" "}</p>
+                                <p className="whitespace-pre-wrap">Optional Comments: {activity?.comments}{" "}</p>
                                 <button
                                   className={cn (buttonVariants({ variant: "subtle" }),"mt-2")}
-                                  onClick={() => setCommentSaved(!commentsSaved)}
+                                  onClick={() => project.activitiesInRange[index]?.setCommentSaved(!(project.activitiesInRange[index]?.commentSaved))}
                                 >
                                 Edit Comments
                               </button>
@@ -265,11 +328,11 @@ export default function MonthlyReport({
                             </div>
                           </form>
                         );
-                      }
+                      // }
                     })}
                   </div>
                 )
-              }
+              // }
 
             })}
             
@@ -277,16 +340,7 @@ export default function MonthlyReport({
         <div className="flex-1 ">
           <h1 className="text-3xl font-bold mb-12" >Projects Completed</h1>
           
-          {projects && projects.map((project) => {
-
-            const projectEnd = project.actualEnd?.getTime()
-            const selectedEnd = date?.to?.getTime()
-            const selectedStart = date?.from?.getTime()
-
-            if (projectEnd && selectedEnd && selectedStart
-              && projectEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-              && projectEnd >= selectedStart
-              &&project.status === "Complete") {
+          {projectsInDateRange && projectsInDateRange.map((project) => {
 
               return (
                 <>
@@ -307,10 +361,10 @@ export default function MonthlyReport({
                 </div>
                 </>
               )
-            }
           })}
         </div>
       </div>
     </div>
   )
 }
+

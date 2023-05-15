@@ -117,7 +117,7 @@ export const activitiesRouter = createTRPCRouter({
     );
   }),
 
-  reportComments: protectedProcedure
+  reportComments: publicProcedure
   .input(ReportCommentSchema)
   .mutation(({ ctx, input }) => {
     return ctx.prisma.activity.update(
