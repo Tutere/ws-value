@@ -1,19 +1,15 @@
 import { Label } from "@radix-ui/react-label";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Select, { MultiValue } from "react-select";
+import Select from "react-select";
 import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { InputSection } from "~/components/ui/inputSection";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
-import { ActivityChangeSchema } from "~/schemas/activityTracker";
 import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
-import { Input } from "../../components/ui/Input";
-import { Textarea } from "../../components/ui/TextArea";
 
 export default function Project() {
   const router = useRouter();

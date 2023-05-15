@@ -1,17 +1,15 @@
+import { Label } from "@radix-ui/react-label";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { api } from "~/utils/api";
+import { useEffect, useState } from "react";
 import { Button } from "src/components/ui/Button";
 import { Input } from "src/components/ui/Input";
 import { Textarea } from "src/components/ui/TextArea";
-import { Label } from "@radix-ui/react-label";
-import { useZodForm } from "~/hooks/useZodForm";
-import { CreateActivitySchema } from "~/schemas/activities";
-import { CreateProjectSchema } from "~/schemas/projects";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import {CompleteProjectSchema, EditProjectSchema} from "~/schemas/projects";
 import { InfoIcon } from "~/components/ui/infoIcon";
+import { useZodForm } from "~/hooks/useZodForm";
+import { EditProjectSchema } from "~/schemas/projects";
+import { api } from "~/utils/api";
 
 export default function ProjectCompletion() {
   const router = useRouter();
