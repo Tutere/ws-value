@@ -1,30 +1,19 @@
-"use client"
-import * as React from "react"
-import { useState } from 'react';
-import { api } from "~/utils/api";
-import { addDays, format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { DateRange } from "react-day-picker"
-import { cn } from "~/utils/cn"
-import { Button } from "~/components/ui/Button"
-import { Calendar } from "src/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "src/components/ui/popover"
-import { useSession } from "next-auth/react";
 import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/client";
+import { Label } from "@radix-ui/react-label";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import * as React from "react";
+import { useState } from 'react';
+import { DateRange } from "react-day-picker";
+import { Button, buttonVariants } from "~/components/ui/Button";
+import { Textarea } from "~/components/ui/TextArea";
 import { DatePicker } from "~/components/ui/datePicker";
-import { TextAreaSection } from "~/components/ui/TextAreaSection";
+import { InfoIcon } from "~/components/ui/infoIcon";
 import { useZodForm } from "~/hooks/useZodForm";
 import { ReportCommentSchema } from "~/schemas/activities";
-import { buttonVariants } from "~/components/ui/Button"
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
-import { Label } from "@radix-ui/react-label";
-import { Textarea } from "~/components/ui/TextArea";
-import { InfoIcon } from "~/components/ui/infoIcon";
+import { api } from "~/utils/api";
+import { cn } from "~/utils/cn";
 
 export default function MonthlyReport({
   className,
@@ -34,9 +23,6 @@ export default function MonthlyReport({
     to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
 
   })
-
-  
-  // console.log(date?.from + "" + " TO " + "" + date?.to)
 
   const { data: sessionData } = useSession();
 
@@ -49,8 +35,6 @@ export default function MonthlyReport({
   });
 
   const projects = query.data;
-
-  // console.log(projects)
 
   const mutation = api.activities.reportComments.useMutation();
 
@@ -83,7 +67,6 @@ export default function MonthlyReport({
     });
 
     activities.push(activity);
-    // console.log(activity);
   })
 
   // get all projects and their activities (so all hooks used each render)
@@ -185,17 +168,6 @@ export default function MonthlyReport({
   console.log(projectsInDateRange);
 
 
-  //Setup for report comment saving and lineage
-  // const mutation = api.activities.reportComments.useMutation();
-
-  // const methods = useZodForm({
-  //   schema: ReportCommentSchema,
-  //   defaultValues: {
-  //     id: "", 
-    
-  //   },
-  // });
-
   const setValues = async (activity: Activity, comment:string) => {
     await methods.setValue("id",activity.id);
     await methods.setValue("reportComment",comment);
@@ -212,21 +184,6 @@ export default function MonthlyReport({
     schema: ActivityChangeSchema,
     defaultValues: {
       changeType: "Edit",
-      // id: activity?.id,
-      // projectId: activity?.projectId.toString(),
-      // name: activity?.name?.toString(),
-      // description: activity?.description?.toString(),
-      // engagementPattern: activity?.engagementPattern?.toString(),
-      // valueCreated: activity?.valueCreated?.toString(),
-      // startDate: activity?.startDate?.toISOString(),
-      // endDate: activity?.endDate?.toISOString() || "",
-      // outcomeScore: activity?.outcomeScore!,
-      // effortScore: activity?.effortScore!,
-      // status: activity?.status!,
-      // hours: activity?.hours!,
-      // members: projMemIds,
-      // stakeholders: project?.stakeholders!,
-      // reportComments:activity?.reportComments?? "", 
     },
   });
 
@@ -235,22 +192,10 @@ export default function MonthlyReport({
       methodsActivityTracker.setValue("projectId", activity.projectId);
       methodsActivityTracker.setValue("name", activity.name);
       methodsActivityTracker.setValue("description", activity.description);
-      methodsActivityTracker.setValue(
-        "engagementPattern",
-        activity.engagementPattern ?? ""
-      );
-      methodsActivityTracker.setValue(
-        "valueCreated",
-        activity.valueCreated?.toString()
-      );
-      methodsActivityTracker.setValue(
-        "startDate",
-        activity.startDate?.toISOString()!
-      );
-      methodsActivityTracker.setValue(
-        "endDate",
-        activity?.endDate?.toISOString() || ""
-      );
+      methodsActivityTracker.setValue("engagementPattern",activity.engagementPattern ?? "");
+      methodsActivityTracker.setValue("valueCreated",activity.valueCreated?.toString());
+      methodsActivityTracker.setValue("startDate",activity.startDate?.toISOString()!);
+      methodsActivityTracker.setValue("endDate",activity?.endDate?.toISOString() || "");
       methodsActivityTracker.setValue("outcomeScore", activity.outcomeScore);
       methodsActivityTracker.setValue("effortScore", activity.effortScore);
       methodsActivityTracker.setValue("status", activity.status);
@@ -260,10 +205,8 @@ export default function MonthlyReport({
       methodsActivityTracker.setValue("reportComments", comments);
   } 
 
-  
 
   return (
-
     <div>
       {/* --------------------------------CALENDAR-------------------------------- */}
 
@@ -274,13 +217,10 @@ export default function MonthlyReport({
 
 
       {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
-
       <div className="flex flex-row m-8 gap-10">
-
         <div className="flex-[1] border-r-2">
             <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
             
-
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
                 return (
@@ -295,15 +235,6 @@ export default function MonthlyReport({
 
                       .map((activity, index) => {
                         
-                        const activityEnd = activity.activity.endDate?.getTime()
-                        const selectedEnd = date?.to?.getTime()
-                        const selectedStart = date?.from?.getTime()
-
-
-                        if (activityEnd && selectedEnd && selectedStart
-                          && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-                          && activityEnd >= selectedStart) {
-
                             //get activity member names for later use
                             const contributorNames: (string | null)[] = [];
 
@@ -321,16 +252,13 @@ export default function MonthlyReport({
 
                         return (
                           <form
-                            // onSubmit={methods.handleSubmit(async (values) => {
                               onSubmit={async (e) => {
                               e.preventDefault();
                               await console.log(activity.comments);
                               await activity.setCommentSaved(true);
-                              // await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
                               await setValues(activity.activity,activity.comments);
                               await setValuesTracking(activity.activity,projMemIds, activity.comments);
                               await Promise.all([
-                                // await mutation.mutateAsync(methods.getValues()),
                                 await(console.log(methodsActivityTracker.getValues())),
                                 await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
                               ]);
@@ -400,7 +328,7 @@ export default function MonthlyReport({
                             </div>
                           </form>
                         );
-                      }
+                      // }
                     })}
                   </div>
                 )
@@ -412,16 +340,7 @@ export default function MonthlyReport({
         <div className="flex-1 ">
           <h1 className="text-3xl font-bold mb-12" >Projects Completed</h1>
           
-          {projects && projects.map((project) => {
-
-            const projectEnd = project.actualEnd?.getTime()
-            const selectedEnd = date?.to?.getTime()
-            const selectedStart = date?.from?.getTime()
-
-            if (projectEnd && selectedEnd && selectedStart
-              && projectEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-              && projectEnd >= selectedStart
-              &&project.status === "Complete") {
+          {projectsInDateRange && projectsInDateRange.map((project) => {
 
               return (
                 <>
@@ -442,7 +361,6 @@ export default function MonthlyReport({
                 </div>
                 </>
               )
-            }
           })}
         </div>
       </div>
