@@ -1,16 +1,7 @@
-import { useRouter } from "next/router";
-import { api } from "~/utils/api";
-import { Button } from "src/components/ui/Button";
-import { Input } from "src/components/ui/Input";
-import { Textarea } from "src/components/ui/TextArea";
 import { Label } from "@radix-ui/react-label";
-import { useZodForm } from "~/hooks/useZodForm";
-import { CreateActivitySchema } from "~/schemas/activities";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { InfoIcon } from "~/components/ui/infoIcon";
+import { useRouter } from "next/router";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
+import { api } from "~/utils/api";
 
 export default function Project() {
   const router = useRouter();
