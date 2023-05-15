@@ -125,7 +125,6 @@ export default function ProjectForm() {
   }, []);
 
   const handleChange = (options: Option[]) => {
-    console.log(options);
     setSelectedOption(options); //not sure why there is an error here as it still works?
   };
 
@@ -167,7 +166,6 @@ export default function ProjectForm() {
       const projectmemberId = project?.members.find(
         (member) => member.userId === element.value
       )?.id as string;
-      await console.log(projectmemberId);
       await methodsProjectMemberDeletion.setValue("id", projectmemberId);
       await methodsActivityMemberDeletion.setValue("id", projectmemberId);
       await mutationActivityMemberDeletion.mutateAsync(
@@ -220,8 +218,6 @@ export default function ProjectForm() {
           <form
             onSubmit={methods.handleSubmit(async (values) => {
               setFormSubmitted(true);
-              await console.log(methods.getValues());
-              await console.log(selectedOption);
               await handleProjectMemberDeletions();
               await Promise.all([
                 mutation.mutateAsync({

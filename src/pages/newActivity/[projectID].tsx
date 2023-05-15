@@ -37,7 +37,6 @@ export default function Project() {
 
   const mutation = api.activities.create.useMutation({
     onSuccess: async (data) => {
-      console.log(data.id);
       methods.setValue("id", data.id);
       await utils.read.invalidate();
     },
@@ -112,7 +111,6 @@ export default function Project() {
   }
 
   const handleChange = (options: Option[]) => {
-    console.log(options);
     setSelectedOption(options); //not sure why there is an error here as it still works?
   };
 
@@ -131,7 +129,6 @@ export default function Project() {
   >([]);
 
   const handleChangeStakeholder = (options: Option[]) => {
-    console.log(options);
     setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
   };
 

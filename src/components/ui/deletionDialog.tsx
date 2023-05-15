@@ -67,7 +67,6 @@ export function DeletionDialog(props: { object: string; id: string }) {
     );
 
   const projectByStakeholderResponse = queryProjectByStakeholderRsponse.data;
-  console.log(projectByStakeholderResponse);
 
   //activity handling
   const utilsActivities = api.useContext().activities;
@@ -227,7 +226,6 @@ export function DeletionDialog(props: { object: string; id: string }) {
       router.push("/projectCompletion/" + projectByStakeholderResponse?.id);
     } else if (props.object === "Activity") {
       await Promise.all([
-        await console.log(methodActivityTracker.getValues()),
         await mutationActivityracker.mutateAsync(
           methodActivityTracker.getValues()
         ),
@@ -240,7 +238,6 @@ export function DeletionDialog(props: { object: string; id: string }) {
       /** If deleting an entire projet, must first delete all of its activites and track those changes*/
       await deleteAllActivitesTracking();
       await Promise.all([
-        await console.log(methodProjectTracker.getValues()),
         await mutationActivities.mutateAsync(methodsActivities.getValues()),
         await mutationProjecTracker.mutateAsync(
           methodProjectTracker.getValues()

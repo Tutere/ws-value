@@ -132,7 +132,6 @@ export default function Project() {
   }, []);
 
   const handleChange = (options: Option[]) => {
-    console.log(options);
     setSelectedOption(options);
   };
 
@@ -160,7 +159,6 @@ export default function Project() {
       const projectmemberId = project?.members.find(
         (member) => member.userId === element.value
       )?.id as string;
-      await console.log(projectmemberId);
       await methodsActivityMemberDeletion.setValue("id", projectmemberId);
       await mutationActivityMemberDeletion.mutateAsync(
         methodsActivityMemberDeletion.getValues()
@@ -200,7 +198,6 @@ export default function Project() {
   }, []);
 
   const handleChangeStakeholder = (options: Option[]) => {
-    console.log(options);
     setStakeholderSelectedOptions(options); //not sure why there is an error here as it still works?
   };
 

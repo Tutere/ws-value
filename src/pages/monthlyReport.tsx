@@ -164,10 +164,6 @@ export default function MonthlyReport({
     }
   });
 
-  console.log(projectsWithActivitiesInRange);
-  console.log(projectsInDateRange);
-
-
   const setValues = async (activity: Activity, comment:string) => {
     await methods.setValue("id",activity.id);
     await methods.setValue("reportComment",comment);
@@ -254,12 +250,10 @@ export default function MonthlyReport({
                           <form
                               onSubmit={async (e) => {
                               e.preventDefault();
-                              await console.log(activity.comments);
                               await activity.setCommentSaved(true);
                               await setValues(activity.activity,activity.comments);
                               await setValuesTracking(activity.activity,projMemIds, activity.comments);
                               await Promise.all([
-                                await(console.log(methodsActivityTracker.getValues())),
                                 await mutationActivityTracker.mutateAsync(methodsActivityTracker.getValues()),
                               ]);
                               // methods.reset();
@@ -306,7 +300,6 @@ export default function MonthlyReport({
                                 variant={"default"}
                                 disabled={mutation.isLoading}
                                 className="mt-2"
-                                onClick={() => console.log(activity.comments)}
                               >
                                 {mutation.isLoading
                                   ? "Loading"
