@@ -35,6 +35,7 @@ export default function MonthlyReport({
 
   })
 
+  
   // console.log(date?.from + "" + " TO " + "" + date?.to)
 
   const { data: sessionData } = useSession();
@@ -50,6 +51,16 @@ export default function MonthlyReport({
   const projects = query.data;
 
   // console.log(projects)
+
+  const mutation = api.activities.reportComments.useMutation();
+
+  const methods = useZodForm({
+    schema: ReportCommentSchema,
+    defaultValues: {
+      id: "", 
+    
+    },
+  });
 
   const activityMembersList: ActivityMember[] = [];
   const activities: ((Activity & { members: ActivityMember[]; }) | null | undefined)[] = [];
@@ -75,6 +86,54 @@ export default function MonthlyReport({
     // console.log(activity);
   })
 
+  //all projects and activities (so all hooks used each render)
+  const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
+  
+  const getProjectMembersOfActivity = (activity: any) => {
+     return api.projectmember.read.useQuery({ id: activity.projectId }).data;
+    
+  };
+
+  const useActivityComments = (activity: { reportComments: string | null; }) => {
+    const [comments, setComments] = useState(activity.reportComments ?? "");
+    const [commentsSaved, setCommentSaved] = useState(
+      activity.reportComments === null || activity.reportComments === "" ? false : true
+    );
+  
+    return {
+      comments,
+      setComments,
+      commentsSaved,
+      setCommentSaved,
+    };
+  };
+
+  projects && projects.map((project) => {
+    const activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[] = [];
+    
+    project.Activity.forEach(activity => {
+      const projectMembersOfActivity = getProjectMembersOfActivity(activity);
+      const { comments, setComments, commentsSaved, setCommentSaved } = useActivityComments( activity);
+
+      activities.push({
+        activity: activity,
+        projectMembers: projectMembersOfActivity,
+        commentSaved: commentsSaved,
+        setCommentSaved: setCommentSaved,
+        comments: comments,
+        setComments: setComments,
+      });
+    })
+
+
+    if (activities.length > 0) {
+      allProjectsAndActivities.push({
+        project: project,
+        activities: activities,
+      });
+    }
+  });
+
   //setup for all activities and projects in date range
 
   const projectsInDateRange: (Project & { Activity: Activity[]; members: ProjectMember[]; })[] = [];
@@ -94,42 +153,71 @@ export default function MonthlyReport({
     }
   })
 
-  projects && projects.map((project) => {
-    let activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[] = [];
-
-    project.Activity
-      .map((activity) => {
-        const activityEnd = activity.endDate?.getTime();
-        const selectedEnd = date?.to?.getTime();
-        const selectedStart = date?.from?.getTime();
-
-        if (activityEnd && selectedEnd && selectedStart
-          && activityEnd <= selectedEnd + 86400000 //add one day worth of milliseconds because date defaults to midnight
-          && activityEnd >= selectedStart) {
-            
-          const projectMembersOfActivity = api.projectmember.read.useQuery({id:activity.projectId}).data;
-          const [commentsSaved, setCommentSaved] = useState(activity.reportComments === null || activity.reportComments === "" ? false : true);
-          //to render comment changes on screen without refreshing
-          const [comments,setComments] = useState(activity.reportComments?? "")
-
-          activitiesInRange.push({activity: activity, projectMembers: projectMembersOfActivity,commentSaved:commentsSaved, setCommentSaved: setCommentSaved,comments:comments, setComments:setComments});
-
-        }
-      })
-      if (activitiesInRange.length > 0) (
-        projectsWithActivitiesInRange.push({project:project, activitiesInRange:activitiesInRange})
-      )
+  // const filterActivitiesInRange = (project: { Activity: any[]; }) => {
+  //   const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; }[] = [];
   
-  })
+  //   project.Activity.forEach((activity: { endDate: { getTime: () => any; }; projectId: any; reportComments: string | null; }) => {
+  //     const activityEnd = activity.endDate?.getTime();
+  //     const selectedEnd = date?.to?.getTime();
+  //     const selectedStart = date?.from?.getTime();
+  
+  //     if (
+  //       activityEnd &&
+  //       selectedEnd &&
+  //       selectedStart &&
+  //       activityEnd <= selectedEnd + 86400000 &&
+  //       activityEnd >= selectedStart
+  //     ) {
+  //       const projectMembersOfActivity = getProjectMembersOfActivity(activity);
+  //       const { comments, setComments, commentsSaved, setCommentSaved } = useActivityComments( activity);
+  
+  //       activitiesInRange.push({
+  //         activity: activity,
+  //         projectMembers: projectMembersOfActivity,
+  //         commentSaved: commentsSaved,
+  //         setCommentSaved: setCommentSaved,
+  //         comments: comments,
+  //         setComments: setComments,
+  //       });
+  //     }
+  //   });
+  
+  //   return activitiesInRange;
+  // };
+
+  allProjectsAndActivities && allProjectsAndActivities.map((element) => {
+    const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; }[] = [];
+
+    element.activities.forEach(activity => {
+    const activityEnd = activity.activity.endDate?.getTime();
+    const selectedEnd = date?.to?.getTime();
+    const selectedStart = date?.from?.getTime();
+
+    if (
+          activityEnd &&
+          selectedEnd &&
+          selectedStart &&
+          activityEnd <= selectedEnd + 86400000 &&
+          activityEnd >= selectedStart
+        ) {
+
+          activitiesInRange.push(activity)
+    }});
+    
+    if (activitiesInRange.length > 0) {
+      projectsWithActivitiesInRange.push({
+        project: element.project,
+        activitiesInRange: activitiesInRange,
+      });
+    }
+  });
 
   console.log(projectsWithActivitiesInRange);
   console.log(projectsInDateRange);
 
 
   //Setup for report comment saving and lineage
-  // const mutation = api.activities.reportComments.useMutation({
-                            
-  // });
+  // const mutation = api.activities.reportComments.useMutation();
 
   // const methods = useZodForm({
   //   schema: ReportCommentSchema,
@@ -139,10 +227,12 @@ export default function MonthlyReport({
   //   },
   // });
 
-  // const setValues = async (activity: Activity, comment:string) => {
-  //   methods.setValue("id",activity.id);
-  //   methods.setValue("reportComment",comment);
-  // }
+  const setValues = async (activity: Activity, comment:string) => {
+    await methods.setValue("id",activity.id);
+    await methods.setValue("reportComment",comment);
+
+    await mutation.mutateAsync(methods.getValues());
+  }
 
   //lineage
   // const mutationActivityTracker = api.activityTracker.edit.useMutation({
@@ -201,6 +291,7 @@ export default function MonthlyReport({
   //     methodsActivityTracker.setValue("reportComments", activity.reportComments?? "");
   // } 
 
+  
 
   return (
 
@@ -263,13 +354,12 @@ export default function MonthlyReport({
                           <form
                             // onSubmit={methods.handleSubmit(async (values) => {
                               onSubmit={async (e) => {
-                                e.preventDefault();
-                              // e.preventDefault();
+                              e.preventDefault();
                               await console.log(activity.comments);
                               await activity.setCommentSaved(true);
                               // await activityInFocus?.setComments(methods.getValues("reportComment"));
                               // await methodsActivityTracker.setValue("reportComments", methods.getValues("reportComment"));
-                              // await setValues(activity.activity,activity.comments);
+                              await setValues(activity.activity,activity.comments);
                               // await setValuesTracking(activityInFocus?.activity!,projMemIds);
                               await Promise.all([
                                 // await mutation.mutateAsync(methods.getValues()),
@@ -319,22 +409,14 @@ export default function MonthlyReport({
                                 <Button
                                 type="submit"
                                 variant={"default"}
-                                // disabled={mutation.isLoading}
+                                disabled={mutation.isLoading}
                                 className="mt-2"
-                                // onClick={() => console.log(activity.comments)}
-                              >
-                                {/* {mutation.isLoading
-                                  ? "Loading"
-                                  : "Save Comments"} */}
-                              </Button>   
-
-                              {/* <button
-                                type="submit"
-                                className={cn (buttonVariants({ variant: "default" }),"mt-2")}
                                 onClick={() => console.log(activity.comments)}
-                                >
-                                Edit Comments
-                              </button> */}
+                              >
+                                {mutation.isLoading
+                                  ? "Loading"
+                                  : "Save Comments"}
+                              </Button>   
                               </>                    
                               ) : (
                                 <>
@@ -400,3 +482,4 @@ export default function MonthlyReport({
     </div>
   )
 }
+
