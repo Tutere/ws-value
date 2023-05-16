@@ -1,251 +1,22 @@
-import { useRouter } from "next/router";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "src/components/ui/dialog";
-import { useZodForm } from "~/hooks/useZodForm";
-import { DeleteProjectSchema } from "~/schemas/projects";
-import {
-  ReadActivitySchema,
-  ReadSpecificActivitySchema,
-} from "~/schemas/activities";
-import { api } from "~/utils/api";
 import { Button } from "./Button";
-import { useState } from "react";
-import { ProjectChangeSchema } from "~/schemas/projectTracker";
-import { ActivityChangeSchema } from "~/schemas/activityTracker";
-import { ReadStakeholderResponseSchema } from "~/schemas/stakeholderResponse";
 
-export function DeletionDialog(props: { object: string; id: string }) {
-  const router = useRouter();
-  const utils = api.useContext().projects;
+
+export function DeletionDialog(props: { object: string; id: string, handleDelete: () => void  }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  //project handling (find project given activity ID)
-  const query = api.projects.findByActivityId.useQuery(
-    { id: props.id },
-    {
-      suspense: true,
-    }
-  );
-
-  const project = query.data;
-  const mutation = api.projects.delete.useMutation({
-    onSuccess: async () => {
-      await utils.read.invalidate();
-    },
-  });
-
-  const methods = useZodForm({
-    schema: DeleteProjectSchema,
-    defaultValues: {
-      id: props.id,
-    },
-  });
-
-  //stakeholderResponse handling
-  const mutationStakeholderResponse =
-    api.stakeholderResponse.delete.useMutation();
-  const methodsStakeholderResponse = useZodForm({
-    schema: ReadStakeholderResponseSchema,
-    defaultValues: {
-      id: props.id,
-    },
-  });
-
-  const queryProjectByStakeholderRsponse =
-    api.projects.findByStakeholderResponseId.useQuery(
-      { id: props.id },
-      {
-        suspense: true,
-      }
-    );
-
-  const projectByStakeholderResponse = queryProjectByStakeholderRsponse.data;
-
-  //activity handling
-  const utilsActivities = api.useContext().activities;
-  const mutationActivities = api.activities.delete.useMutation({
-    onSuccess: async () => {
-      await utilsActivities.read.invalidate();
-    },
-  });
-
-  const mutationSpecificActivy = api.activities.deleteByActivityId.useMutation({
-    onSuccess: async () => {
-      await utilsActivities.read.invalidate();
-    },
-  });
-
-  const methodsActivities = useZodForm({
-    schema: ReadActivitySchema,
-    defaultValues: {
-      projectId: props.id,
-    },
-  });
-
-  const methodSpecificActivity = useZodForm({
-    schema: ReadSpecificActivitySchema,
-    defaultValues: {
-      id: props.id,
-    },
-  });
-
-  //data lineage handling for project
-  const mutationProjecTracker = api.projectTracker.edit.useMutation({});
-
-  const queryProjectById = api.projects.findByProjectId.useQuery(
-    { id: props.id },
-    {
-      suspense: true,
-    }
-  );
-
-  const project2 = queryProjectById.data;
-
-  const methodProjectTracker = useZodForm({
-    schema: ProjectChangeSchema,
-    defaultValues: {
-      changeType: "Delete",
-      projectId: project2?.id.toString(),
-      icon: project2?.icon?.toString(),
-      name: project2?.name?.toString(),
-      description: project2?.description?.toString(),
-      goal: project2?.goal?.toString(),
-      estimatedStart: project2?.estimatedStart?.toISOString(),
-      estimatedEnd: project2?.estimatedEnd?.toISOString() || "",
-      trigger: project2?.trigger?.toString(),
-      expectedMovement: project2?.expectedMovement?.toString(),
-      alternativeOptions: project2?.alternativeOptions?.toString(),
-      estimatedRisk: project2?.estimatedRisk?.toString(),
-      outcomeScore: project2?.outcomeScore || 1,
-      effortScore: project2?.effortScore || 1,
-      actualStart:
-        project2?.actualStart?.toISOString() ||
-        project2?.estimatedStart?.toISOString(),
-      actualEnd: project?.actualEnd?.toISOString() || "",
-      lessonsLearnt: project2?.lessonsLearnt! || "",
-      retrospective: project2?.retrospective! || "",
-      status: project2?.status!,
-      colour: project2?.colour!,
-      members: project2?.members?.map((member) => member.userId),
-      stakeholders: project2?.stakeholders!,
-      pid: project2?.pid ?? "",
-    },
-  });
-
-  //data lineage handling for activity
-  const mutationActivityracker = api.activityTracker.edit.useMutation();
-
-  const queryActivityById = api.activities.readSpecific.useQuery(
-    { id: props.id },
-    {
-      suspense: true,
-    }
-  );
-
-  const activity = queryActivityById.data;
-
-  const methodActivityTracker = useZodForm({
-    schema: ActivityChangeSchema,
-    defaultValues: {
-      changeType: "Delete",
-      id: activity?.id,
-      projectId: activity?.projectId.toString(),
-      name: activity?.name?.toString(),
-      description: activity?.description?.toString(),
-      engagementPattern: activity?.engagementPattern?.toString(),
-      valueCreated: activity?.valueCreated?.toString(),
-      startDate: activity?.startDate?.toISOString(),
-      endDate: activity?.endDate?.toISOString() || "",
-      outcomeScore: activity?.outcomeScore!,
-      effortScore: activity?.effortScore!,
-      status: activity?.status!,
-      hours: activity?.hours!,
-      members: activity?.members?.map((member) => member.projectMemberId),
-      stakeholders: project2?.stakeholders!,
-      reportComments:activity?.reportComments?? "",
-    },
-  });
-
-  //lineage for all activities if whole project deleted
-
-  const { data: activities } = api.activities.read.useQuery(
-    { projectId: props.id },
-    {
-      suspense: true,
-    }
-  );
-
-  const deleteAllActivitesTracking = async () => {
-    activities?.map((activity) => {
-      methodActivityTracker.setValue("id", activity.id);
-      methodActivityTracker.setValue("projectId", activity.projectId);
-      methodActivityTracker.setValue("name", activity.name);
-      methodActivityTracker.setValue("description", activity.description);
-      methodActivityTracker.setValue(
-        "engagementPattern",
-        activity.engagementPattern ?? ""
-      );
-      methodActivityTracker.setValue(
-        "valueCreated",
-        activity.valueCreated?.toString()
-      );
-      methodActivityTracker.setValue(
-        "startDate",
-        activity.startDate?.toISOString()!
-      );
-      methodActivityTracker.setValue(
-        "endDate",
-        activity?.endDate?.toISOString() || ""
-      );
-      methodActivityTracker.setValue("outcomeScore", activity.outcomeScore);
-      methodActivityTracker.setValue("effortScore", activity.effortScore);
-      methodActivityTracker.setValue("status", activity.status);
-      methodActivityTracker.setValue("hours", activity.hours);
-      methodActivityTracker.setValue("stakeholders", activity.stakeholders!);
-      methodActivityTracker.setValue("members",activity.members?.map((member) => member.projectMemberId));
-      methodActivityTracker.setValue("reportComments", activity.reportComments?? "");
-
-      mutationActivityracker.mutateAsync(methodActivityTracker.getValues());
-    });
-  };
-
-  const handleDelete = async () => {
-    if (props.object === "Stakeholder Response") {
-      await Promise.all([
-        await mutationStakeholderResponse.mutateAsync(
-          methodsStakeholderResponse.getValues()
-        ),
-      ]);
-      router.push("/projectCompletion/" + projectByStakeholderResponse?.id);
-    } else if (props.object === "Activity") {
-      await Promise.all([
-        await mutationActivityracker.mutateAsync(
-          methodActivityTracker.getValues()
-        ),
-        await mutationSpecificActivy.mutateAsync(
-          methodSpecificActivity.getValues()
-        ),
-      ]);
-      router.push("/" + project?.id);
-    } else {
-      /** If deleting an entire projet, must first delete all of its activites and track those changes*/
-      await deleteAllActivitesTracking();
-      await Promise.all([
-        await mutationActivities.mutateAsync(methodsActivities.getValues()),
-        await mutationProjecTracker.mutateAsync(
-          methodProjectTracker.getValues()
-        ),
-        await mutation.mutateAsync(methods.getValues()),
-      ]);
-      router.push("/");
-    }
+  const handleDeleteClick = async () => {
+    await props.handleDelete();
+    setIsOpen(false);
   };
 
   return (
@@ -264,7 +35,7 @@ export function DeletionDialog(props: { object: string; id: string }) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button type="submit" className="bg-red-600" onClick={handleDelete}>
+          <Button type="submit" className="bg-red-600" onClick={handleDeleteClick}>
             Delete
           </Button>
           <Button variant={"outline"} onClick={() => setIsOpen(false)}>

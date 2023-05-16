@@ -1,5 +1,6 @@
 import { Label } from "@radix-ui/react-label";
 import { useRouter } from "next/router";
+import { useStakeholderResponseDeletion } from "~/components/hooks/useStakeholderResponseDeletion";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
 import { api } from "~/utils/api";
 
@@ -14,18 +15,7 @@ export default function Project() {
 
   const stakeholderResponse = query.data;
 
-//   const { data: sessionData } = useSession();
-//   const isMemberFound = project?.members.some(member => {
-//     return member.userId === sessionData?.user.id;
-//   });
-
-//   useEffect(() => {
-//     if (!isMemberFound) {
-//       setTimeout(() => {
-//         router.push("/");
-//       }, 3000);
-//     }
-//   }, [isMemberFound, router]);
+  const {stakeholderResponseHandleDelete} = useStakeholderResponseDeletion(id);
 
 const isMemberFound = true;
 
@@ -67,7 +57,7 @@ if (stakeholderResponse === null || stakeholderResponse === undefined ) {
             Edit Activity
         </Button>
       </Link> */}
-      <DeletionDialog object="Stakeholder Response" id={id}></DeletionDialog>
+      <DeletionDialog object="Stakeholder Response" id={id} handleDelete={stakeholderResponseHandleDelete}></DeletionDialog>
       </div>
 
     </div>

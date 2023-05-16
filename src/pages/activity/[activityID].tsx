@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/ui/Button";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
+import { useActivityDeletion } from "~/components/hooks/useActivityDeletion";
 import { api } from "~/utils/api";
 
 export default function Project() {
@@ -23,6 +24,7 @@ export default function Project() {
     suspense: true,
   });
 
+  const {ActivityhandleDelete} = useActivityDeletion(activity?.id ?? "");
 
   const { data: sessionData } = useSession();
   const isMemberFound = project?.members.some(member => {
@@ -161,7 +163,7 @@ const toggleReadMore = () => {
             Edit Activity
         </Button>
       </Link>
-      <DeletionDialog object="Activity" id={id}></DeletionDialog>
+      <DeletionDialog object="Activity" id={id} handleDelete={ActivityhandleDelete}></DeletionDialog>
       </div>
     </div>
     
