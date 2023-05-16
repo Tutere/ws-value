@@ -9,6 +9,7 @@ import { ProjectChangeSchema } from "~/schemas/projectTracker";
 import { ActivateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
 import { Button } from "../components/ui/Button";
+import { useProjectDeletion } from "~/components/hooks/useProjectDeletion";
 
 export default function Project() {
   const router = useRouter();
@@ -29,6 +30,8 @@ export default function Project() {
   const isMemberFound = project?.members.some(member => {
     return member.userId === sessionData?.user.id;
   });
+
+  const {projectHandleDelete} = useProjectDeletion(id);
 
   useEffect(() => {
     if (!isMemberFound) {
@@ -248,7 +251,7 @@ const toggleReadMore = () => {
       </Link>
       
 
-      <DeletionDialog object="Project" id={id}></DeletionDialog>
+      <DeletionDialog object="Project" id={id} handleDelete={projectHandleDelete}></DeletionDialog>
       </div>
 
       <h2 className="mt-10 text-2xl font-bold">Project Activities</h2>

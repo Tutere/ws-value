@@ -22,15 +22,6 @@ export default function Project() {
       }
     }
   });
-  useEffect(() => {
-    const query = api.projects.FindByProjectId.useQuery({id:id}, {
-      onError: (error) => {
-        if (error.data?.code === "UNAUTHORIZED") {
-          router.push("/");
-        }
-      }
-    });
-  }, []);
 
 
   const project = query.data;
