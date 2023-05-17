@@ -18,6 +18,7 @@ import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/s
             experienceRating: input.experienceRating,
             improvements: input.improvements,
             complaints: input.complaints,
+            status: "Active",
           },
         });
       }),
@@ -28,7 +29,10 @@ import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/s
       return ctx.prisma.stakeholderResponse.findMany({
         where: {
           projectId: input.id,
-        }
+          NOT: {
+            status:"Deleted",
+          }
+        },
       });
     }),
 
@@ -48,6 +52,19 @@ import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/s
       return ctx.prisma.stakeholderResponse.delete({
         where: {
           id: input.id,
+        }
+      });
+    }),
+
+    softDelete: protectedProcedure
+    .input(ReadStakeholderResponseSchema)
+    .mutation(({ ctx,input }) => {
+      return ctx.prisma.stakeholderResponse.updateMany({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status:"Deleted",
         }
       });
     }),

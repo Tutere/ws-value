@@ -8,7 +8,7 @@ import { api } from "~/utils/api";
 export function useStakeholderResponseDeletion(id:string) {
     const router = useRouter();
     
-    const mutationStakeholderResponse = api.stakeholderResponse.delete.useMutation();
+    const mutationStakeholderResponse = api.stakeholderResponse.softDelete.useMutation();
   
     const methodsStakeholderResponse = useZodForm({
         schema: ReadStakeholderResponseSchema,
