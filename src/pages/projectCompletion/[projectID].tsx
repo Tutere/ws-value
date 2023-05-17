@@ -250,11 +250,21 @@ export default function ProjectCompletion() {
             </Link> 
           </div>
         </div>
-        
-        <Button type="submit" variant={"default"} disabled={mutation.isLoading} className="bg-green-500">
-          {mutation.isLoading ? "Loading" : "Complete Project"}
-        </Button>
 
+
+        {project.status === "Complete" ? (
+          <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
+            {mutation.isLoading ? "Loading" : "Edit Completion Details"}
+          </Button>
+        ): (
+           <>
+          <Button type="submit" variant={"default"} disabled={mutation.isLoading} className="bg-green-500">
+            {mutation.isLoading ? "Loading" : "Complete Project"}
+          </Button>
+          </>
+        )
+      }
+        
       </form>
 
       <h2 className="mt-10 text-2xl font-bold">Stakeholder Survey Responses:</h2>

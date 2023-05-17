@@ -218,7 +218,7 @@ const toggleReadMore = () => {
       <Button variant={"subtle"}
       size={"sm"}
       className="mt-2" 
-      onClick={toggleReadMore}> {!isReadMoreShown ? "See More..": "See Less..."}
+      onClick={toggleReadMore}> {!isReadMoreShown ? "See More...": "See Less..."}
       </Button>
 
       <div className="mt-10 flex gap-7">
