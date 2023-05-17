@@ -70,73 +70,80 @@ const toggleReadMore = () => {
     <>
     {isMemberFound ? (
     <div className="p-8 bg-white rounded-lg shadow-md">
+      
+      <Link href={"/" + project?.id}>
+        <Button className="mb-5" variant={"subtle"}>
+         {"< Back to project"}
+        </Button>
+      </Link>
+       
       <h2 className="mb-5 text-3xl font-bold">Activity Details</h2>
       {!isReadMoreShown ? (
         <>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
         <Label className="font-medium">Activity Name:</Label>
         <p className="ml-1">{activity.name}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Desription:</Label>
           <p className="ml-1">{activity.description}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Value Created:</Label>
           <p className="ml-1">{activity.valueCreated}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Outcome Score:</Label>
           <p className="ml-1">{activity.outcomeScore}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Effort Score:</Label>
           <p className="ml-1">{activity.effortScore}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Hours Spent on Activity:</Label>
           <p className="ml-1">{activity.hours + " hours"}</p>
         </div>
         </>
       ) : (
         <>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
         <Label className="font-medium">Activity Name:</Label>
         <p className="ml-1">{activity.name}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Desription:</Label>
           <p className="ml-1">{activity.description}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Value Created:</Label>
           <p className="ml-1">{activity.valueCreated}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Outcome Score:</Label>
           <p className="ml-1">{activity.outcomeScore}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Effort Score:</Label>
           <p className="ml-1">{activity.effortScore}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Hours Spent on Activity:</Label>
           <p className="ml-1">{activity.hours + " hours"}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Start Date:</Label>
           <p className="ml-1">{activity.startDate?.toLocaleDateString()}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">End Date:</Label>
           <p className="ml-1">{activity.endDate?.toLocaleDateString()}</p>
         </div>
-        <div className="flex flex-row mb-4 ">
+        <div className="flex flex-row ">
           <Label className="font-medium">Engagement Pattern:</Label>
           <p className="ml-1">{activity.engagementPattern}</p>
         </div>
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row">
           <Label className="font-medium">Activity Members:</Label>
           <p className="ml-1">
             {activityMembers?.map((member) => member?.name).join(", ")}   
