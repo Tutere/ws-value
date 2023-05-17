@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/ui/Button";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
-import { useActivityDeletion } from "~/components/hooks/useActivityDeletion";
+import { useActivityDeletion } from "~/hooks/useActivityDeletion";
 import { api } from "~/utils/api";
 
 export default function Project() {

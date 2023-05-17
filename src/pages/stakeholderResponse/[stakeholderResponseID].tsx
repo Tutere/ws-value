@@ -1,7 +1,7 @@
 import { Label } from "@radix-ui/react-label";
 import { useRouter } from "next/router";
-import { useStakeholderResponseDeletion } from "~/components/hooks/useStakeholderResponseDeletion";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
+import { useStakeholderResponseDeletion } from "~/hooks/useStakeholderResponseDeletion";
 import { api } from "~/utils/api";
 
 export default function Project() {

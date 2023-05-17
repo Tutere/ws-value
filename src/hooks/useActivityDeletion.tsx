@@ -26,7 +26,7 @@ export function useActivityDeletion(id:string) {
     },
   });
 
-  const mutationSpecificActivy = api.activities.deleteByActivityId.useMutation({
+  const mutationSpecificActivy = api.activities.softDeleteByActivityId.useMutation({
     onSuccess: async () => {
       await utilsActivities.read.invalidate();
     },

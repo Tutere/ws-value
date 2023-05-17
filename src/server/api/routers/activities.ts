@@ -145,5 +145,20 @@ export const activitiesRouter = createTRPCRouter({
     );
   }),
 
+  softDeleteByActivityId: protectedProcedure
+  .input(ReadSpecificActivitySchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.update(
+      {
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: "Deleted"
+        }
+      }
+    );
+  }),
+
 
 });

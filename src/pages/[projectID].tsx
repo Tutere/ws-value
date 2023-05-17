@@ -9,7 +9,8 @@ import { ProjectChangeSchema } from "~/schemas/projectTracker";
 import { ActivateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
 import { Button } from "../components/ui/Button";
-import { useProjectDeletion } from "~/components/hooks/useProjectDeletion";
+import { useProjectDeletion } from "~/hooks/useProjectDeletion";
+
 
 export default function Project() {
   const router = useRouter();
