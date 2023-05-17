@@ -16,6 +16,7 @@ export default function Project() {
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
   const query = api.projects.FindByProjectId.useQuery({id:id}, {
+    suspense:true,
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
         router.push("/");
