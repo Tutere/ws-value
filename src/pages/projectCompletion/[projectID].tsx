@@ -116,6 +116,13 @@ export default function ProjectCompletion() {
     <>
     {isMemberFound ? (
     <div className="p-8 ">
+
+      <Link href={"/" + project?.id}>
+        <Button className="mb-5" variant={"subtle"}>
+         {"< Back to project"}
+        </Button>
+      </Link>
+
       <h2 className="mt-5 mb-5 text-2xl font-bold">Project Completion Page</h2>
       <div className="flex flex-row mb-5">
         <Label className="font-medium">Project Name:</Label>
