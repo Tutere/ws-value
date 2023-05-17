@@ -56,6 +56,9 @@ export const projectsRouter = createTRPCRouter({
             userId: ctx.session.user.id,
           },
         },
+        NOT: {
+          status:"Deleted",
+        }
       },
       include: {
         members: true,
@@ -125,6 +128,19 @@ export const projectsRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+      });
+    }),
+
+    softDelete: protectedProcedure
+    .input(DeleteProjectSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.project.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: "Deleted",
+        }
       });
     }),
 

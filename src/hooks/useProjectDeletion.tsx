@@ -22,7 +22,7 @@ export function useProjectDeletion(id:string) {
       const project = query.data;
     
     //project
-    const mutation = api.projects.delete.useMutation({
+    const mutation = api.projects.softDelete.useMutation({
       onSuccess: async () => {
         await utils.read.invalidate();
       },
@@ -37,7 +37,7 @@ export function useProjectDeletion(id:string) {
 
     //activities for project
     const utilsActivities = api.useContext().activities;
-    const mutationActivities = api.activities.delete.useMutation({
+    const mutationActivities = api.activities.softDelete.useMutation({
         onSuccess: async () => {
           await utilsActivities.read.invalidate();
         },

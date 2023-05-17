@@ -230,6 +230,7 @@ model StakeholderResponse {
     improvements     String?
     complaints       String?
     createdAt        DateTime @default(now())
+    status           String?
 
     @@index([projectId])
 }

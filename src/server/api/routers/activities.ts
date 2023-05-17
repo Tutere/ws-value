@@ -45,6 +45,9 @@ export const activitiesRouter = createTRPCRouter({
       {
         where: {
           projectId: input.projectId,
+          NOT: {
+            status:"Deleted",
+          }
         },
         include: {
           members: true,
@@ -66,6 +69,23 @@ export const activitiesRouter = createTRPCRouter({
       }
     );
   }),
+
+  //Soft delete all activities within a project (given a project ID)
+  softDelete: protectedProcedure
+  .input(ReadActivitySchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.updateMany(
+      {
+        where: {
+          projectId: input.projectId,
+        },
+        data: {
+          status:"Deleted",
+        }
+      }
+    );
+  }),
+  
 
   readSpecific: protectedProcedure
   .input(ReadSpecificActivitySchema)
