@@ -13,6 +13,10 @@ import {
       return ctx.prisma.projectMember.findMany({
         where: {
           projectId: input.id,
+        },
+        include: {
+          user:true,
+          ActivityMember:true,
         }
 
       });
@@ -37,7 +41,20 @@ import {
         }
       });
     }),
+    
 
-
+    readByUserId: protectedProcedure
+    .input(FindProjectmemberSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.projectMember.findMany({
+        where: {
+          userId: input.id
+        },
+        include: {
+          user:true,
+          ActivityMember:true,
+        }
+      });
+    }),
   
   });

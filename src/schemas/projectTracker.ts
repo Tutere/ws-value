@@ -28,7 +28,8 @@ export const ProjectChangeSchema = z.object({
     icon: z.string().optional(),
     colour: z.string().optional(),
     members: z.array(z.string()),
-    stakeholders: z.string().optional()
+    stakeholders: z.string().optional(),
+    pid: z.string().optional(),
 });
 
 export type ProjectChangeSchema = z.infer<typeof ProjectChangeSchema>;
@@ -52,7 +53,8 @@ export const ProjectCreateSchema = z.object({
     icon: z.string().optional(),
     colour: z.string().optional(),
     members: z.array(z.string()),
-    stakeholders: z.string().optional()
+    stakeholders: z.string().optional(),
+    pid: z.string().optional(),
 });
 
 export type ProjectCreateSchema = z.infer<typeof ProjectCreateSchema>;

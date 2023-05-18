@@ -1,11 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-
-import { api } from "~/utils/api";
-import ProjectForm from "~/components/forms/ProjectForm";
 import { Button } from "~/components/ui/Button";
+import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const utils = api.useContext().projects;
@@ -37,7 +34,7 @@ const Home: NextPage = () => {
                       <Link
                         href={"/" + project.id}
                         key={project.id}
-                        style={{ backgroundColor: `#${project.colour}` }}
+                        style={{ backgroundColor: `${project.colour}` }}
                         className="basis-60 overflow-hidden p-4 shadow sm:rounded-lg"
                       >
                         <div className="flex justify-start">
@@ -71,7 +68,7 @@ const Home: NextPage = () => {
                       <Link
                         href={"/" + project.id}
                         key={project.id}
-                        style={{ backgroundColor: `#${project.colour}` }}
+                        style={{ backgroundColor: `${project.colour}` }}
                         className="basis-60 overflow-hidden p-4 shadow sm:rounded-lg"
                       >
                         <div className="flex justify-start">

@@ -19,7 +19,8 @@ export const CreateProjectSchema = z.object({
   projectId: z.string(),
   changeType: z.string(),
   members: z.array(z.string()),
-  stakeholders: z.string().optional()
+  stakeholders: z.string().optional(),
+  pid: z.string().optional(),
 });
 
 export type CreateProjectSchema = z.infer<typeof CreateProjectSchema>;
@@ -68,6 +69,7 @@ export const EditProjectSchema = z.object({
   colour: z.string().optional(),
   stakeholders: z.string().optional(),
   members: z.array(z.string()),
+  pid: z.string().optional(),
 });
 
 export const DeleteProjectSchema = z.object({

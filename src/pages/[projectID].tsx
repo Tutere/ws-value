@@ -1,18 +1,16 @@
+import { Label } from "@radix-ui/react-label";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { DeletionDialog } from "~/components/ui/deletionDialog";
+import { useZodForm } from "~/hooks/useZodForm";
+import { ProjectChangeSchema } from "~/schemas/projectTracker";
+import { ActivateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
 import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import { Textarea } from "../components/ui/TextArea";
-import { Label } from "@radix-ui/react-label";
-import { useZodForm } from "~/hooks/useZodForm";
-import { CreateActivitySchema } from "~/schemas/activities";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { InfoIcon } from "~/components/ui/infoIcon";
-import { DeletionDialog } from "~/components/ui/deletionDialog";
-import { ActivateProjectSchema } from "~/schemas/projects";
-import { ProjectChangeSchema } from "~/schemas/projectTracker";
+import { useProjectDeletion } from "~/hooks/useProjectDeletion";
+
 
 export default function Project() {
   const router = useRouter();
@@ -33,6 +31,8 @@ export default function Project() {
   const isMemberFound = project?.members.some(member => {
     return member.userId === sessionData?.user.id;
   });
+
+  const {projectHandleDelete} = useProjectDeletion(id);
 
   useEffect(() => {
     if (!isMemberFound) {
@@ -105,26 +105,75 @@ const methodProjectTracker= useZodForm({
   },
 });
 
+//used for read more button
+const [isReadMoreShown, setIsReadMoreShown] = useState(false);
+const toggleReadMore = () => {
+  setIsReadMoreShown(prevState => !prevState)
+}
+  
+  if (project === null || project === undefined ) {
+    return <p>Error finding project</p>
+  }
   return (
     <>
     {isMemberFound ? (
     <div className="p-8">
       <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
+      {!isReadMoreShown ? (
+        <>
+        <div className="flex flex-row">
+          <Label className="font-medium">Project Name:</Label>
+          <p className="ml-1">{project.name}</p>
+        </div>
+        <div className="flex flex-row">
+        <Label className="font-medium">Goal:</Label>
+        <p className="ml-1">{project.goal}</p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Estimated Start Date:</Label>
+          <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Description:</Label>
+          <p className="ml-1">{project.description}</p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Project Members:</Label>
+          <p className="ml-1">
+            {projectMembers?.map((member) => member?.name).join(", ")}   
+          </p>
+        </div>
+        <div className="flex flex-row">
+          <Label className="font-medium">Stakeholders:</Label>
+          <p className="ml-1">{project.stakeholders}</p>
+        </div>
+        <div className="flex flex-row">
+        <Label className="font-medium">Link to Project Initiation Document: </Label>
+        {project.pid? 
+        <a className="ml-1 text-blue-600 hover:underline" href={project.pid?? ""} rel="noopener noreferrer" 
+            target="_blank">Click Here</a>
+        :
+        <p className="ml-1"> N/A</p>
+      }
+      </div>
+        </>
+      ): (
+        <>
       <div className="flex flex-row">
         <Label className="font-medium">Project Name:</Label>
-        <p className="ml-1">{project?.name}</p>
+        <p className="ml-1">{project.name}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Goal:</Label>
-        <p className="ml-1">{project?.goal}</p>
+        <p className="ml-1">{project.goal}</p>
       </div>
       <div className="flex flex-row">
-        <Label className="font-medium">Start Date:</Label>
-        <p className="ml-1">{project?.estimatedStart.toLocaleDateString()}</p>
+        <Label className="font-medium">Estimated Start Date:</Label>
+        <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Description:</Label>
-        <p className="ml-1">{project?.description}</p>
+        <p className="ml-1">{project.description}</p>
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Project Members:</Label>
@@ -134,19 +183,53 @@ const methodProjectTracker= useZodForm({
       </div>
       <div className="flex flex-row">
         <Label className="font-medium">Stakeholders:</Label>
-        <p className="ml-1">{project?.stakeholders}</p>
+        <p className="ml-1">{project.stakeholders}</p>
       </div>
-      <div className="mt-5 flex gap-7">
+      <div className="flex flex-row">
+        <Label className="font-medium">Trigger:</Label>
+        <p className="ml-1">{project.trigger === "" ? "N/A" : project.trigger}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Expected Outcome:</Label>
+        <p className="ml-1">{project.expectedMovement === "" ? "N/A" : project.expectedMovement}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Alternatives Considered:</Label>
+        <p className="ml-1">{project.alternativeOptions === "" ? "N/A" : project.alternativeOptions}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Estimated Risks:</Label>
+        <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
+      </div>
+      <div className="flex flex-row">
+        <Label className="font-medium">Link to Project Initiation Document: </Label>
+        {project.pid? 
+        <a className="ml-1 text-blue-600 hover:underline" href={project.pid?? ""} rel="noopener noreferrer" 
+            target="_blank">Click Here</a>
+        :
+        <p className="ml-1"> N/A</p>
+      }
+      </div>
+     
+      </>
 
-        
-      <Link href={"/projectCompletion/" + project?.id}>
+      ) 
+      } 
+      <Button variant={"subtle"}
+      size={"sm"}
+      className="mt-2" 
+      onClick={toggleReadMore}> {!isReadMoreShown ? "See More...": "See Less..."}
+      </Button>
+
+      <div className="mt-10 flex gap-7">
+      <Link href={"/projectCompletion/" + project.id}>
         <Button variant={"default"}>
-            {project?.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
+            {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
 
         </Button>
       </Link>
 
-      <Link href={"/" + project?.id} className={project?.status=="Active" ? "hidden":""} >
+      <Link href={"/" + project?.id} className={project.status=="Active" ? "hidden":""} >
       <Button variant={"default"}  className="bg-green-500" 
       onClick={methods.handleSubmit(async (values) => {
         await Promise.all ([
@@ -162,33 +245,40 @@ const methodProjectTracker= useZodForm({
       </Link>
 
 
-      <Link href={"/editProject/" + project?.id}>
+      <Link href={"/editProject/" + project.id}>
         <Button variant={"default"}>
             Edit Project
         </Button>
       </Link>
       
 
-      <DeletionDialog object="Project" id={id}></DeletionDialog>
+      <DeletionDialog object="Project" id={id} handleDelete={projectHandleDelete}></DeletionDialog>
       </div>
 
       <h2 className="mt-10 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-row flex-wrap gap-5 py-2">
         {activities &&
-          activities.map((activity) => (
+          activities
+          .sort((a, b) => {
+            const aStartDate = a.startDate ? a.startDate.getTime() : new Date(0).getTime();
+            const bStartDate = b.startDate ? b.startDate.getTime() : new Date(0).getTime(); 
+            return bStartDate - aStartDate; // sort the activities array by startDate in descending order
+          })
+          .map((activity) => (
             <Link
+              style={{ backgroundColor: `${project.colour}` }}
               href={"/activity/" + activity.id}
               key={activity.id}
-              className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
+              className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
             >
               <h3 className="text-xl font-bold">{activity.name}</h3>
-              <p>{activity.description}</p>
+              <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
             </Link>
           ))}
       </div>
 
-      <Link href={"/newActivity/" + id } className={project?.status=="Complete"? "pointer-events-none":""}>
-        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project?.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
+      <Link href={"/newActivity/" + id } className={project.status=="Complete"? "pointer-events-none":""}>
+        <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
         Add New Activity
         </Button>
       </Link>

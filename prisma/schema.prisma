@@ -131,6 +131,7 @@ model Project {
     members            ProjectMember[]
     Activity           Activity[]
     stakeholders       String?
+    pid                String?
 
     // ProjectTracker     ProjectTracker[]
     // ActivityTracker    ActivityTracker[]
@@ -145,7 +146,7 @@ model Activity {
     project           Project          @relation(fields: [projectId], references: [id])
     name              String
     description       String           @db.Text
-    engagementPattern String           @db.Text
+    engagementPattern String?          @db.Text
     valueCreated      String?          @db.Text
     startDate         DateTime?
     endDate           DateTime?
@@ -155,6 +156,7 @@ model Activity {
     stakeholders      String?
     members           ActivityMember[]
     hours             Int?
+    reportComments    String?          @db.Text
     // ActivityTracker   ActivityTracker[]
 
     @@index([projectId])
@@ -187,6 +189,7 @@ model ProjectTracker {
     members            String?   @db.Text
     // Activity           Activity[]     *** Need to organise how these will be stored in projectTracker
     stakeholders       String?
+    pid                String?
 
     // @@index([projectId])
 }
@@ -199,8 +202,8 @@ model ActivityTracker {
     // project           Project   @relation(fields: [projectId], references: [id])
     name              String
     description       String    @db.Text
-    engagementPattern String    @db.Text
-    valueCreated      String?
+    engagementPattern String?   @db.Text
+    valueCreated      String?   @db.Text
     startDate         DateTime?
     endDate           DateTime?
     // activity          Activity  @relation(fields: [activityId], references: [id])
@@ -211,6 +214,7 @@ model ActivityTracker {
     hours             Int?
     stakeholders      String?
     members           String?   @db.Text
+    reportComments    String?   @db.Text
 
     @@index([projectId])
     @@index([activityId])
@@ -226,6 +230,7 @@ model StakeholderResponse {
     improvements     String?
     complaints       String?
     createdAt        DateTime @default(now())
+    status           String?
 
     @@index([projectId])
 }

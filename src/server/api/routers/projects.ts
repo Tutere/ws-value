@@ -12,6 +12,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { TRPCError } from "@trpc/server";
 
 export const projectsRouter = createTRPCRouter({
   create: protectedProcedure
@@ -32,6 +33,7 @@ export const projectsRouter = createTRPCRouter({
           estimatedRisk: input.estimatedRisk,
           status: input.status,
           stakeholders: input.stakeholders,
+          pid: input.pid,
           members: {
             createMany: {
               data: input.members.map(member => {
@@ -54,9 +56,13 @@ export const projectsRouter = createTRPCRouter({
             userId: ctx.session.user.id,
           },
         },
+        NOT: {
+          status:"Deleted",
+        }
       },
       include: {
         members: true,
+        Activity:true,
       },
     });
   }),
@@ -100,6 +106,7 @@ export const projectsRouter = createTRPCRouter({
           alternativeOptions: input.alternativeOptions,
           estimatedRisk: input.estimatedRisk,
           stakeholders: input.stakeholders,
+          pid: input.pid,
           members: {
             createMany: {
               data: input.members.map(member => {
@@ -124,12 +131,42 @@ export const projectsRouter = createTRPCRouter({
       });
     }),
 
+    softDelete: protectedProcedure
+    .input(DeleteProjectSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.project.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: "Deleted",
+        }
+      });
+    }),
+
   findByActivityId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
     .query(({ ctx, input }) => {
       return ctx.prisma.project.findFirst({
         where: {
           Activity: {
+            some: {
+              id: input.id,
+            },
+          },
+        },
+        include: {
+          members: true,
+        },
+      });
+    }),
+
+    findByStakeholderResponseId: protectedProcedure
+    .input(FindProjectByActivityIdSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.project.findFirst({
+        where: {
+          StakeholderResponse: {
             some: {
               id: input.id,
             },
@@ -167,10 +204,11 @@ export const projectsRouter = createTRPCRouter({
       });
     }),
 
-    PublicFindByProjectId: publicProcedure
+    FindByProjectId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
-    .query(({ ctx, input }) => {
-      return ctx.prisma.project.findUnique({
+    .query(async ({ ctx, input }) => {
+      const project = 
+      await ctx.prisma.project.findUnique({
         where: {
           id: input.id,
         },
@@ -178,5 +216,13 @@ export const projectsRouter = createTRPCRouter({
           members: true,
         },
       });
+      const isMemberFound = project?.members.some((member) => {
+        return member.userId === ctx.session?.user.id;
+      });
+
+      if (!isMemberFound) {
+        throw new TRPCError ({code: "UNAUTHORIZED", message: "User is not a member of this project"})
+      }
+      return project;
     }),
 });

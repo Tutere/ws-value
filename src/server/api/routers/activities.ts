@@ -1,5 +1,5 @@
 import { CreateActivitySchema, ReadActivitySchema,
-  ReadSpecificActivitySchema, EditActivitySchema  } from "~/schemas/activities";
+  ReadSpecificActivitySchema, EditActivitySchema, ReportCommentSchema  } from "~/schemas/activities";
 
 
 import {
@@ -45,6 +45,9 @@ export const activitiesRouter = createTRPCRouter({
       {
         where: {
           projectId: input.projectId,
+          NOT: {
+            status:"Deleted",
+          }
         },
         include: {
           members: true,
@@ -67,6 +70,23 @@ export const activitiesRouter = createTRPCRouter({
     );
   }),
 
+  //Soft delete all activities within a project (given a project ID)
+  softDelete: protectedProcedure
+  .input(ReadActivitySchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.updateMany(
+      {
+        where: {
+          projectId: input.projectId,
+        },
+        data: {
+          status:"Deleted",
+        }
+      }
+    );
+  }),
+  
+
   readSpecific: protectedProcedure
   .input(ReadSpecificActivitySchema)
   .query(({ ctx, input }) => {
@@ -77,6 +97,7 @@ export const activitiesRouter = createTRPCRouter({
         },
         include: {
           members: true,
+          project: true,
         },
       }
     );
@@ -116,6 +137,21 @@ export const activitiesRouter = createTRPCRouter({
     );
   }),
 
+  reportComments: publicProcedure
+  .input(ReportCommentSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.update(
+      {
+        where: {
+          id: input.id,
+        },
+        data: {
+          reportComments: input.reportComment,
+        }
+      }
+    );
+  }),
+
   //Delete a specific activity within a project (given an activity ID)
   deleteByActivityId: protectedProcedure
   .input(ReadSpecificActivitySchema)
@@ -125,6 +161,21 @@ export const activitiesRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+      }
+    );
+  }),
+
+  softDeleteByActivityId: protectedProcedure
+  .input(ReadSpecificActivitySchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activity.update(
+      {
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: "Deleted"
+        }
       }
     );
   }),
