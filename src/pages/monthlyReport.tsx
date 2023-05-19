@@ -290,15 +290,16 @@ export default function MonthlyReport({
       <div className={cn("grid gap-2", className)}>
         <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
         <DatePicker date={date} setDate={setDate} />
+        <Button className="mx-auto mt-4" onClick={sendEmail} disabled={emailSending}>
+          {emailSending ? "Sending Email..." : " Send Email"}
+        </Button>
       </div>
 
 
       {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
       <div className="flex flex-row m-8 gap-10">
         <div className="flex-[1] border-r-2">
-          <Button onClick={sendEmail} disabled={emailSending}>
-            {emailSending ? "Sending Email..." : " Send Email"}
-          </Button>
+          
 
             <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
             
