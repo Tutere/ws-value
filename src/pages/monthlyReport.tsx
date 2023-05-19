@@ -14,6 +14,7 @@ import { ReportCommentSchema } from "~/schemas/activities";
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
+import emailjs from '@emailjs/browser';
 
 export default function MonthlyReport({
   className,
@@ -199,8 +200,61 @@ export default function MonthlyReport({
       methodsActivityTracker.setValue("stakeholders", activity.stakeholders!);
       methodsActivityTracker.setValue("members",projMemIds);
       methodsActivityTracker.setValue("reportComments", comments);
-  } 
+  }
+  
 
+  const body = projectsWithActivitiesInRange.map(project => {
+    const activities = project.activitiesInRange.map(activity => `
+      <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
+        <p style="margin-right: 5px;">${project.project.icon}</p>
+        <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
+        <p className="ml-1">
+        ${" "}
+        - Completed:${" "}
+        ${activity.activity.endDate?.toDateString()}
+        </p>
+      </div>
+      <ul style="margin-top: 0px; padding-top: 0px;">
+        <li>Outcome score: ${activity.activity.outcomeScore}</li>
+        <li>Contributors: ${"TBC"}</li>
+        <li>Stakeholders: ${activity.activity.stakeholders === "" ? activity.activity.stakeholders : "N/A"}</li>
+        <li>Value Statement: ${activity.activity.valueCreated}</li>
+        <li style="white-space: pre-wrap;">Additional Comments: ${activity.comments ? activity.comments.replace(/\n/g, '<br>') : ""}</li>
+      </ul>
+    `).join('');
+  
+    return `
+      <div style="margin-bottom: 30px;">
+        <p style="font-size: 15px; margin-bottom: 0px;"><b>${project.project.name}</b></p>
+        ${activities}
+      </div>
+    `;
+  }).join('\n');
+
+  const [emailSending,setEmailSending] = useState(false);
+
+  const sendEmail = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setEmailSending(true);
+
+    emailjs.send('service_0yn0tdg', 'template_i1cq8tc', 
+    {
+      user_name: sessionData?.user.name,
+      user_email: sessionData?.user.email,
+      activitiesCompleted: body,
+      projectsCompleted: "projects Completed Here"
+    },
+     'ZyIRYHSvCLfZ4nSsl')
+      .then((result) => {
+          alert("Email was sent!")
+          setEmailSending(false);
+      }, (error) => {
+          console.log(error.text);
+          alert("Error:" + error.text);
+      });
+  };
+
+ 
 
   return (
     <div>
@@ -215,6 +269,10 @@ export default function MonthlyReport({
       {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
       <div className="flex flex-row m-8 gap-10">
         <div className="flex-[1] border-r-2">
+          <Button onClick={sendEmail} disabled={emailSending}>
+            {emailSending ? "Sending Email..." : " Send Email"}
+          </Button>
+
             <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
