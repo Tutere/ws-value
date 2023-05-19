@@ -22,6 +22,25 @@ import {
       });
     }),
 
+    readByActivityId: protectedProcedure
+    .input(FindProjectmemberSchema)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.projectMember.findMany({
+        where: {
+          ActivityMember : {
+            some: {
+              activityId:input.id
+            }
+          }         
+        },
+        include: {
+          user:true,
+          ActivityMember:true,
+        }
+
+      });
+    }),
+
     readSpecific: protectedProcedure
     .input(FindProjectmemberSchema)
     .query(({ ctx, input }) => {

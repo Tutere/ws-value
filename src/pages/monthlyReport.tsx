@@ -74,7 +74,7 @@ export default function MonthlyReport({
   const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
   
   const getProjectMembersOfActivity = (activity: any) => {
-     return api.projectmember.read.useQuery({ id: activity.projectId }).data;
+     return api.projectmember.readByActivityId.useQuery({ id: activity.id }).data;
     
   };
 
@@ -121,7 +121,7 @@ export default function MonthlyReport({
 
   //setup for all activities and projects in date range
 
-  const projectsInDateRange: (Project & { Activity: Activity[]; members: ProjectMember[]; })[] = [];
+  const projectsInDateRange: (Project & { Activity: Activity[]; members: (ProjectMember & { user: User; })[]; })[] = [];
   const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
 
   projects && projects.map((project) => {
@@ -165,6 +165,7 @@ export default function MonthlyReport({
     }
   });
 
+
   const setValues = async (activity: Activity, comment:string) => {
     await methods.setValue("id",activity.id);
     await methods.setValue("reportComment",comment);
@@ -203,7 +204,7 @@ export default function MonthlyReport({
   }
   
 
-  const body = projectsWithActivitiesInRange.map(project => {
+  const activitiesForEmail = projectsWithActivitiesInRange.map(project => {
     const activities = project.activitiesInRange.map(activity => `
       <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
         <p style="margin-right: 5px;">${project.project.icon}</p>
@@ -216,7 +217,7 @@ export default function MonthlyReport({
       </div>
       <ul style="margin-top: 0px; padding-top: 0px;">
         <li>Outcome score: ${activity.activity.outcomeScore}</li>
-        <li>Contributors: ${"TBC"}</li>
+        <li>Contributors: ${activity.projectMembers?.map(pm => pm.user.name).join(", ")}</li>
         <li>Stakeholders: ${activity.activity.stakeholders === "" ? activity.activity.stakeholders : "N/A"}</li>
         <li>Value Statement: ${activity.activity.valueCreated}</li>
         <li style="white-space: pre-wrap;">Additional Comments: ${activity.comments ? activity.comments.replace(/\n/g, '<br>') : ""}</li>
@@ -231,6 +232,32 @@ export default function MonthlyReport({
     `;
   }).join('\n');
 
+  const projectsForEmail = projectsInDateRange.map(project => {
+    return `
+      <div style="margin-bottom: 30px;">
+        <div style="font-size: 15px; display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px;">
+          <p style="margin-right: 5px;">${project.icon}</p>
+          <p style="margin-right: 5px;"><b>${project.name}</b></p>
+          <p className="ml-1">
+          ${" "}
+          - Completed:${" "}
+          ${project.actualEnd?.toDateString()}
+          </p>
+        </div>
+
+        <ul style="margin-top: 0px; padding-top: 0px;">
+          <li>Outcome score: ${project.outcomeScore}</li>
+          <li>Effort Score: ${project.effortScore}</li>
+          <li>Contributors: ${project.members.map(pm => pm.user.name).join(", ")}</li>
+          <li>Stakeholders: ${project.stakeholders}</li>
+          <li>Retrospective: ${project.retrospective}</li>
+          <li>Lessons Learnt: ${project.lessonsLearnt}</li>
+        </ul>
+
+      </div>
+    `;
+  }).join('\n');
+
   const [emailSending,setEmailSending] = useState(false);
 
   const sendEmail = (e: { preventDefault: () => void; }) => {
@@ -241,8 +268,8 @@ export default function MonthlyReport({
     {
       user_name: sessionData?.user.name,
       user_email: sessionData?.user.email,
-      activitiesCompleted: body,
-      projectsCompleted: "projects Completed Here"
+      activitiesCompleted: activitiesForEmail,
+      projectsCompleted: projectsForEmail,
     },
      'ZyIRYHSvCLfZ4nSsl')
       .then((result) => {
@@ -407,6 +434,8 @@ export default function MonthlyReport({
                 <div className="mb-5 ml-5 w-3/4">     
                     <p className="">Outcome Score: {project.outcomeScore} </p>
                     <p className="">Effort Score: {project.effortScore} </p>
+                    <p className="">Contributors: {project.members.map(pm => pm.user.name).join(", ")} </p>
+                    <p className="">Stakeholders: {project.stakeholders} </p>
                     <p className="">Retrospective: {project.retrospective} </p>
                     <p className="mb-10">Lessons Learnt: {project.lessonsLearnt} </p>
                 </div>
