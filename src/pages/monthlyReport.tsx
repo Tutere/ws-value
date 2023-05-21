@@ -290,7 +290,7 @@ export default function MonthlyReport({
       <div className={cn("grid gap-2", className)}>
         <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
         <DatePicker date={date} setDate={setDate} />
-        <Button className="mx-auto mt-4" onClick={sendEmail} disabled={emailSending}>
+        <Button className="mx-auto mt-4 bg-green-600" onClick={sendEmail} disabled={emailSending}>
           {emailSending ? "Sending Email..." : " Send Email"}
         </Button>
       </div>
