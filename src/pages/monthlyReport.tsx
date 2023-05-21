@@ -15,6 +15,7 @@ import { ActivityChangeSchema } from "~/schemas/activityTracker";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 import emailjs from '@emailjs/browser';
+import { EmailConfirmation } from "~/components/ui/emailConfirmation";
 
 export default function MonthlyReport({
   className,
@@ -203,6 +204,7 @@ export default function MonthlyReport({
       methodsActivityTracker.setValue("reportComments", comments);
   }
   
+  //email setup .... should this be in it's own component?
 
   const activitiesForEmail = projectsWithActivitiesInRange.map(project => {
     const activities = project.activitiesInRange.map(activity => `
@@ -290,9 +292,7 @@ export default function MonthlyReport({
       <div className={cn("grid gap-2", className)}>
         <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
         <DatePicker date={date} setDate={setDate} />
-        <Button className="mx-auto mt-4 bg-green-600" onClick={sendEmail} disabled={emailSending}>
-          {emailSending ? "Sending Email..." : " Send Email"}
-        </Button>
+        <EmailConfirmation sendEmail={sendEmail} emailSending={emailSending}></EmailConfirmation>
       </div>
 
 
