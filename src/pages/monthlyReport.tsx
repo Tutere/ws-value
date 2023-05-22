@@ -260,7 +260,10 @@ export default function MonthlyReport({
     `;
   }).join('\n');
 
+  //used for loading state of button 
   const [emailSending,setEmailSending] = useState(false);
+
+  //to figure out current user email for sending
   const currentUser = api.users.currentUser.useQuery(undefined,{
     suspense:true,
   }).data;
