@@ -377,7 +377,7 @@ export default function MonthlyReport({
                                   <Label htmlFor="reportComment">Optional Comments for Activity</Label>
                                   <div className="flex items-center">
                                       <Textarea
-                                        className="mr-4 whitespace-pre"
+                                        className="mr-4 whitespace-pre-wrap resize"
                                         placeholder=""
                                         defaultValue={activity.comments}
                                         onChange={(e) => activity.setComments(e.target.value)}
