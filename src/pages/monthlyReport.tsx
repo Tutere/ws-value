@@ -261,6 +261,9 @@ export default function MonthlyReport({
   }).join('\n');
 
   const [emailSending,setEmailSending] = useState(false);
+  const currentUser = api.users.currentUser.useQuery(undefined,{
+    suspense:true,
+  }).data;
 
   const sendEmail = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -269,7 +272,7 @@ export default function MonthlyReport({
     emailjs.send('service_0yn0tdg', 'template_i1cq8tc', 
     {
       user_name: sessionData?.user.name,
-      user_email: sessionData?.user.email,
+      user_email: currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "" ,
       activitiesCompleted: activitiesForEmail,
       projectsCompleted: projectsForEmail,
     },

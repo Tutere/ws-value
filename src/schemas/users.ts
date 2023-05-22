@@ -5,3 +5,9 @@ export const FindUserSchema = z.object({
 });
 
 export type FindUserSchema = z.infer<typeof FindUserSchema>;
+
+export const WorkEmailSchema = z.object({
+  email: z.string()
+});
+
+export type WorkEmailSchema = z.infer<typeof WorkEmailSchema>;

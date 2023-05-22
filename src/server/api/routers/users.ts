@@ -1,5 +1,5 @@
 
-import { FindUserSchema } from "~/schemas/users";
+import { FindUserSchema, WorkEmailSchema } from "~/schemas/users";
 import {
     createTRPCRouter,
     publicProcedure,
@@ -25,6 +25,31 @@ import {
         },
         include: {
           projects: true,
+        },
+      });
+    }),
+
+    currentUser: protectedProcedure
+    .query(({ ctx}) => {
+      return ctx.prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id
+        },
+        include: {
+          projects: true,
+        },
+      });
+    }),
+
+    updateWorkEmail: protectedProcedure
+    .input(WorkEmailSchema)
+    .mutation(({ ctx, input}) => {
+      return ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id
+        },
+        data: {
+          workEmail: input.email,
         },
       });
     }),

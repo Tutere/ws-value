@@ -22,6 +22,9 @@ export function Navbar() {
           <Link href={"/monthlyReport"} className="text-white">
             Monthly Report
           </Link>
+          <Link href={"/emailPreferences"} className="text-white">
+            Email Preferences
+          </Link>
           <Link href={"/newProject"} className="text-white">
             <Button variant={"subtle"}>
               Start New Project
