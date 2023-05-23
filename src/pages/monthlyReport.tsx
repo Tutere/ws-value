@@ -286,6 +286,7 @@ export default function MonthlyReport({
       }, (error) => {
           console.log(error.text);
           alert("Error:" + error.text);
+          setEmailSending(false);
       });
   };
 
