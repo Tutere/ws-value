@@ -307,7 +307,7 @@ export default function MonthlyReport({
         <div className="flex-[1] border-r-2">
           
 
-            <h1 className="text-3xl font-bold mb-12" >Activities Completed (by project)</h1>
+            <h1 className="text-3xl font-bold mb-12 underline" >Activities Completed (by project)</h1>
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
@@ -351,8 +351,12 @@ export default function MonthlyReport({
                               // methods.reset();
                               // methodsActivityTracker.reset();
                             }}
-                          >
+                          > 
+                            
                             <div className="mb-5 ml-5 w-3/4">
+                            <Link className="hover:underline"  href={"/activity/" + activity.activity.id} 
+                              rel="noopener noreferrer" 
+                              target="_blank">
                               <div className="flex">
                                 <div>{project.project.icon}</div>
                                 <p className="ml-2 font-bold">
@@ -364,6 +368,7 @@ export default function MonthlyReport({
                                   {activity.activity.endDate?.toDateString()}{" "}
                                 </p>
                               </div>
+                              </Link>
 
                               <p className="">Outcome Score: {activity.activity.outcomeScore}{" "}</p>
                               <p className="">Contributors: {contributorNames.join(", ")}{" "}</p>
@@ -420,7 +425,7 @@ export default function MonthlyReport({
             
         </div>
         <div className="flex-1 ">
-          <h1 className="text-3xl font-bold mb-12" >Projects Completed</h1>
+          <h1 className="text-3xl font-bold mb-12 underline" >Projects Completed</h1>
           
           {projectsInDateRange && projectsInDateRange.map((project) => {
 
