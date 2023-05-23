@@ -1,11 +1,15 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { Button } from "~/components/ui/Button";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const utils = api.useContext().projects;
+  const [loading, setLoading] = useState(false);
   const query = api.projects.read.useQuery(undefined, {
     suspense: true,
     onError: (error) => {
@@ -14,6 +18,10 @@ const Home: NextPage = () => {
   });
 
   const projects = query.data;
+
+  if(loading) {
+    return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+  }
 
   return (
     <>
@@ -36,6 +44,7 @@ const Home: NextPage = () => {
                         key={project.id}
                         style={{ backgroundColor: `${project.colour}` }}
                         className="basis-60 overflow-hidden p-4 shadow sm:rounded-lg"
+                        onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
                           <div className="text-lg mr-2">{project.icon}</div>
@@ -70,6 +79,7 @@ const Home: NextPage = () => {
                         key={project.id}
                         style={{ backgroundColor: `${project.colour}` }}
                         className="basis-60 overflow-hidden p-4 shadow sm:rounded-lg"
+                        onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
                           <div className="text-lg mr-2">{project.icon}</div>
