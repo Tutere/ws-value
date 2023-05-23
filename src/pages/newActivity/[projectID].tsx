@@ -10,6 +10,7 @@ import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
 import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
+import { useCurrentDate } from "~/hooks/useCurrentDate";
 
 export default function Project() {
   const router = useRouter();
@@ -256,7 +257,7 @@ export default function Project() {
               methodsField="startDate"
               placeHolder=""
               type="date"
-              defaultValue={new Date().toISOString().slice(0, 10)}
+              defaultValue={useCurrentDate()}
             />
 
             <InputSection

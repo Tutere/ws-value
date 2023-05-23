@@ -8,6 +8,7 @@ import { Input } from "src/components/ui/Input";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { InputSection } from "~/components/ui/inputSection";
+import { useCurrentDate } from "~/hooks/useCurrentDate";
 import { useZodForm } from "~/hooks/useZodForm";
 import { CreateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
@@ -21,6 +22,7 @@ export default function ProjectForm() {
       console.error(error);
     },
   });
+
 
   const router = useRouter();
 
@@ -211,7 +213,7 @@ export default function ProjectForm() {
           methodsField="estimatedStart"
           placeHolder=""
           type="date"
-          defaultValue={new Date().toISOString().slice(0,10)}
+          defaultValue={useCurrentDate()}
           />
 
           <InputSection
