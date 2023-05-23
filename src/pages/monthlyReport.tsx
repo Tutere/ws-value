@@ -307,7 +307,7 @@ export default function MonthlyReport({
         <div className="flex-[1] border-r-2">
           
 
-            <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
+            <h1 className="text-3xl font-bold mb-12" >Activities Completed (by project)</h1>
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
@@ -386,16 +386,13 @@ export default function MonthlyReport({
                                   </div>
                                    
                               </div>
-
                                 <Button
                                 type="submit"
                                 variant={"default"}
                                 disabled={mutation.isLoading}
                                 className="mt-2"
                               >
-                                {mutation.isLoading
-                                  ? "Loading"
-                                  : "Save Comments"}
+                                {mutation.isLoading? "Loading": "Save Comments"}
                               </Button>   
                               </>                    
                               ) : (
