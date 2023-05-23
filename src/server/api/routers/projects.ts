@@ -218,6 +218,13 @@ export const projectsRouter = createTRPCRouter({
         },
         include: {
           members: true,
+          Activity: {
+            where: {
+              NOT: {
+                status:"Deleted",
+              }
+            }
+          }
         },
       });
       const isMemberFound = project?.members.some((member) => {

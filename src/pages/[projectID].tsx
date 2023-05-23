@@ -18,16 +18,17 @@ export default function Project() {
   const utils = api.useContext().activities;
   const [loading, setLoading] = useState(false);
 
-  const query = api.projects.read.useQuery(undefined, {
-    suspense: true,
+  const query = api.projects.FindByProjectId.useQuery({id:id}, {
+    suspense:true,
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        router.push("/");
+      }
+    }
   });
 
-  const projects = query.data;
-  const project = projects ? projects.find((p) => p.id === id) : null;
-
-  const { data: activities } = api.activities.read.useQuery({projectId: id}, {
-    suspense: true,
-  });
+  const project = query.data;
+  const activities  = project?.Activity;
 
   const { data: sessionData } = useSession();
   const isMemberFound = project?.members.some(member => {
