@@ -13,6 +13,7 @@ import { Button } from "../../components/ui/Button";
 
 export default function Project() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
   const query = api.projects.FindByProjectId.useQuery({id:id}, {
@@ -151,6 +152,10 @@ export default function Project() {
       router.events.off("routeChangeStart", handleBrowseAway);
     };
   }, [formSubmitted]);
+
+  if(loading) {
+    return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+  }
 
   return (
     <>

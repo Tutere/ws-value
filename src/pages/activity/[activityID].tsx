@@ -12,6 +12,7 @@ export default function Project() {
   const router = useRouter();
   const id = router.query.activityID as string;
   const utils = api.useContext().activities;
+  const [loading, setLoading] = useState(false);
   
   const query = api.projects.findByActivityId.useQuery({id:id}, {
     suspense: true,
@@ -62,7 +63,10 @@ const [isReadMoreShown, setIsReadMoreShown] = useState(false);
 const toggleReadMore = () => {
   setIsReadMoreShown(prevState => !prevState)
 }
-  
+
+  if(loading) {
+    return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+  }
   if (activity === null || activity === undefined ) {
     return <p>Error finding activity</p>
   }
@@ -165,7 +169,7 @@ const toggleReadMore = () => {
       </Button>
       
       <div className="mt-10 flex gap-7"> 
-      <Link href={"/editActivity/" + id}>
+      <Link href={"/editActivity/" + id} onClick={() => setLoading(true)}>
         <Button variant={"default"}>
             Edit Activity
         </Button>
