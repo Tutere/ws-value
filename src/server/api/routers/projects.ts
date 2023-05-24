@@ -36,14 +36,14 @@ export const projectsRouter = createTRPCRouter({
           pid: input.pid,
           members: {
             createMany: {
-              data: input.members.map(member => {
+              data: input.members.map((member) => {
                 return {
                   userId: member,
                   role: "OWNER",
-                }
-              })
-            }
-          },    
+                };
+              }),
+            },
+          },
         },
       });
     }),
@@ -57,16 +57,16 @@ export const projectsRouter = createTRPCRouter({
           },
         },
         NOT: {
-          status:"Deleted",
-        }
+          status: "Deleted",
+        },
       },
       include: {
         members: {
           include: {
-            user:true,
+            user: true,
           },
         },
-        Activity:true,
+        Activity: true,
       },
     });
   }),
@@ -113,14 +113,14 @@ export const projectsRouter = createTRPCRouter({
           pid: input.pid,
           members: {
             createMany: {
-              data: input.members.map(member => {
+              data: input.members.map((member) => {
                 return {
                   userId: member,
                   role: "OWNER",
-                }
-              })
-            }
-          },    
+                };
+              }),
+            },
+          },
         },
       });
     }),
@@ -128,23 +128,43 @@ export const projectsRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(DeleteProjectSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.delete({
+      ctx.prisma.project.delete({
         where: {
           id: input.id,
         },
       });
     }),
 
-    softDelete: protectedProcedure
+  softDelete: protectedProcedure
     .input(DeleteProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.update({
+    .mutation(async ({ ctx, input }) => {
+      const deletedProject = await ctx.prisma.project.update({
         where: {
           id: input.id,
         },
         data: {
           status: "Deleted",
-        }
+        },
+        include: {
+          Activity: true,
+        },
+      });
+      await ctx.prisma.projectTracker.create({
+        data: { ...deletedProject, changeType: "Delete", projectId: input.id },
+      });
+
+      deletedProject.Activity.forEach(async (activity) => {
+        await ctx.prisma.activity.update({
+          where: {
+            id: activity.id,
+          },
+          data: {
+            status: "Deleted",
+          },
+        });
+        await ctx.prisma.activityTracker.create({
+          data: { ...activity, changeType: "Delete", activityId: activity.id },
+        });
       });
     }),
 
@@ -165,7 +185,7 @@ export const projectsRouter = createTRPCRouter({
       });
     }),
 
-    findByStakeholderResponseId: protectedProcedure
+  findByStakeholderResponseId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
     .query(({ ctx, input }) => {
       return ctx.prisma.project.findFirst({
@@ -203,16 +223,15 @@ export const projectsRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          status: "Active"
+          status: "Active",
         },
       });
     }),
 
-    FindByProjectId: protectedProcedure
+  FindByProjectId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
     .query(async ({ ctx, input }) => {
-      const project = 
-      await ctx.prisma.project.findUnique({
+      const project = await ctx.prisma.project.findUnique({
         where: {
           id: input.id,
         },
@@ -221,10 +240,10 @@ export const projectsRouter = createTRPCRouter({
           Activity: {
             where: {
               NOT: {
-                status:"Deleted",
-              }
-            }
-          }
+                status: "Deleted",
+              },
+            },
+          },
         },
       });
       const isMemberFound = project?.members.some((member) => {
@@ -232,7 +251,10 @@ export const projectsRouter = createTRPCRouter({
       });
 
       if (!isMemberFound) {
-        throw new TRPCError ({code: "UNAUTHORIZED", message: "User is not a member of this project"})
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User is not a member of this project",
+        });
       }
       return project;
     }),
