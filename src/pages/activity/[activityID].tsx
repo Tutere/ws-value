@@ -14,16 +14,13 @@ export default function Project() {
   const utils = api.useContext().activities;
   const [loading, setLoading] = useState(false);
   
-  const query = api.projects.findByActivityId.useQuery({id:id}, {
-    suspense: true,
-  });
-
-  const project = query.data;
-//   const project = projects ? projects.find((p) => p.id === id) : null;
+ 
 
   const { data: activity } = api.activities.readSpecific.useQuery({id: id}, {
     suspense: true,
   });
+
+  const project = activity?.project;
 
   const {ActivityhandleDelete} = useActivityDeletion(activity?.id ?? "");
 

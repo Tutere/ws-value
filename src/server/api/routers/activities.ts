@@ -97,7 +97,11 @@ export const activitiesRouter = createTRPCRouter({
         },
         include: {
           members: true,
-          project: true,
+          project: {
+            include:{
+              members:true,
+            }
+          }
         },
       }
     );
