@@ -197,6 +197,7 @@ export default function Project() {
               placeHolder=""
               type=""
               defaultValue=""
+              required={true}
             />
 
             <TextAreaSection
@@ -206,6 +207,7 @@ export default function Project() {
               methodsField="description"
               placeHolder=""
               defaultValue=""
+              required={true}
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
@@ -239,6 +241,7 @@ export default function Project() {
               methodsField="engagementPattern"
               placeHolder="Optional"
               defaultValue=""
+              required={false}
             />
 
             <TextAreaSection
@@ -248,6 +251,7 @@ export default function Project() {
               methodsField="valueCreated"
               placeHolder=""
               defaultValue=""
+              required={true}
             />
 
             <InputSection
@@ -258,6 +262,7 @@ export default function Project() {
               placeHolder=""
               type="date"
               defaultValue={useCurrentDate()}
+              required={true}
             />
 
             <InputSection
@@ -268,6 +273,7 @@ export default function Project() {
               placeHolder=""
               type="date"
               defaultValue=""
+              required={false}
             />
 
             <InputSection
@@ -278,6 +284,7 @@ export default function Project() {
               placeHolder=""
               defaultValue=""
               type=""
+              required={true}
             />
 
             <InputSection
@@ -288,6 +295,7 @@ export default function Project() {
               placeHolder=""
               defaultValue=""
               type=""
+              required={true}
             />
 
             <InputSection
@@ -298,6 +306,7 @@ export default function Project() {
               placeHolder="Optional"
               defaultValue=""
               type=""
+              required={false}
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
