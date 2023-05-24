@@ -271,10 +271,14 @@ if(loading) {
           })
           .map((activity) => (
             <Link
-              style={{ backgroundColor: `${project.colour}` }}
               href={"/activity/" + activity.id}
               key={activity.id}
-              className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
+              style={{
+                borderTopColor: `${project.colour}`,
+                borderTopStyle: "solid",
+                borderTopWidth: "thick",
+              }}
+              className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
               onClick={() => setLoading(true)}
             >
               <h3 className="text-xl font-bold">{activity.name}</h3>

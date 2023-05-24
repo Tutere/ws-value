@@ -272,14 +272,16 @@ export default function ProjectCompletion() {
         {stakeholderResponses?.length! > 0 ? (
           stakeholderResponses?.map((stakeholderResponse) => (
             <a 
-            className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
-            style={{ backgroundColor: `${project.colour}` }}
+            style={{
+              borderTopColor: `${project.colour}`,
+              borderTopStyle: "solid",
+              borderTopWidth: "thick",
+            }}
+            className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
             onClick={() => setFormSubmitted(true)}> {/* wrapper to get around pop up */}
               <Link
                 href={"/stakeholderResponse/" + stakeholderResponse.id}
                 key={stakeholderResponse.id}
-                // className="overflow-hidden bg-white p-4 shadow sm:rounded-lg basis-60"
-                // style={{ backgroundColor: `${project.colour}` }}
               >
                 <h3 className="text-xl font-bold">{stakeholderResponse.organisation}</h3>
                 <p>{"Benefits rating: " + stakeholderResponse.benefitsRating}</p>

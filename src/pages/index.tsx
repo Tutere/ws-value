@@ -92,8 +92,12 @@ const Home: NextPage = () => {
                       <Link
                         href={"/" + project.id}
                         key={project.id}
-                        style={{ backgroundColor: `${project.colour}` }}
-                        className="basis-60 overflow-hidden p-4 shadow sm:rounded-lg"
+                        style={{
+                          borderTopColor: `${project.colour}`,
+                          borderTopStyle: "solid",
+                          borderTopWidth: "thick",
+                        }}
+                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
                         onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
