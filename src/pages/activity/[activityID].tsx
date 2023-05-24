@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/ui/Button";
 import { DeletionDialog } from "~/components/ui/deletionDialog";
+import { LoadingPage } from "~/components/ui/loading";
 import { useActivityDeletion } from "~/hooks/useActivityDeletion";
 import { api } from "~/utils/api";
 
@@ -62,7 +63,7 @@ const toggleReadMore = () => {
 }
 
   if(loading) {
-    return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+    <LoadingPage></LoadingPage>
   }
   if (activity === null || activity === undefined ) {
     return <p>Error finding activity</p>

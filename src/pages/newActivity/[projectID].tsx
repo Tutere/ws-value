@@ -11,6 +11,7 @@ import { CreateActivitySchema } from "~/schemas/activities";
 import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
 import { useCurrentDate } from "~/hooks/useCurrentDate";
+import { LoadingPage } from "~/components/ui/loading";
 
 export default function Project() {
   const router = useRouter();
@@ -155,7 +156,7 @@ export default function Project() {
   }, [formSubmitted]);
 
   if(loading) {
-    return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+    return  <LoadingPage></LoadingPage>
   }
 
   return (
