@@ -10,9 +10,11 @@ import { useZodForm } from "~/hooks/useZodForm";
 import { CreateActivitySchema } from "~/schemas/activities";
 import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
+import { useCurrentDate } from "~/hooks/useCurrentDate";
 
 export default function Project() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
   const query = api.projects.FindByProjectId.useQuery({id:id}, {
@@ -152,6 +154,10 @@ export default function Project() {
     };
   }, [formSubmitted]);
 
+  if(loading) {
+    return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+  }
+
   return (
     <>
         <div className="p-8">
@@ -251,7 +257,7 @@ export default function Project() {
               methodsField="startDate"
               placeHolder=""
               type="date"
-              defaultValue={new Date().toISOString().slice(0, 10)}
+              defaultValue={useCurrentDate()}
             />
 
             <InputSection

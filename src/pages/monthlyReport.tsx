@@ -14,6 +14,8 @@ import { ReportCommentSchema } from "~/schemas/activities";
 import { ActivityChangeSchema } from "~/schemas/activityTracker";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
+import emailjs from '@emailjs/browser';
+import { EmailConfirmation } from "~/components/ui/emailConfirmation";
 
 export default function MonthlyReport({
   className,
@@ -73,7 +75,7 @@ export default function MonthlyReport({
   const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
   
   const getProjectMembersOfActivity = (activity: any) => {
-     return api.projectmember.read.useQuery({ id: activity.projectId }).data;
+     return api.projectmember.readByActivityId.useQuery({ id: activity.id }).data;
     
   };
 
@@ -120,7 +122,7 @@ export default function MonthlyReport({
 
   //setup for all activities and projects in date range
 
-  const projectsInDateRange: (Project & { Activity: Activity[]; members: ProjectMember[]; })[] = [];
+  const projectsInDateRange: (Project & { Activity: Activity[]; members: (ProjectMember & { user: User; })[]; })[] = [];
   const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
 
   projects && projects.map((project) => {
@@ -164,6 +166,7 @@ export default function MonthlyReport({
     }
   });
 
+
   const setValues = async (activity: Activity, comment:string) => {
     await methods.setValue("id",activity.id);
     await methods.setValue("reportComment",comment);
@@ -199,8 +202,95 @@ export default function MonthlyReport({
       methodsActivityTracker.setValue("stakeholders", activity.stakeholders!);
       methodsActivityTracker.setValue("members",projMemIds);
       methodsActivityTracker.setValue("reportComments", comments);
-  } 
+  }
+  
+  //email setup .... should this be in it's own component?
 
+  const activitiesForEmail = projectsWithActivitiesInRange.map(project => {
+    const activities = project.activitiesInRange.map(activity => `
+      <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
+        <p style="margin-right: 5px;">${project.project.icon}</p>
+        <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
+        <p className="ml-1">
+        ${" "}
+        - Completed:${" "}
+        ${activity.activity.endDate?.toDateString()}
+        </p>
+      </div>
+      <ul style="margin-top: 0px; padding-top: 0px;">
+        <li>Outcome score: ${activity.activity.outcomeScore}</li>
+        <li>Contributors: ${activity.projectMembers?.map(pm => pm.user.name).join(", ")}</li>
+        <li>Stakeholders: ${activity.activity.stakeholders === "" ? activity.activity.stakeholders : "N/A"}</li>
+        <li>Value Statement: ${activity.activity.valueCreated}</li>
+        <li style="white-space: pre-wrap;">Additional Comments: ${activity.comments ? activity.comments.replace(/\n/g, '<br>') : ""}</li>
+      </ul>
+    `).join('');
+  
+    return `
+      <div style="margin-bottom: 30px;">
+        <p style="font-size: 15px; margin-bottom: 0px;"><b>${project.project.name}</b></p>
+        ${activities}
+      </div>
+    `;
+  }).join('\n');
+
+  const projectsForEmail = projectsInDateRange.map(project => {
+    return `
+      <div style="margin-bottom: 30px;">
+        <div style="font-size: 15px; display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px;">
+          <p style="margin-right: 5px;">${project.icon}</p>
+          <p style="margin-right: 5px;"><b>${project.name}</b></p>
+          <p className="ml-1">
+          ${" "}
+          - Completed:${" "}
+          ${project.actualEnd?.toDateString()}
+          </p>
+        </div>
+
+        <ul style="margin-top: 0px; padding-top: 0px;">
+          <li>Outcome score: ${project.outcomeScore}</li>
+          <li>Effort Score: ${project.effortScore}</li>
+          <li>Contributors: ${project.members.map(pm => pm.user.name).join(", ")}</li>
+          <li>Stakeholders: ${project.stakeholders}</li>
+          <li>Retrospective: ${project.retrospective}</li>
+          <li>Lessons Learnt: ${project.lessonsLearnt}</li>
+        </ul>
+
+      </div>
+    `;
+  }).join('\n');
+
+  //used for loading state of button 
+  const [emailSending,setEmailSending] = useState(false);
+
+  //to figure out current user email for sending
+  const currentUser = api.users.currentUser.useQuery(undefined,{
+    suspense:true,
+  }).data;
+
+  const sendEmail = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setEmailSending(true);
+
+    emailjs.send('service_0yn0tdg', 'template_i1cq8tc', 
+    {
+      user_name: sessionData?.user.name,
+      user_email: currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "" ,
+      activitiesCompleted: activitiesForEmail,
+      projectsCompleted: projectsForEmail,
+    },
+     'ZyIRYHSvCLfZ4nSsl')
+      .then((result) => {
+          alert("Email was sent!")
+          setEmailSending(false);
+      }, (error) => {
+          console.log(error.text);
+          alert("Error:" + error.text);
+          setEmailSending(false);
+      });
+  };
+
+ 
 
   return (
     <div>
@@ -209,13 +299,16 @@ export default function MonthlyReport({
       <div className={cn("grid gap-2", className)}>
         <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
         <DatePicker date={date} setDate={setDate} />
+        <EmailConfirmation sendEmail={sendEmail} emailSending={emailSending}></EmailConfirmation>
       </div>
 
 
       {/* --------------------------------ACTIVITIES COMPLETED-------------------------------- */}
       <div className="flex flex-row m-8 gap-10">
         <div className="flex-[1] border-r-2">
-            <h1 className="text-3xl font-bold mb-12" >Activities Completed</h1>
+          
+
+            <h1 className="text-3xl font-bold mb-12 underline" >Activities Completed (by project)</h1>
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
@@ -259,8 +352,12 @@ export default function MonthlyReport({
                               // methods.reset();
                               // methodsActivityTracker.reset();
                             }}
-                          >
+                          > 
+                            
                             <div className="mb-5 ml-5 w-3/4">
+                            <Link className="hover:underline"  href={"/activity/" + activity.activity.id} 
+                              rel="noopener noreferrer" 
+                              target="_blank">
                               <div className="flex">
                                 <div>{project.project.icon}</div>
                                 <p className="ml-2 font-bold">
@@ -272,6 +369,7 @@ export default function MonthlyReport({
                                   {activity.activity.endDate?.toDateString()}{" "}
                                 </p>
                               </div>
+                              </Link>
 
                               <p className="">Outcome Score: {activity.activity.outcomeScore}{" "}</p>
                               <p className="">Contributors: {contributorNames.join(", ")}{" "}</p>
@@ -282,10 +380,10 @@ export default function MonthlyReport({
                                 <>
 
                               <div className="grid w-full max-w-md items-center gap-1.5">
-                                  <Label htmlFor="reportComment">Optional Comments for Activity</Label>
+                                  <Label htmlFor="reportComment">Optional Comments for Monthly report</Label>
                                   <div className="flex items-center">
                                       <Textarea
-                                        className="mr-4 whitespace-pre"
+                                        className="mr-4 whitespace-pre-wrap resize"
                                         placeholder=""
                                         defaultValue={activity.comments}
                                         onChange={(e) => activity.setComments(e.target.value)}
@@ -294,16 +392,13 @@ export default function MonthlyReport({
                                   </div>
                                    
                               </div>
-
                                 <Button
                                 type="submit"
                                 variant={"default"}
                                 disabled={mutation.isLoading}
                                 className="mt-2"
                               >
-                                {mutation.isLoading
-                                  ? "Loading"
-                                  : "Save Comments"}
+                                {mutation.isLoading? "Loading": "Save Comments"}
                               </Button>   
                               </>                    
                               ) : (
@@ -331,7 +426,7 @@ export default function MonthlyReport({
             
         </div>
         <div className="flex-1 ">
-          <h1 className="text-3xl font-bold mb-12" >Projects Completed</h1>
+          <h1 className="text-3xl font-bold mb-12 underline" >Projects Completed</h1>
           
           {projectsInDateRange && projectsInDateRange.map((project) => {
 
@@ -349,6 +444,8 @@ export default function MonthlyReport({
                 <div className="mb-5 ml-5 w-3/4">     
                     <p className="">Outcome Score: {project.outcomeScore} </p>
                     <p className="">Effort Score: {project.effortScore} </p>
+                    <p className="">Contributors: {project.members.map(pm => pm.user.name).join(", ")} </p>
+                    <p className="">Stakeholders: {project.stakeholders} </p>
                     <p className="">Retrospective: {project.retrospective} </p>
                     <p className="mb-10">Lessons Learnt: {project.lessonsLearnt} </p>
                 </div>

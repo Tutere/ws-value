@@ -16,16 +16,19 @@ export default function Project() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
-  const query = api.projects.read.useQuery(undefined, {
-    suspense: true,
+  const [loading, setLoading] = useState(false);
+
+  const query = api.projects.FindByProjectId.useQuery({id:id}, {
+    suspense:true,
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        router.push("/");
+      }
+    }
   });
 
-  const projects = query.data;
-  const project = projects ? projects.find((p) => p.id === id) : null;
-
-  const { data: activities } = api.activities.read.useQuery({projectId: id}, {
-    suspense: true,
-  });
+  const project = query.data;
+  const activities  = project?.Activity;
 
   const { data: sessionData } = useSession();
   const isMemberFound = project?.members.some(member => {
@@ -110,7 +113,9 @@ const [isReadMoreShown, setIsReadMoreShown] = useState(false);
 const toggleReadMore = () => {
   setIsReadMoreShown(prevState => !prevState)
 }
-  
+if(loading) {
+  return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+}
   if (project === null || project === undefined ) {
     return <p>Error finding project</p>
   }
@@ -222,14 +227,14 @@ const toggleReadMore = () => {
       </Button>
 
       <div className="mt-10 flex gap-7">
-      <Link href={"/projectCompletion/" + project.id}>
+      <Link href={"/projectCompletion/" + project.id} onClick={() => setLoading(true)}>
         <Button variant={"default"}>
             {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
 
         </Button>
       </Link>
 
-      <Link href={"/" + project?.id} className={project.status=="Active" ? "hidden":""} >
+      <Link href={"/" + project?.id} className={project.status=="Active" ? "hidden":""} onClick={() => setLoading(true)}>
       <Button variant={"default"}  className="bg-green-500" 
       onClick={methods.handleSubmit(async (values) => {
         await Promise.all ([
@@ -245,7 +250,7 @@ const toggleReadMore = () => {
       </Link>
 
 
-      <Link href={"/editProject/" + project.id}>
+      <Link href={"/editProject/" + project.id} onClick={() => setLoading(true)}>
         <Button variant={"default"}>
             Edit Project
         </Button>
@@ -270,6 +275,7 @@ const toggleReadMore = () => {
               href={"/activity/" + activity.id}
               key={activity.id}
               className="overflow-hidden p-4 shadow sm:rounded-lg basis-60"
+              onClick={() => setLoading(true)}
             >
               <h3 className="text-xl font-bold">{activity.name}</h3>
               <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
@@ -277,7 +283,7 @@ const toggleReadMore = () => {
           ))}
       </div>
 
-      <Link href={"/newActivity/" + id } className={project.status=="Complete"? "pointer-events-none":""}>
+      <Link href={"/newActivity/" + id } className={project.status=="Complete"? "pointer-events-none":""} onClick={() => setLoading(true)}>
         <Button type="submit" variant={project?.status=="Active"?"default":"subtle"} className={project.status=="Active"?"mt-5 bg-green-500":"mt-5"}>
         Add New Activity
         </Button>

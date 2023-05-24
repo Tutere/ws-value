@@ -17,20 +17,14 @@ export default function Project() {
   const id = router.query.activityID as string;
   const utils = api.useContext().activities;
 
-  const query = api.projects.findByActivityId.useQuery(
-    { id: id },
-    {
-      suspense: true,
-    }
-  );
-  const project = query.data;
-
   const { data: activity } = api.activities.readSpecific.useQuery(
     { id: id },
     {
       suspense: true,
     }
   );
+
+  const project = activity?.project;
 
   const mutation = api.activities.edit.useMutation({
     onSuccess: async () => {
