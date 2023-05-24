@@ -10,6 +10,7 @@ import { ActivateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
 import { Button } from "../components/ui/Button";
 import { useProjectDeletion } from "~/hooks/useProjectDeletion";
+import { LoadingPage } from "~/components/ui/loading";
 
 
 export default function Project() {
@@ -114,7 +115,7 @@ const toggleReadMore = () => {
   setIsReadMoreShown(prevState => !prevState)
 }
 if(loading) {
-  return  <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+  return  <LoadingPage></LoadingPage>
 }
   if (project === null || project === undefined ) {
     return <p>Error finding project</p>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button } from "~/components/ui/Button";
+import { LoadingPage } from "~/components/ui/loading";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -21,10 +22,7 @@ const Home: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center text-7xl">
-        {" "}
-        ⏳
-      </div>
+      <LoadingPage></LoadingPage>
     );
   }
 
