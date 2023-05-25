@@ -36,11 +36,12 @@ const Home: NextPage = () => {
       <main>
         <div className="p-8 ">
           <div>
-            <h2 className="text-3xl font-bold">Current Projects</h2>
+            <h2 className="text-3xl font-bold mb-3">Current Projects</h2>
             <div className="flex flex-row flex-wrap gap-5 py-4">
               {projects &&
                 projects.map((project) => {
                   if (project.status == "Active") {
+
                     return (
                       <Link
                         href={"/" + project.id}
@@ -50,7 +51,7 @@ const Home: NextPage = () => {
                           borderTopStyle: "solid",
                           borderTopWidth: "thick",
                         }}
-                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
+                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
                         onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
@@ -70,7 +71,7 @@ const Home: NextPage = () => {
               <Button
                 type="submit"
                 variant={"withIcon"}
-                className="text-green-600"
+                className="text-green-600 my-3"
               >
                 <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path clip-rule="evenodd" fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"></path>
@@ -95,7 +96,7 @@ const Home: NextPage = () => {
                           borderTopStyle: "solid",
                           borderTopWidth: "thick",
                         }}
-                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
+                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
                         onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">

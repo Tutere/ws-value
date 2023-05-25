@@ -14,16 +14,16 @@ export default function Project() {
   const id = router.query.activityID as string;
   const utils = api.useContext().activities;
   const [loading, setLoading] = useState(false);
-  
- 
 
-  const { data: activity } = api.activities.readSpecific.useQuery({id: id}, {
+
+
+  const { data: activity } = api.activities.readSpecific.useQuery({ id: id }, {
     suspense: true,
   });
 
   const project = activity?.project;
 
-  const {ActivityhandleDelete} = useActivityDeletion(activity?.id ?? "");
+  const { ActivityhandleDelete } = useActivityDeletion(activity?.id ?? "");
 
   const { data: sessionData } = useSession();
   const isMemberFound = project?.members.some(member => {
@@ -55,25 +55,31 @@ export default function Project() {
       user.projects?.some((projectMember) => projectMember.id === member.projectMemberId)
     )
   );
-  
+
   //used for read more button
-const [isReadMoreShown, setIsReadMoreShown] = useState(false);
-const toggleReadMore = () => {
-  setIsReadMoreShown(prevState => !prevState)
-}
+  const [isReadMoreShown, setIsReadMoreShown] = useState(false);
+  const toggleReadMore = () => {
+    setIsReadMoreShown(prevState => !prevState)
+  }
 
   if(loading) {
     return <LoadingPage></LoadingPage>
+
   }
-  if (activity === null || activity === undefined ) {
+  if (activity === null || activity === undefined) {
     return <p>Error finding activity</p>
   }
   return (
     <>
-    {isMemberFound ? (
-    <div className="p-8 bg-white rounded-lg shadow-md">
-      
-      <Link href={"/" + project?.id} onClick={() => setLoading(true)}>
+      {isMemberFound ? (
+        <div className="p-8"
+          style={{
+            borderTopColor: `${project?.colour}`,
+            borderTopStyle: "solid",
+            borderTopWidth: "10px",
+          }} >
+
+           <Link href={"/" + project?.id} onClick={() => setLoading(true)}>
         <Button className="mb-5" variant={"withIcon"}>
         <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path clip-rule="evenodd" fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"></path>
@@ -81,88 +87,64 @@ const toggleReadMore = () => {
         {"Back to project"}
         </Button>
       </Link>
-       
-      <h2 className="mb-5 text-3xl font-bold">Activity Details</h2>
-      {!isReadMoreShown ? (
-        <>
-        <div className="flex flex-row">
-        <Label className="font-medium">Activity Name:</Label>
-        <p className="ml-1">{activity.name}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Desription:</Label>
-          <p className="ml-1">{activity.description}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Value Created:</Label>
-          <p className="ml-1">{activity.valueCreated}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Outcome Score:</Label>
-          <p className="ml-1">{activity.outcomeScore}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Effort Score:</Label>
-          <p className="ml-1">{activity.effortScore}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Hours Spent on Activity:</Label>
-          <p className="ml-1">{activity.hours + " hours"}</p>
-        </div>
-        </>
-      ) : (
-        <>
-        <div className="flex flex-row">
-        <Label className="font-medium">Activity Name:</Label>
-        <p className="ml-1">{activity.name}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Desription:</Label>
-          <p className="ml-1">{activity.description}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Value Created:</Label>
-          <p className="ml-1">{activity.valueCreated}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Outcome Score:</Label>
-          <p className="ml-1">{activity.outcomeScore}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Effort Score:</Label>
-          <p className="ml-1">{activity.effortScore}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Hours Spent on Activity:</Label>
-          <p className="ml-1">{activity.hours + " hours"}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Start Date:</Label>
-          <p className="ml-1">{activity.startDate?.toLocaleDateString()}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">End Date:</Label>
-          <p className="ml-1">{activity.endDate?.toLocaleDateString()}</p>
-        </div>
-        <div className="flex flex-row ">
-          <Label className="font-medium">Engagement Pattern:</Label>
-          <p className="ml-1">{activity.engagementPattern}</p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Activity Members:</Label>
-          <p className="ml-1">
-            {activityMembers?.map((member) => member?.name).join(", ")}   
-          </p>
-        </div>
-        <div className="flex flex-row">
-          <Label className="font-medium">Stakeholders Involved:</Label>
-          <p className="ml-1">
-            {activity?.stakeholders}   
-          </p>
-        </div>
-      </>
-      )
-    }
+
+          <h2 className="mb-5 text-3xl font-bold">Activity Details</h2>
+
+          <>
+            <div className="flex flex-row">
+              <Label className="font-medium">Activity Name:</Label>
+              <p className="ml-1">{activity.name}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Desription:</Label>
+              <p className="ml-1">{activity.description}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Value Created:</Label>
+              <p className="ml-1">{activity.valueCreated}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Outcome Score:</Label>
+              <p className="ml-1">{activity.outcomeScore}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Effort Score:</Label>
+              <p className="ml-1">{activity.effortScore}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Hours Spent on Activity:</Label>
+              <p className="ml-1">{activity.hours + " hours"}</p>
+            </div>
+          </>
+          {isReadMoreShown && (
+            <>
+              <div className="flex flex-row">
+                <Label className="font-medium">Start Date:</Label>
+                <p className="ml-1">{activity.startDate?.toLocaleDateString()}</p>
+              </div>
+              <div className="flex flex-row">
+                <Label className="font-medium">End Date:</Label>
+                <p className="ml-1">{activity.endDate?.toLocaleDateString()}</p>
+              </div>
+              <div className="flex flex-row ">
+                <Label className="font-medium">Engagement Pattern:</Label>
+                <p className="ml-1">{activity.engagementPattern}</p>
+              </div>
+              <div className="flex flex-row">
+                <Label className="font-medium">Activity Members:</Label>
+                <p className="ml-1">
+                  {activityMembers?.map((member) => member?.name).join(", ")}
+                </p>
+              </div>
+              <div className="flex flex-row">
+                <Label className="font-medium">Stakeholders Involved:</Label>
+                <p className="ml-1">
+                  {activity?.stakeholders}
+                </p>
+              </div>
+            </>
+          )}
+
       <Button variant={"subtle"} 
       className="mt-2" 
       size={"sm"}
@@ -193,6 +175,7 @@ const toggleReadMore = () => {
       </div>
       )
     }
+
     </>
   );
 }
