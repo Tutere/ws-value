@@ -222,7 +222,7 @@ export default function Project() {
 
 
  
-<Button variant={"withIcon"}
+      <Button variant={"withIcon"}
       size={"sm"}
       className="mt-2 bg-slate-100" 
       onClick={toggleReadMore}> {!isReadMoreShown ? "See More...": "See Less..."}
