@@ -91,7 +91,7 @@ export default function Project() {
       description: project?.description?.toString(),
       goal: project?.goal?.toString(),
       estimatedStart: project?.estimatedStart?.toISOString(),
-      estimatedEnd: project?.estimatedEnd?.toISOString(),
+      estimatedEnd: project?.estimatedEnd?.toISOString()?? "",
       trigger: project?.trigger?.toString(),
       expectedMovement: project?.expectedMovement?.toString(),
       alternativeOptions: project?.alternativeOptions?.toString(),
@@ -108,6 +108,35 @@ export default function Project() {
       members: project?.members.map(member => member.userId),
     },
   });
+
+  useEffect(() => { 
+    if (project) {
+      methodProjectTracker.reset({
+        changeType: "Re-Activate",
+        projectId: project.id.toString(),
+        icon: project.icon?.toString(),
+        name: project.name?.toString(),
+        description: project.description?.toString(),
+        goal: project.goal?.toString(),
+        estimatedStart: project.estimatedStart?.toISOString(),
+        estimatedEnd: project.estimatedEnd?.toISOString() ?? "",
+        trigger: project.trigger?.toString(),
+        expectedMovement: project.expectedMovement?.toString(),
+        alternativeOptions: project.alternativeOptions?.toString(),
+        estimatedRisk: project.estimatedRisk?.toString(),
+        outcomeScore: project.outcomeScore!,
+        effortScore: project.effortScore!,
+        actualStart: project.actualStart?.toISOString(),
+        actualEnd: project.actualEnd?.toISOString(),
+        lessonsLearnt: project.lessonsLearnt!,
+        retrospective: project.retrospective!,
+        status: project.status!,
+        colour: project.colour!,
+        stakeholders: project.stakeholders! || "",
+        members: project.members.map((member) => member.userId),
+      });
+    }
+  }, [project, methodProjectTracker]);
 
   //used for read more button
   const [isReadMoreShown, setIsReadMoreShown] = useState(false);
