@@ -110,6 +110,36 @@ const methodProjectTracker= useZodForm({
   },
 });
 
+//to ensure that the new fields are loaded into the default values after coming back straight from the project completion page
+useEffect(() => { 
+  if (project) {
+    methodProjectTracker.reset({
+      changeType: "Re-Activate",
+      projectId: project.id.toString(),
+      icon: project.icon?.toString(),
+      name: project.name?.toString(),
+      description: project.description?.toString(),
+      goal: project.goal?.toString(),
+      estimatedStart: project.estimatedStart?.toISOString(),
+      estimatedEnd: project.estimatedEnd?.toISOString() ?? "",
+      trigger: project.trigger?.toString(),
+      expectedMovement: project.expectedMovement?.toString(),
+      alternativeOptions: project.alternativeOptions?.toString(),
+      estimatedRisk: project.estimatedRisk?.toString(),
+      outcomeScore: project.outcomeScore!,
+      effortScore: project.effortScore!,
+      actualStart: project.actualStart?.toISOString(),
+      actualEnd: project.actualEnd?.toISOString(),
+      lessonsLearnt: project.lessonsLearnt!,
+      retrospective: project.retrospective!,
+      status: project.status!,
+      colour: project.colour!,
+      stakeholders: project.stakeholders! || "",
+      members: project.members.map((member) => member.userId),
+    });
+  }
+}, [project, methodProjectTracker]);
+
 //used for read more button
 const [isReadMoreShown, setIsReadMoreShown] = useState(false);
 const toggleReadMore = () => {
@@ -239,6 +269,7 @@ if(loading) {
       <Link href={"/" + project?.id} className={project.status=="Active" ? "hidden":""} onClick={() => setLoading(true)}>
       <Button variant={"default"}  className="bg-green-500" 
       onClick={methods.handleSubmit(async (values) => {
+        await console.log(project);
         await console.log(methodProjectTracker.getValues());
         await Promise.all ([
           mutation.mutateAsync(values),
