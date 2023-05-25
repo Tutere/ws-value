@@ -309,27 +309,6 @@ export default function ProjectForm() {
               required={false}
             />
 
-            <div className="grid w-full max-w-md items-center gap-1.5">
-              <Label htmlFor="name">Goal</Label>
-              <div className="flex items-center">
-                {project.goal ? (
-                  <Textarea
-                    {...methods.register("goal")}
-                    className="mr-4"
-                    defaultValue={project.goal}
-                  />
-                ) : (
-                  <Textarea {...methods.register("goal")} className="mr-4" />
-                )}
-                <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
-              </div>
-              {methods.formState.errors.goal?.message && (
-                <p className="text-red-700">
-                  {methods.formState.errors.goal?.message}
-                </p>
-              )}
-            </div>
-
             <TextAreaSection
               label="Goal"
               methods={methods}
