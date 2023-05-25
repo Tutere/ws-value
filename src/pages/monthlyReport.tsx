@@ -380,7 +380,7 @@ export default function MonthlyReport({
                                 <>
 
                               <div className="grid w-full max-w-md items-center gap-1.5">
-                                  <Label htmlFor="reportComment">Optional Comments for Monthly report</Label>
+                                  <Label htmlFor="reportComment">Optional Comments (for Monthly report)</Label>
                                   <div className="flex items-center">
                                       <Textarea
                                         className="mr-4 whitespace-pre-wrap resize"
@@ -403,7 +403,7 @@ export default function MonthlyReport({
                               </>                    
                               ) : (
                                 <>
-                                <p className="whitespace-pre-wrap">Optional Comments: {activity?.comments}{" "}</p>
+                                <p className="whitespace-pre-wrap">Optional Comments (for Monthly report): {activity?.comments}{" "}</p>
                                 <button
                                   className={cn (buttonVariants({ variant: "subtle" }),"mt-2")}
                                   onClick={() => project.activitiesInRange[index]?.setCommentSaved(!(project.activitiesInRange[index]?.commentSaved))}
