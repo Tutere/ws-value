@@ -44,7 +44,7 @@ export default function ProjectCompletion() {
       description: project?.description?.toString(),
       goal: project?.goal?.toString(),
       estimatedStart: project?.estimatedStart?.toISOString(),
-      estimatedEnd: project?.estimatedEnd?.toISOString(),
+      estimatedEnd: project?.estimatedEnd?.toISOString()?? "",
       trigger: project?.trigger?.toString(),
       expectedMovement: project?.expectedMovement?.toString(),
       alternativeOptions: project?.alternativeOptions?.toString(),
@@ -121,8 +121,11 @@ export default function ProjectCompletion() {
     <div className="p-8 ">
 
       <Link href={"/" + project?.id}>
-        <Button className="mb-5" variant={"subtle"}>
-         {"< Back to project"}
+        <Button className="mb-5" variant={"withIcon"}>
+        <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path clip-rule="evenodd" fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"></path>
+        </svg>
+         {"Back to project"}
         </Button>
       </Link>
 
@@ -224,11 +227,18 @@ export default function ProjectCompletion() {
 
         {project.status === "Complete" ? (
           <Button type="submit" variant={"default"} disabled={mutation.isLoading}>
+            <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"></path>
+              <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"></path>
+            </svg>
             {mutation.isLoading ? "Loading" : "Edit Completion Details"}
           </Button>
         ): (
            <>
-          <Button type="submit" variant={"default"} disabled={mutation.isLoading} className="bg-green-500">
+          <Button type="submit" variant={"withIcon"} disabled={mutation.isLoading} className="text-green-600">
+          <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path clip-rule="evenodd" fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"></path>
+          </svg>  
             {mutation.isLoading ? "Loading" : "Complete Project"}
           </Button>
           </>

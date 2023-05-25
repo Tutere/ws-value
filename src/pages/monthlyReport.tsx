@@ -394,10 +394,13 @@ export default function MonthlyReport({
                               </div>
                                 <Button
                                 type="submit"
-                                variant={"default"}
+                                variant={"withIcon"}
                                 disabled={mutation.isLoading}
-                                className="mt-2"
+                                className="mt-2 "
                               >
+                                <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                  <path clip-rule="evenodd" fill-rule="evenodd" d="M5.5 17a4.5 4.5 0 01-1.44-8.765 4.5 4.5 0 018.302-3.046 3.5 3.5 0 014.504 4.272A4 4 0 0115 17H5.5zm3.75-2.75a.75.75 0 001.5 0V9.66l1.95 2.1a.75.75 0 101.1-1.02l-3.25-3.5a.75.75 0 00-1.1 0l-3.25 3.5a.75.75 0 101.1 1.02l1.95-2.1v4.59z"></path>
+                                </svg>
                                 {mutation.isLoading? "Loading": "Save Comments"}
                               </Button>   
                               </>                    
@@ -405,9 +408,13 @@ export default function MonthlyReport({
                                 <>
                                 <p className="whitespace-pre-wrap">Optional Comments (for Monthly report): {activity?.comments}{" "}</p>
                                 <button
-                                  className={cn (buttonVariants({ variant: "subtle" }),"mt-2")}
+                                  className={cn (buttonVariants({ variant: "withIcon" }),"mt-2")}
                                   onClick={() => project.activitiesInRange[index]?.setCommentSaved(!(project.activitiesInRange[index]?.commentSaved))}
                                 >
+                                  <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"></path>
+                                    <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"></path>
+                                  </svg>
                                 Edit Comments
                               </button>
                               </>
