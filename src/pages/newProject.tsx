@@ -309,6 +309,9 @@ export default function ProjectForm() {
             variant={"default"}
             disabled={mutation.isLoading}
           >
+            <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path>
+            </svg>
             {mutation.isLoading ? "Loading" : "Start Project"}
           </Button>
         </form>
