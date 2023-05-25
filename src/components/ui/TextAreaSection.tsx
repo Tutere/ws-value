@@ -12,6 +12,7 @@ interface TextAreaProps<T extends FieldValues> {
   methodsField: Path<T>;
   placeHolder: string;
   defaultValue: string;
+  required: boolean;
 }
 
 export function TextAreaSection<T extends FieldValues>(
@@ -19,7 +20,10 @@ export function TextAreaSection<T extends FieldValues>(
 ) {
   return (
     <div className="grid w-full max-w-md items-center gap-1.5">
-      <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
+      <div className="flex">
+        <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
+        <p className="text-red-600 ml-auto mr-10"> {props.required? "* required" : ""}</p>
+      </div>
       <div className="flex items-center">
         <Textarea
           {...props.methods.register(props.methodsField)}

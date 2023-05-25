@@ -177,6 +177,7 @@ export default function ProjectForm() {
           placeHolder=""
           type=""
           defaultValue=""
+          required={true}
           />
 
           <TextAreaSection
@@ -186,6 +187,7 @@ export default function ProjectForm() {
           methodsField="description"
           placeHolder="Optional"
           defaultValue=""
+          required={false}
           />
 
           <TextAreaSection
@@ -195,6 +197,7 @@ export default function ProjectForm() {
           methodsField="goal"
           placeHolder=""
           defaultValue=""
+          required={true}
           />
           
           <TextAreaSection
@@ -204,6 +207,7 @@ export default function ProjectForm() {
           methodsField="expectedMovement"
           placeHolder="Optional"
           defaultValue=""
+          required={false}
           />
 
           <InputSection
@@ -214,6 +218,7 @@ export default function ProjectForm() {
           placeHolder=""
           type="date"
           defaultValue={useCurrentDate()}
+          required={false}
           />
 
           <InputSection
@@ -224,6 +229,7 @@ export default function ProjectForm() {
           placeHolder=""
           type="date"
           defaultValue=""
+          required={false}
           />
           
           <TextAreaSection
@@ -233,6 +239,7 @@ export default function ProjectForm() {
           methodsField="trigger"
           placeHolder="Optional"
           defaultValue=""
+          required={false}
           />
 
           <TextAreaSection
@@ -242,6 +249,7 @@ export default function ProjectForm() {
           methodsField="alternativeOptions"
           placeHolder="Optional"
           defaultValue=""
+          required={false}
           />
 
           <TextAreaSection
@@ -251,6 +259,7 @@ export default function ProjectForm() {
           methodsField="estimatedRisk"
           placeHolder="Optional"
           defaultValue=""
+          required={false}
           />
 
           <div className="grid w-full max-w-md items-center gap-1.5">
@@ -280,6 +289,7 @@ export default function ProjectForm() {
           methodsField="stakeholders"
           placeHolder="Optional"
           defaultValue=""
+          required={false}
           />
 
           <InputSection
@@ -290,6 +300,7 @@ export default function ProjectForm() {
           placeHolder="Optional"
           type=""
           defaultValue=""
+          required={false}
           />
 
 

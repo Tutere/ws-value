@@ -277,6 +277,7 @@ export default function Project() {
               placeHolder=""
               type=""
               defaultValue={activity.name}
+              required={false}
             />
 
             <TextAreaSection
@@ -286,6 +287,7 @@ export default function Project() {
               methodsField="description"
               placeHolder=""
               defaultValue={activity.description}
+              required={false}
             />
 
             <TextAreaSection
@@ -295,6 +297,7 @@ export default function Project() {
               methodsField="engagementPattern"
               placeHolder="Optional"
               defaultValue={activity.engagementPattern ?? ""}
+              required={false}
             />
 
             <TextAreaSection
@@ -304,6 +307,7 @@ export default function Project() {
               methodsField="valueCreated"
               placeHolder=""
               defaultValue={activity.valueCreated ?? ""}
+              required={false}
             />
 
             <InputSection
@@ -318,6 +322,7 @@ export default function Project() {
                   ? activity.startDate.toISOString().slice(0, 10)
                   : ""
               }
+              required={false}
             />
 
             <InputSection
@@ -332,6 +337,7 @@ export default function Project() {
                   ? activity.endDate.toISOString().slice(0, 10)
                   : ""
               }
+              required={false}
             />
 
             <InputSection
@@ -342,6 +348,7 @@ export default function Project() {
               placeHolder=""
               defaultValue={activity.outcomeScore ?? ""}
               type=""
+              required={false}
             />
 
             <InputSection
@@ -352,6 +359,7 @@ export default function Project() {
               placeHolder=""
               defaultValue={activity.effortScore ?? ""}
               type=""
+              required={false}
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
@@ -380,6 +388,7 @@ export default function Project() {
               placeHolder="Optional"
               defaultValue={activity.hours ?? ""}
               type=""
+              required={false}
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">

@@ -10,6 +10,7 @@ import { Navbar } from "~/components/ui/navbar";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Url } from "next/dist/shared/lib/router/router";
+import { LoadingPage } from "~/components/ui/loading";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -44,7 +45,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <AuthGuard>
       <Navbar onClickLink={handleClickLink} />
         {isLoading ? (
-          <div className="flex justify-center items-center h-screen text-7xl"> ⏳</div>
+          <LoadingPage></LoadingPage>
         ) : (
           <Component {...pageProps} />
         )}

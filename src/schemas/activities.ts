@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const CreateActivitySchema = z.object({
   name: z.string().min(1).max(255),
-  description: z.string(),
+  description: z.string().nonempty(),
   projectId: z.string().cuid(),
   engagementPattern: z.string(),
-  valueCreated: z.string().optional(),
+  valueCreated: z.string().nonempty(),
   startDate: z.string().transform((val) => new Date(val).toISOString()),
   endDate: z
   .string()

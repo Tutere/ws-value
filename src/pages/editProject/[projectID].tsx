@@ -296,6 +296,7 @@ export default function ProjectForm() {
               placeHolder=""
               type=""
               defaultValue={project.name}
+              required={false}
             />
 
             <TextAreaSection
@@ -305,28 +306,8 @@ export default function ProjectForm() {
               methodsField="description"
               placeHolder=""
               defaultValue={project.description ?? ""}
+              required={false}
             />
-
-            <div className="grid w-full max-w-md items-center gap-1.5">
-              <Label htmlFor="name">Goal</Label>
-              <div className="flex items-center">
-                {project.goal ? (
-                  <Textarea
-                    {...methods.register("goal")}
-                    className="mr-4"
-                    defaultValue={project.goal}
-                  />
-                ) : (
-                  <Textarea {...methods.register("goal")} className="mr-4" />
-                )}
-                <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
-              </div>
-              {methods.formState.errors.goal?.message && (
-                <p className="text-red-700">
-                  {methods.formState.errors.goal?.message}
-                </p>
-              )}
-            </div>
 
             <TextAreaSection
               label="Goal"
@@ -335,6 +316,7 @@ export default function ProjectForm() {
               methodsField="goal"
               placeHolder=""
               defaultValue={project.goal}
+              required={false}
             />
 
             <TextAreaSection
@@ -344,6 +326,7 @@ export default function ProjectForm() {
               methodsField="expectedMovement"
               placeHolder="Optional"
               defaultValue={project.expectedMovement ?? ""}
+              required={false}
             />
 
             <InputSection
@@ -354,6 +337,7 @@ export default function ProjectForm() {
               placeHolder=""
               type="date"
               defaultValue={project.estimatedStart.toISOString().slice(0, 10)}
+              required={false}
             />
 
             <InputSection
@@ -368,6 +352,7 @@ export default function ProjectForm() {
                   ? project.estimatedEnd.toISOString().slice(0, 10)
                   : ""
               }
+              required={false}
             />
 
             <TextAreaSection
@@ -377,6 +362,7 @@ export default function ProjectForm() {
               methodsField="trigger"
               placeHolder="Optional"
               defaultValue={project.trigger ?? ""}
+              required={false}
             />
 
             <TextAreaSection
@@ -386,6 +372,7 @@ export default function ProjectForm() {
               methodsField="alternativeOptions"
               placeHolder="Optional"
               defaultValue={project.alternativeOptions ?? ""}
+              required={false}
             />
 
             <TextAreaSection
@@ -395,6 +382,7 @@ export default function ProjectForm() {
               methodsField="estimatedRisk"
               placeHolder="Optional"
               defaultValue={project.estimatedRisk ?? ""}
+              required={false}
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
@@ -425,6 +413,7 @@ export default function ProjectForm() {
               methodsField="stakeholders"
               placeHolder="Optional"
               defaultValue={project.stakeholders ?? ""}
+              required={false}
             />
 
             <InputSection
@@ -435,6 +424,7 @@ export default function ProjectForm() {
               placeHolder="Optional"
               type=""
               defaultValue={project.pid ?? ""}
+              required={false}
             />
 
             <Button
