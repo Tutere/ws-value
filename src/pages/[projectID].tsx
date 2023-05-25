@@ -130,35 +130,35 @@ export default function Project() {
             borderTopWidth: "10px",
           }}>
           <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
-          {!isReadMoreShown ? (
+          
             <>
-              <div className="flex flex-row  py-1 ">
+              <div className="flex flex-row">
                 <Label className="font-medium">Project Name:</Label>
                 <p className="ml-1">{project.name}</p>
               </div>
-              <div className="flex flex-row py-1">
+              <div className="flex flex-row">
                 <Label className="font-medium">Goal:</Label>
                 <p className="ml-1">{project.goal}</p>
               </div>
-              <div className="flex flex-row py-1">
+              <div className="flex flex-row">
                 <Label className="font-medium">Estimated Start Date:</Label>
                 <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
               </div>
-              <div className="flex flex-row py-1">
+              <div className="flex flex-row">
                 <Label className="font-medium">Description:</Label>
                 <p className="ml-1">{project.description}</p>
               </div>
-              <div className="flex flex-row py-1">
+              <div className="flex flex-row">
                 <Label className="font-medium">Project Members:</Label>
                 <p className="ml-1">
                   {projectMembers?.map((member) => member?.name).join(", ")}
                 </p>
               </div>
-              <div className="flex flex-row py-1">
+              <div className="flex flex-row">
                 <Label className="font-medium">Stakeholders:</Label>
                 <p className="ml-1">{project.stakeholders}</p>
               </div>
-              <div className="flex flex-row py-1">
+              <div className="flex flex-row">
                 <Label className="font-medium">Link to Project Initiation Document: </Label>
                 {project.pid ?
                   <a className="ml-1 text-blue-600 hover:underline" href={project.pid ?? ""} rel="noopener noreferrer"
@@ -168,64 +168,31 @@ export default function Project() {
                 }
               </div>
             </>
-          ) : (
+            {isReadMoreShown && (
             <>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Project Name:</Label>
-                <p className="ml-1">{project.name}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Goal:</Label>
-                <p className="ml-1">{project.goal}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Estimated Start Date:</Label>
-                <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Description:</Label>
-                <p className="ml-1">{project.description}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Project Members:</Label>
-                <p className="ml-1">
-                  {projectMembers?.map((member) => member?.name).join(", ")}
-                </p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Stakeholders:</Label>
-                <p className="ml-1">{project.stakeholders}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Trigger:</Label>
-                <p className="ml-1">{project.trigger === "" ? "N/A" : project.trigger}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Expected Outcome:</Label>
-                <p className="ml-1">{project.expectedMovement === "" ? "N/A" : project.expectedMovement}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Alternatives Considered:</Label>
-                <p className="ml-1">{project.alternativeOptions === "" ? "N/A" : project.alternativeOptions}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Estimated Risks:</Label>
-                <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
-              </div>
-              <div className="flex flex-row py-1">
-                <Label className="font-medium">Link to Project Initiation Document: </Label>
-                {project.pid ?
-                  <a className="ml-1 text-blue-600 hover:underline" href={project.pid ?? ""} rel="noopener noreferrer"
-                    target="_blank">Click Here</a>
-                  :
-                  <p className="ml-1"> N/A</p>
-                }
-              </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Trigger:</Label>
+              <p className="ml-1">{project.trigger === "" ? "N/A" : project.trigger}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Expected Outcome:</Label>
+              <p className="ml-1">{project.expectedMovement === "" ? "N/A" : project.expectedMovement}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Alternatives Considered:</Label>
+              <p className="ml-1">{project.alternativeOptions === "" ? "N/A" : project.alternativeOptions}</p>
+            </div>
+            <div className="flex flex-row">
+              <Label className="font-medium">Estimated Risks:</Label>
+              <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
+            </div>
 
-            </>
+          </>
 
-          )
-          }
+            )}
+
+
+ 
           <Button variant={"subtle"}
             size={"sm"}
             className="mt-2 shadow"
