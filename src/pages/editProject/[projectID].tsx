@@ -296,6 +296,7 @@ export default function ProjectForm() {
               placeHolder=""
               type=""
               defaultValue={project.name}
+              required={false}
             />
 
             <TextAreaSection
@@ -305,28 +306,8 @@ export default function ProjectForm() {
               methodsField="description"
               placeHolder=""
               defaultValue={project.description ?? ""}
+              required={false}
             />
-
-            <div className="grid w-full max-w-md items-center gap-1.5">
-              <Label htmlFor="name">Goal</Label>
-              <div className="flex items-center">
-                {project.goal ? (
-                  <Textarea
-                    {...methods.register("goal")}
-                    className="mr-4"
-                    defaultValue={project.goal}
-                  />
-                ) : (
-                  <Textarea {...methods.register("goal")} className="mr-4" />
-                )}
-                <InfoIcon content="Remember SMART - Specific, Measurable, Achievable, Relevant, and Time-Bound." />
-              </div>
-              {methods.formState.errors.goal?.message && (
-                <p className="text-red-700">
-                  {methods.formState.errors.goal?.message}
-                </p>
-              )}
-            </div>
 
             <TextAreaSection
               label="Goal"
@@ -335,6 +316,7 @@ export default function ProjectForm() {
               methodsField="goal"
               placeHolder=""
               defaultValue={project.goal}
+              required={false}
             />
 
             <TextAreaSection
@@ -344,6 +326,7 @@ export default function ProjectForm() {
               methodsField="expectedMovement"
               placeHolder="Optional"
               defaultValue={project.expectedMovement ?? ""}
+              required={false}
             />
 
             <InputSection
@@ -354,6 +337,7 @@ export default function ProjectForm() {
               placeHolder=""
               type="date"
               defaultValue={project.estimatedStart.toISOString().slice(0, 10)}
+              required={false}
             />
 
             <InputSection
@@ -368,6 +352,7 @@ export default function ProjectForm() {
                   ? project.estimatedEnd.toISOString().slice(0, 10)
                   : ""
               }
+              required={false}
             />
 
             <TextAreaSection
@@ -377,6 +362,7 @@ export default function ProjectForm() {
               methodsField="trigger"
               placeHolder="Optional"
               defaultValue={project.trigger ?? ""}
+              required={false}
             />
 
             <TextAreaSection
@@ -386,6 +372,7 @@ export default function ProjectForm() {
               methodsField="alternativeOptions"
               placeHolder="Optional"
               defaultValue={project.alternativeOptions ?? ""}
+              required={false}
             />
 
             <TextAreaSection
@@ -395,6 +382,7 @@ export default function ProjectForm() {
               methodsField="estimatedRisk"
               placeHolder="Optional"
               defaultValue={project.estimatedRisk ?? ""}
+              required={false}
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
@@ -425,6 +413,7 @@ export default function ProjectForm() {
               methodsField="stakeholders"
               placeHolder="Optional"
               defaultValue={project.stakeholders ?? ""}
+              required={false}
             />
 
             <InputSection
@@ -435,6 +424,7 @@ export default function ProjectForm() {
               placeHolder="Optional"
               type=""
               defaultValue={project.pid ?? ""}
+              required={false}
             />
 
             <Button
@@ -442,6 +432,9 @@ export default function ProjectForm() {
               variant={"default"}
               disabled={mutation.isLoading}
             >
+              <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path clip-rule="evenodd" fill-rule="evenodd" d="M5.5 17a4.5 4.5 0 01-1.44-8.765 4.5 4.5 0 018.302-3.046 3.5 3.5 0 014.504 4.272A4 4 0 0115 17H5.5zm3.75-2.75a.75.75 0 001.5 0V9.66l1.95 2.1a.75.75 0 101.1-1.02l-3.25-3.5a.75.75 0 00-1.1 0l-3.25 3.5a.75.75 0 101.1 1.02l1.95-2.1v4.59z"></path>
+            </svg>
               {mutation.isLoading ? "Loading" : "Save Changes"}
             </Button>
           </form>

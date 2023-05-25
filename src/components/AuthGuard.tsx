@@ -2,6 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
 import { Button } from "./ui/Button";
 import { useRouter } from "next/router";
+import { LoadingPage } from "./ui/loading";
 
 const AuthGuard = ({ children, }: { children: ReactNode, }) => {
   const { data: sessionData, status } = useSession();
@@ -11,8 +12,7 @@ const AuthGuard = ({ children, }: { children: ReactNode, }) => {
 
   switch (status) {
     case "loading":
-      return <div className="flex justify-center items-center h-screen text-7xl">
-        ⏳</div>;
+      return <LoadingPage></LoadingPage>
     case "unauthenticated":
       if (isPublicPage) {
         return <div>{children}</div>;

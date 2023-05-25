@@ -10,6 +10,8 @@ import { ActivateProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
 import { Button } from "../components/ui/Button";
 import { useProjectDeletion } from "~/hooks/useProjectDeletion";
+import { LoadingPage } from "~/components/ui/loading";
+import { ButtonGrouping } from "~/components/ui/buttonGrouping";
 
 export default function Project() {
   const router = useRouter();
