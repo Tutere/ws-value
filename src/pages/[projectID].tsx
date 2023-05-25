@@ -29,6 +29,7 @@ export default function Project() {
   });
 
   const project = query.data;
+
   const activities  = project?.Activity;
 
   const { data: sessionData } = useSession();
@@ -91,7 +92,7 @@ const methodProjectTracker= useZodForm({
     description: project?.description?.toString(),
     goal: project?.goal?.toString(),
     estimatedStart: project?.estimatedStart?.toISOString(),
-    estimatedEnd: project?.estimatedEnd?.toISOString(),
+    estimatedEnd: project?.estimatedEnd?.toISOString() ?? "",
     trigger: project?.trigger?.toString(),
     expectedMovement: project?.expectedMovement?.toString(),
     alternativeOptions: project?.alternativeOptions?.toString(),
@@ -238,6 +239,7 @@ if(loading) {
       <Link href={"/" + project?.id} className={project.status=="Active" ? "hidden":""} onClick={() => setLoading(true)}>
       <Button variant={"default"}  className="bg-green-500" 
       onClick={methods.handleSubmit(async (values) => {
+        await console.log(methodProjectTracker.getValues());
         await Promise.all ([
           mutation.mutateAsync(values),
           mutationProjecTracker.mutateAsync(methodProjectTracker.getValues())

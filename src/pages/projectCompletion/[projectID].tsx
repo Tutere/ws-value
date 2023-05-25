@@ -44,7 +44,7 @@ export default function ProjectCompletion() {
       description: project?.description?.toString(),
       goal: project?.goal?.toString(),
       estimatedStart: project?.estimatedStart?.toISOString(),
-      estimatedEnd: project?.estimatedEnd?.toISOString(),
+      estimatedEnd: project?.estimatedEnd?.toISOString()?? "",
       trigger: project?.trigger?.toString(),
       expectedMovement: project?.expectedMovement?.toString(),
       alternativeOptions: project?.alternativeOptions?.toString(),

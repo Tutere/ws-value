@@ -41,9 +41,6 @@ const Home: NextPage = () => {
               {projects &&
                 projects.map((project) => {
                   if (project.status == "Active") {
-                    console.log(
-                      `top-4 basis-60 overflow-hidden rounded-lg border-8 border-white border-t-[${project.colour}] p-4 shadow`
-                    );
                     return (
                       <Link
                         href={"/" + project.id}
