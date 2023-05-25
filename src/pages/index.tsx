@@ -36,14 +36,12 @@ const Home: NextPage = () => {
       <main>
         <div className="p-8 ">
           <div>
-            <h2 className="text-3xl font-bold">Current Projects</h2>
+            <h2 className="text-3xl font-bold mb-3">Current Projects</h2>
             <div className="flex flex-row flex-wrap gap-5 py-4">
               {projects &&
                 projects.map((project) => {
                   if (project.status == "Active") {
-                    console.log(
-                      `top-4 basis-60 overflow-hidden rounded-lg border-8 border-white border-t-[${project.colour}] p-4 shadow`
-                    );
+  
                     return (
                       <Link
                         href={"/" + project.id}
@@ -53,7 +51,7 @@ const Home: NextPage = () => {
                           borderTopStyle: "solid",
                           borderTopWidth: "thick",
                         }}
-                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
+                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
                         onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
@@ -73,7 +71,7 @@ const Home: NextPage = () => {
               <Button
                 type="submit"
                 variant={"default"}
-                className="bg-green-500"
+                className="bg-green-500 my-3"
               >
                 Start New Project
               </Button>
@@ -95,7 +93,7 @@ const Home: NextPage = () => {
                           borderTopStyle: "solid",
                           borderTopWidth: "thick",
                         }}
-                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
+                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
                         onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
