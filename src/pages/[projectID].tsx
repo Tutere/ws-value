@@ -12,31 +12,33 @@ import { Button } from "../components/ui/Button";
 import { useProjectDeletion } from "~/hooks/useProjectDeletion";
 import { LoadingPage } from "~/components/ui/loading";
 
-
 export default function Project() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
   const [loading, setLoading] = useState(false);
 
-  const query = api.projects.FindByProjectId.useQuery({ id: id }, {
-    suspense: true,
-    onError: (error) => {
-      if (error.data?.code === "UNAUTHORIZED") {
-        router.push("/");
-      }
+  const query = api.projects.FindByProjectId.useQuery(
+    { id: id },
+    {
+      suspense: true,
+      onError: (error) => {
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
+      },
     }
-  });
+  );
 
   const project = query.data;
   const activities = project?.Activity;
 
   const { data: sessionData } = useSession();
-  const isMemberFound = project?.members.some(member => {
+  const isMemberFound = project?.members.some((member) => {
     return member.userId === sessionData?.user.id;
   });
 
-  const { projectHandleDelete } = useProjectDeletion(id);
+  const { projectDelete } = useProjectDeletion(id);
 
   useEffect(() => {
     if (!isMemberFound) {
@@ -55,7 +57,6 @@ export default function Project() {
   });
 
   const users = queryUsers.data;
-
 
   const projectMembers = project?.members.map((member) =>
     users?.find((user) => user.id === member.userId)
@@ -77,9 +78,7 @@ export default function Project() {
 
   //data lineage for "reactivating" a project
 
-  const mutationProjecTracker = api.projectTracker.edit.useMutation({
-
-  });
+  const mutationProjecTracker = api.projectTracker.edit.useMutation({});
 
   const methodProjectTracker = useZodForm({
     schema: ProjectChangeSchema,
@@ -152,14 +151,9 @@ export default function Project() {
   return (
     <>
       {isMemberFound ? (
-        <div className="p-8"
-          style={{
-            borderTopColor: `${project.colour}`,
-            borderTopStyle: "solid",
-            borderTopWidth: "10px",
-          }}>
+        <div className="p-8">
           <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
-          
+          {!isReadMoreShown ? (
             <>
               <div className="flex flex-row">
                 <Label className="font-medium">Project Name:</Label>
@@ -171,7 +165,9 @@ export default function Project() {
               </div>
               <div className="flex flex-row">
                 <Label className="font-medium">Estimated Start Date:</Label>
-                <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
+                <p className="ml-1">
+                  {project.estimatedStart.toLocaleDateString()}
+                </p>
               </div>
               <div className="flex flex-row">
                 <Label className="font-medium">Description:</Label>
@@ -188,16 +184,24 @@ export default function Project() {
                 <p className="ml-1">{project.stakeholders}</p>
               </div>
               <div className="flex flex-row">
-                <Label className="font-medium">Link to Project Initiation Document: </Label>
-                {project.pid ?
-                  <a className="ml-1 text-blue-600 hover:underline" href={project.pid ?? ""} rel="noopener noreferrer"
-                    target="_blank">Click Here</a>
-                  :
+                <Label className="font-medium">
+                  Link to Project Initiation Document:{" "}
+                </Label>
+                {project.pid ? (
+                  <a
+                    className="ml-1 text-blue-600 hover:underline"
+                    href={project.pid ?? ""}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Click Here
+                  </a>
+                ) : (
                   <p className="ml-1"> N/A</p>
-                }
+                )}
               </div>
             </>
-            {isReadMoreShown && (
+          ) : (
             <>
             <div className="flex flex-row">
               <Label className="font-medium">Trigger:</Label>
