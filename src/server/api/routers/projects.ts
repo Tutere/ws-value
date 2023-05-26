@@ -13,6 +13,7 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { Activity } from "@prisma/client";
 
 export const projectsRouter = createTRPCRouter({
   create: protectedProcedure
@@ -145,27 +146,85 @@ export const projectsRouter = createTRPCRouter({
         data: {
           status: "Deleted",
         },
-        include: {
-          Activity: true,
-        },
-      });
-      await ctx.prisma.projectTracker.create({
-        data: { ...deletedProject, changeType: "Delete", projectId: input.id },
       });
 
-      deletedProject.Activity.forEach(async (activity) => {
-        await ctx.prisma.activity.update({
-          where: {
-            id: activity.id,
-          },
-          data: {
-            status: "Deleted",
-          },
-        });
-        await ctx.prisma.activityTracker.create({
-          data: { ...activity, changeType: "Delete", activityId: activity.id },
-        });
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Delete",
+          name: deletedProject.name,
+          createdAt: deletedProject.createdAt,
+          description: deletedProject.description,
+          goal: deletedProject.goal,
+          estimatedStart: deletedProject.estimatedStart,
+          estimatedEnd: deletedProject.estimatedEnd,
+          trigger: deletedProject.trigger,
+          expectedMovement: deletedProject.expectedMovement,
+          alternativeOptions: deletedProject.alternativeOptions,
+          estimatedRisk: deletedProject.estimatedRisk,
+          outcomeScore: deletedProject.outcomeScore,
+          effortScore: deletedProject.effortScore,
+          status: deletedProject.status,
+          actualStart: deletedProject.actualStart,
+          actualEnd: deletedProject.actualEnd,
+          lessonsLearnt: deletedProject.lessonsLearnt,
+          retrospective: deletedProject.retrospective,
+          projectId: input.id,
+          icon: deletedProject.icon,
+          colour: deletedProject.colour,
+          stakeholders: deletedProject.stakeholders,
+          pid: deletedProject.pid,
+        },
       });
+
+      const projectActivities = await ctx.prisma.activity.findMany({
+        where: {
+          projectId: input.id,
+        },
+      });
+      const softDeletedActivitiesPromises = projectActivities.map(
+        (activity) => {
+          console.log("soft deleting activity :", activity.id);
+          return ctx.prisma.activity.update({
+            where: {
+              id: activity.id,
+            },
+            data: {
+              status: "Deleted",
+            },
+          });
+        }
+      );
+
+      const updateActivitiesTrackerPromises = projectActivities.map(
+        (activity) => {
+          console.log("soft deleting activity :", activity.id);
+          return ctx.prisma.activityTracker.create({
+            data: {
+              changeType: "Delete",
+              createdAt: activity.createdAt,
+              projectId: activity.projectId,
+              name: activity.name,
+              description: activity.description,
+              engagementPattern: activity.engagementPattern,
+              valueCreated: activity.valueCreated,
+              startDate: activity.startDate,
+              endDate: activity.endDate,
+              status: activity.status,
+              outcomeScore: activity.outcomeScore,
+              effortScore: activity.effortScore,
+              hours: activity.hours,
+              stakeholders: activity.stakeholders,
+              reportComments: activity.reportComments,
+              activityId: activity.id!,
+            },
+          });
+        }
+      );
+
+      await Promise.all([
+        ...softDeletedActivitiesPromises,
+        ...updateActivitiesTrackerPromises,
+      ]);
     }),
 
   findByActivityId: protectedProcedure
