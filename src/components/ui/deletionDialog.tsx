@@ -9,14 +9,17 @@ import {
   DialogTrigger,
 } from "src/components/ui/dialog";
 import { Button } from "./Button";
+import { useRouter } from "next/router";
 
 
 export function DeletionDialog(props: { object: string; id: string, handleDelete: () => void  }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router= useRouter();
 
   const handleDeleteClick = async () => {
     await props.handleDelete();
-    setIsOpen(false);
+    await setIsOpen(false);
+    await router.push("/");
   };
 
   return (
