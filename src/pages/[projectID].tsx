@@ -266,7 +266,11 @@ export default function Project() {
             Edit Project
           </Link>
 
-        <DeletionDialog object="Project" id={id} handleDelete={projectHandleDelete}></DeletionDialog> 
+          <DeletionDialog
+              object="Project"
+              id={id}
+              handleDelete={() => projectDelete({ id: id })}
+            ></DeletionDialog>
 
         </div>
       </div>
