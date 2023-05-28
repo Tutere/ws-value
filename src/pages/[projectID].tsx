@@ -225,11 +225,8 @@ export default function Project() {
               <Label className="font-medium">Estimated Risks:</Label>
               <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
             </div>
-
           </>
-
-            )}
-
+          )}
 
  
       <Button variant={"withIcon"}
