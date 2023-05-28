@@ -211,18 +211,7 @@ export default function ProjectCompletion() {
           required={true}
           />
 
-        <div className="grid w-full max-w-md items-center gap-1.5">
-          <Label htmlFor="name">Stakeholder Survey Form: </Label>
-          <div className="flex items-center">
-            <Link className="mr-4 font-medium text-blue-600 hover:underline" 
-            href={"/stakeholderSurvey/" + project.id}
-            rel="noopener noreferrer" 
-            target="_blank"
-            >
-              <p>Link Here</p>
-            </Link> 
-          </div>
-        </div>
+        
 
 
         {project.status === "Complete" ? (
@@ -247,7 +236,20 @@ export default function ProjectCompletion() {
         
       </form>
 
-      <h2 className="mt-10 text-2xl font-bold">Stakeholder Survey Responses:</h2>
+      <div className="mt-10 grid w-full max-w-md items-center gap-1.5">
+          <Label htmlFor="name">Stakeholder Survey Form: </Label>
+          <div className="flex items-center">
+            <Link className="mr-4 font-medium text-blue-600 hover:underline" 
+            href={"/stakeholderSurvey/" + project.id}
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
+              <p>Link Here</p>
+            </Link> 
+          </div>
+        </div>
+
+      <h2 className="mt-5 text-2xl font-bold">Stakeholder Survey Responses:</h2>
       <div className="flex flex-row flex-wrap gap-5 py-2">
         {stakeholderResponses?.length! > 0 ? (
           stakeholderResponses?.map((stakeholderResponse) => (
