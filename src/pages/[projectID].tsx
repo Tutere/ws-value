@@ -159,7 +159,7 @@ export default function Project() {
         }}
         >
           <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
-          {!isReadMoreShown ? (
+         
             <>
               <div className="flex flex-row">
                 <Label className="font-medium">Project Name:</Label>
@@ -207,7 +207,7 @@ export default function Project() {
                 )}
               </div>
             </>
-          ) : (
+            {isReadMoreShown && (
             <>
             <div className="flex flex-row">
               <Label className="font-medium">Trigger:</Label>
