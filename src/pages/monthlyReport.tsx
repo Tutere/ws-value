@@ -380,7 +380,7 @@ export default function MonthlyReport({
                                 <>
 
                               <div className="grid w-full max-w-md items-center gap-1.5">
-                                  <Label htmlFor="reportComment">Optional Comments (for Monthly report)</Label>
+                                  <Label htmlFor="reportComment">Optional Comments (for Monthly report):</Label>
                                   <div className="flex items-center">
                                       <Textarea
                                         className="mr-4 whitespace-pre-wrap resize"
