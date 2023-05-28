@@ -151,7 +151,13 @@ export default function Project() {
   return (
     <>
       {isMemberFound ? (
-        <div className="p-8">
+        <div className="p-8"
+        style={{
+          borderTopColor: `${project.colour}`,
+          borderTopStyle: "solid",
+          borderTopWidth: "10px",
+        }}
+        >
           <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
           {!isReadMoreShown ? (
             <>
