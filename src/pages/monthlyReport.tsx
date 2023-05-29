@@ -241,9 +241,12 @@ export default function MonthlyReport({
         <p style="margin-right: 5px;">${project.project.icon}</p>
         <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
         <p className="ml-1">
-        ${" "}
-        - Completed:${" "}
-        ${activity.activity.endDate?.toDateString()}
+        ${activity.activity.endDate ? (
+          "- Completed: " +
+        activity.activity.endDate?.toDateString()
+        ): (
+          " - Ongoing (not yet completed)"
+        )}
         </p>
       </div>
       <ul style="margin-top: 0px; padding-top: 0px;">
