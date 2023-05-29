@@ -393,9 +393,13 @@ export default function MonthlyReport({
                                   {activity.activity.name}
                                 </p>
                                 <p className="ml-1">
-                                  {" "}
-                                  - Completed:{" "}
-                                  {activity.activity.endDate?.toDateString()}{" "}
+                                  {activity.activity.endDate ? (
+                                   " - Completed: " + 
+                                  activity.activity.endDate?.toDateString() + " "
+                                  ) : (
+                                    " - Ongoing (not yet completed)"
+                                  )}
+                                 
                                 </p>
                               </div>
                               </Link>
