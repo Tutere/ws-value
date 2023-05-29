@@ -144,19 +144,48 @@ export default function MonthlyReport({
 
     element.activities.forEach(activity => {
     const activityEnd = activity.activity.endDate?.getTime();
+    const activityStart = activity.activity.startDate?.getTime();
+    const activityStatus = activity.activity.status;
     const selectedEnd = date?.to?.getTime();
     const selectedStart = date?.from?.getTime();
 
-    if (
-          activityEnd &&
+    // if (
+    //       activityEnd &&
+    //       activityStart &&
+    //       selectedEnd &&
+    //       selectedStart &&
+    //       activityStart <= selectedEnd + 86400000 &&
+    //       activityEnd <= selectedEnd + 86400000 &&
+    //       activityEnd >= selectedStart
+    //     ) {
+
+    //       activitiesInRange.push(activity)
+    //     }
+
+        if (
+          !activityEnd &&
+          activityStart &&
           selectedEnd &&
           selectedStart &&
-          activityEnd <= selectedEnd + 86400000 &&
-          activityEnd >= selectedStart
+          activityStart <= selectedEnd + 86400000 &&
+          activityStatus !== "Deleted"
         ) {
 
           activitiesInRange.push(activity)
-    }});
+        }
+        else if (
+          activityEnd &&
+          activityStart &&
+          selectedEnd &&
+          selectedStart &&
+          activityEnd <= selectedEnd + 86400000 &&
+          activityEnd >= selectedStart &&
+          activityStatus !== "Deleted"
+        ) {
+
+          activitiesInRange.push(activity)
+        }
+  });
     
     if (activitiesInRange.length > 0) {
       projectsWithActivitiesInRange.push({
@@ -212,9 +241,12 @@ export default function MonthlyReport({
         <p style="margin-right: 5px;">${project.project.icon}</p>
         <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
         <p className="ml-1">
-        ${" "}
-        - Completed:${" "}
-        ${activity.activity.endDate?.toDateString()}
+        ${activity.activity.endDate ? (
+          "- Completed: " +
+        activity.activity.endDate?.toDateString()
+        ): (
+          " - Ongoing (not yet completed)"
+        )}
         </p>
       </div>
       <ul style="margin-top: 0px; padding-top: 0px;">
@@ -308,7 +340,7 @@ export default function MonthlyReport({
         <div className="flex-[1] border-r-2">
           
 
-            <h1 className="text-3xl font-bold mb-12 underline" >Activities Completed (by project)</h1>
+            <h1 className="text-3xl font-bold mb-12 underline" >Activities Worked On (by project)</h1>
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
@@ -364,9 +396,13 @@ export default function MonthlyReport({
                                   {activity.activity.name}
                                 </p>
                                 <p className="ml-1">
-                                  {" "}
-                                  - Completed:{" "}
-                                  {activity.activity.endDate?.toDateString()}{" "}
+                                  {activity.activity.endDate ? (
+                                   " - Completed: " + 
+                                  activity.activity.endDate?.toDateString() + " "
+                                  ) : (
+                                    " - Ongoing (not yet completed)"
+                                  )}
+                                 
                                 </p>
                               </div>
                               </Link>
