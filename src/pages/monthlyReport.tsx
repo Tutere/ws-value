@@ -250,7 +250,14 @@ export default function MonthlyReport({
   //email setup .... should this be in it's own component?
 
   const activitiesForEmail = projectsWithActivitiesInRange.map(project => {
-    const activities = project.activitiesInRange.map(activity => `
+    let allActivitiesHidden = true;
+    project.activitiesInRange.forEach(element => {
+      if (element.hidden === false) {
+        allActivitiesHidden = false;
+      }
+    })
+    const activities = project.activitiesInRange.filter(activity => !activity.hidden)
+    .map(activity => `
       <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
         <p style="margin-right: 5px;">${project.project.icon}</p>
         <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
@@ -274,7 +281,7 @@ export default function MonthlyReport({
   
     return `
       <div style="margin-bottom: 30px;">
-        <p style="font-size: 15px; margin-bottom: 0px;"><b>${project.project.name}</b></p>
+        <p style="font-size: 15px; margin-bottom: 0px; ${allActivitiesHidden? "display: none;" : ""}"><b>${project.project.name}</b></p>
         ${activities}
       </div>
     `;
