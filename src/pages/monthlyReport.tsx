@@ -16,6 +16,7 @@ import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 import emailjs from '@emailjs/browser';
 import { EmailConfirmation } from "~/components/ui/emailConfirmation";
+import { RemoveDialog } from "~/components/ui/removeDialogue";
 
 export default function MonthlyReport({
   className,
@@ -72,7 +73,7 @@ export default function MonthlyReport({
   })
 
   // get all projects and their activities (so all hooks used each render)
-  const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
+  const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[]; }[] = [];
   
   const getProjectMembersOfActivity = (activity: any) => {
      return api.projectmember.readByActivityId.useQuery({ id: activity.id }).data;
@@ -93,13 +94,24 @@ export default function MonthlyReport({
     };
   };
 
+  const useActivityHide = () => {
+    const [hidden, setHidden] = useState(false);
+  
+    return {
+      hidden,
+      setHidden,
+    };
+  };
+
+
   //add all activities to each project, along with fields and states for later user
   projects && projects.map((project) => {
-    const activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[] = [];
+    const activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[] = [];
     
     project.Activity.forEach(activity => {
       const projectMembersOfActivity = getProjectMembersOfActivity(activity);
       const { comments, setComments, commentsSaved, setCommentSaved } = useActivityComments( activity);
+      const {hidden, setHidden} = useActivityHide();
 
       activities.push({
         activity: activity,
@@ -108,6 +120,8 @@ export default function MonthlyReport({
         setCommentSaved: setCommentSaved,
         comments: comments,
         setComments: setComments,
+        hidden: hidden,
+        setHidden:setHidden,
       });
     })
 
@@ -123,7 +137,7 @@ export default function MonthlyReport({
   //setup for all activities and projects in date range
 
   const projectsInDateRange: (Project & { Activity: Activity[]; members: (ProjectMember & { user: User; })[]; })[] = [];
-  const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
+  const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[]; }[] = [];
 
   projects && projects.map((project) => {
 
@@ -140,7 +154,7 @@ export default function MonthlyReport({
   })
   
   allProjectsAndActivities && allProjectsAndActivities.map((element) => {
-    const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; }[] = [];
+    const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[] = [];
 
     element.activities.forEach(activity => {
     const activityEnd = activity.activity.endDate?.getTime();
@@ -344,8 +358,16 @@ export default function MonthlyReport({
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
+                //check if user has removed all activities from project
+                let allActivitiesHidden = true;
+                project.activitiesInRange.forEach(element => {
+                  if (element.hidden === false) {
+                    allActivitiesHidden = false;
+                  }
+                })
+
                 return (
-                  <div>
+                  <div className={allActivitiesHidden === true ? "hidden" : ""}>
                     <Link className="text-xl mb-5 hover:underline" 
                     href={"/" + project.project.id} 
                     rel="noopener noreferrer" 
@@ -386,7 +408,7 @@ export default function MonthlyReport({
                             }}
                           > 
                             
-                            <div className="mb-5 ml-5 w-3/4">
+                            <div className= {activity.hidden === true ? "hidden" :"mb-5 ml-5 w-3/4"}>
                             <Link className="hover:underline"  href={"/activity/" + activity.activity.id} 
                               rel="noopener noreferrer" 
                               target="_blank">
@@ -455,7 +477,11 @@ export default function MonthlyReport({
                               </button>
                               </>
                               )}
-                              
+                              <div className="mt-5">
+                                <RemoveDialog 
+                                setHidden={project.activitiesInRange[index]?.setHidden ?? (() => {})} 
+                                />
+                              </div>              
                             </div>
                           </form>
                         );
