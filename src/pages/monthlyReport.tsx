@@ -215,7 +215,7 @@ export default function MonthlyReport({
         ${" "}
         - Completed:${" "}
         ${activity.activity.endDate?.toDateString()}
-        </p>
+        </p>in
       </div>
       <ul style="margin-top: 0px; padding-top: 0px;">
         <li>Outcome score: ${activity.activity.outcomeScore}</li>
