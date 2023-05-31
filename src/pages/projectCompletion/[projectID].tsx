@@ -201,17 +201,6 @@ export default function ProjectCompletion() {
           required={true}
           />
 
-        {/* <InputSection
-          label="Effort Score (1-10)"
-          methods={methods}
-          infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"
-          methodsField="effortScore"
-          placeHolder=""
-          type=""
-          defaultValue={project.effortScore?? ""}
-          required={true}
-          /> */}
-
           <DiscreteSlider 
               defaultValue={project.effortScore ?? ""}
               methods={methods}
