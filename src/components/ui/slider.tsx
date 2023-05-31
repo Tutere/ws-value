@@ -38,7 +38,7 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 'experience':
                 return renderExperience(param);
             default:
-                return 'foo';
+                return 'error';
         }
     }
 
@@ -49,7 +49,7 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 2:
                 return 'Very little effort';
             default:
-                return 'foo';
+                return 'description';
         }
     }
 
@@ -60,7 +60,7 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 2:
                 return 'Very little change, not noticeable';
             default:
-                return 'foo';
+                return 'description';
         }
     }
 
@@ -71,7 +71,7 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 2:
                 return 'Very little benefit, not noticeable';
             default:
-                return 'foo';
+                return 'description';
         }
     }
 
@@ -82,8 +82,8 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 2:
                 return 'Very little benefit, not noticeable';
             default:
-                return 'foo';
-        }
+                return 'description';
+        }description
     }
 
     return (
