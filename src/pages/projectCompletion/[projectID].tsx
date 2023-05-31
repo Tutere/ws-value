@@ -213,9 +213,13 @@ export default function ProjectCompletion() {
           /> */}
 
           <DiscreteSlider 
-          methods={methods}
-          methodsField = "effortScore"
-          ></DiscreteSlider>
+              defaultValue={project.effortScore ?? ""}
+              methods={methods}
+              methodsField="effortScore"
+              label="Effort Score"
+              infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10" 
+              renderType={"effort"}          
+              />
 
         
 
