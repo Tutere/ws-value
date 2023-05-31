@@ -12,6 +12,7 @@ import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
 import { useCurrentDate } from "~/hooks/useCurrentDate";
 import { LoadingPage } from "~/components/ui/loading";
+import DiscreteSlider from "~/components/ui/slider";
 
 export default function Project() {
   const router = useRouter();
@@ -287,6 +288,11 @@ export default function Project() {
               type=""
               required={true}
             />
+
+            {/* <DiscreteSlider>
+
+
+            </DiscreteSlider> */}
 
             <InputSection
               label="Effort Score (1-10) "

@@ -9,6 +9,7 @@ import { Textarea } from "src/components/ui/TextArea";
 import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { InputSection } from "~/components/ui/inputSection";
+import DiscreteSlider from "~/components/ui/slider";
 import { useCurrentDate } from "~/hooks/useCurrentDate";
 import { useZodForm } from "~/hooks/useZodForm";
 import { EditProjectSchema } from "~/schemas/projects";
@@ -200,7 +201,7 @@ export default function ProjectCompletion() {
           required={true}
           />
 
-        <InputSection
+        {/* <InputSection
           label="Effort Score (1-10)"
           methods={methods}
           infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"
@@ -209,7 +210,12 @@ export default function ProjectCompletion() {
           type=""
           defaultValue={project.effortScore?? ""}
           required={true}
-          />
+          /> */}
+
+          <DiscreteSlider 
+          methods={methods}
+          methodsField = "effortScore"
+          ></DiscreteSlider>
 
         
 
