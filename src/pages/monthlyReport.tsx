@@ -435,12 +435,13 @@ export default function MonthlyReport({
                                 </p>
                               </div>
                               </Link>
-
-                              <p className="">Outcome Score: {activity.activity.outcomeScore}{" "}</p>
-                              <p className="">Contributors: {contributorNames.join(", ")}{" "}</p>
-                              <p className="">Stakeholders Involved:{" "} {activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders}{" "}</p>
-                              <p className="mb-5 mt-5">Value Statement: {activity.activity.valueCreated}{" "}</p>
-
+                              
+                              <ul className="list-disc ml-5">
+                                <li className="">Outcome Score: {activity.activity.outcomeScore}{" "}</li>
+                                <li className="">Contributors: {contributorNames.join(", ")}{" "}</li>
+                                <li className="">Stakeholders Involved:{" "} {activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders}{" "}</li>
+                                <li className="mb-5">Value Statement: {activity.activity.valueCreated}{" "}</li>
+                              </ul>
                               {activity?.commentSaved === false || activity?.comments === ""? (
                                 <>
 
