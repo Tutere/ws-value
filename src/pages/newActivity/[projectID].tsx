@@ -211,40 +211,6 @@ export default function Project() {
               required={true}
             />
 
-            <div className="grid w-full max-w-md items-center gap-1.5">
-              <Label htmlFor="name">Stakeholders Involved</Label>
-              <div className="flex items-center">
-                <Select
-                  options={stakeholderOptions}
-                  className="mr-4 w-full"
-                  isMulti
-                  // defaultValue={defaultValue}
-                  value={stakeholderSelectedOptions}
-                  closeMenuOnSelect={false}
-                  onChange={(newValue) =>
-                    handleChangeStakeholder(newValue as Option[])
-                  }
-                  placeholder="Optional"
-                />
-                <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
-              </div>
-              {methods.formState.errors.members?.message && (
-                <p className="text-red-700">
-                  {methods.formState.errors.members?.message}
-                </p>
-              )}
-            </div>
-
-            <TextAreaSection
-              label="Engagement Pattern"
-              methods={methods}
-              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
-              methodsField="engagementPattern"
-              placeHolder="Optional"
-              defaultValue=""
-              required={false}
-            />
-
             <TextAreaSection
               label="Value Created (Outcome)"
               methods={methods}
@@ -299,6 +265,41 @@ export default function Project() {
               required={true}
             />
 
+            <div className="grid w-full max-w-md items-center gap-1.5">
+              <Label htmlFor="name">Stakeholders Involved</Label>
+              <div className="flex items-center">
+                <Select
+                  options={stakeholderOptions}
+                  className="mr-4 w-full"
+                  isMulti
+                  // defaultValue={defaultValue}
+                  value={stakeholderSelectedOptions}
+                  closeMenuOnSelect={false}
+                  onChange={(newValue) =>
+                    handleChangeStakeholder(newValue as Option[])
+                  }
+                  placeholder="Optional"
+                />
+                <InfoIcon content="The external stakeholders that were involved in this activity (to edit dropdown selection, please do so at the project level)" />
+              </div>
+              {methods.formState.errors.members?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.members?.message}
+                </p>
+              )}
+            </div>
+
+            <TextAreaSection
+              label="Engagement Pattern"
+              methods={methods}
+              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
+              methodsField="engagementPattern"
+              placeHolder="Optional"
+              defaultValue=""
+              required={false}
+            />
+
+
             <InputSection
               label="Hours taken to complete"
               methods={methods}
@@ -322,7 +323,7 @@ export default function Project() {
                   closeMenuOnSelect={false}
                   onChange={(newValue) => handleChange(newValue as Option[])}
                 />
-                <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+                <InfoIcon content="Innovation Team Members that also contributed. Only shows members of this project." />
               </div>
               {/* {methods.formState.errors.icon?.message && (
               <p className="text-red-700">

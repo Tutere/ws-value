@@ -368,7 +368,7 @@ export default function ProjectForm() {
             <TextAreaSection
               label="Alternative Options or Solutions Considered"
               methods={methods}
-              infoContent=""
+              infoContent="What other solutions were considered prior to initiating this project?"
               methodsField="alternativeOptions"
               placeHolder="Optional"
               defaultValue={project.alternativeOptions ?? ""}
@@ -378,7 +378,7 @@ export default function ProjectForm() {
             <TextAreaSection
               label="Estimated Risks/Concerns/Bottleknecks"
               methods={methods}
-              infoContent=""
+              infoContent="What are the main risks or concerns with this project?"
               methodsField="estimatedRisk"
               placeHolder="Optional"
               defaultValue={project.estimatedRisk ?? ""}
@@ -419,7 +419,7 @@ export default function ProjectForm() {
             <InputSection
               label="Link to Project Initiation Document"
               methods={methods}
-              infoContent=""
+              infoContent="Copy and paste the link to the project initiation document, if you have one."
               methodsField="pid"
               placeHolder="Optional"
               type=""
