@@ -253,7 +253,7 @@ export default function ProjectForm() {
           />
 
           <TextAreaSection
-          label="Estimated Risks/Concerns/Bottleknecks"
+          label="Estimated Risks/Concerns"
           methods={methods}
           infoContent=""
           methodsField="estimatedRisk"
@@ -285,7 +285,7 @@ export default function ProjectForm() {
           <TextAreaSection
           label="Stakeholders (separate by comma)"
           methods={methods}
-          infoContent=""
+          infoContent="The stakeholders that will be involved in this project (please seperate each stakeholder by comma)"
           methodsField="stakeholders"
           placeHolder="Optional"
           defaultValue=""

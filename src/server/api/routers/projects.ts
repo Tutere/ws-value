@@ -13,6 +13,7 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { Activity } from "@prisma/client";
 
 export const projectsRouter = createTRPCRouter({
   create: protectedProcedure
@@ -36,14 +37,14 @@ export const projectsRouter = createTRPCRouter({
           pid: input.pid,
           members: {
             createMany: {
-              data: input.members.map(member => {
+              data: input.members.map((member) => {
                 return {
                   userId: member,
                   role: "OWNER",
-                }
-              })
-            }
-          },    
+                };
+              }),
+            },
+          },
         },
       });
     }),
@@ -57,16 +58,16 @@ export const projectsRouter = createTRPCRouter({
           },
         },
         NOT: {
-          status:"Deleted",
-        }
+          status: "Deleted",
+        },
       },
       include: {
         members: {
           include: {
-            user:true,
+            user: true,
           },
         },
-        Activity:true,
+        Activity: true,
       },
     });
   }),
@@ -113,14 +114,14 @@ export const projectsRouter = createTRPCRouter({
           pid: input.pid,
           members: {
             createMany: {
-              data: input.members.map(member => {
+              data: input.members.map((member) => {
                 return {
                   userId: member,
                   role: "OWNER",
-                }
-              })
-            }
-          },    
+                };
+              }),
+            },
+          },
         },
       });
     }),
@@ -128,24 +129,102 @@ export const projectsRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(DeleteProjectSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.delete({
+      ctx.prisma.project.delete({
         where: {
           id: input.id,
         },
       });
     }),
 
-    softDelete: protectedProcedure
+  softDelete: protectedProcedure
     .input(DeleteProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.update({
+    .mutation(async ({ ctx, input }) => {
+      const deletedProject = await ctx.prisma.project.update({
         where: {
           id: input.id,
         },
         data: {
           status: "Deleted",
-        }
+        },
       });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Delete",
+          name: deletedProject.name,
+          createdAt: deletedProject.createdAt,
+          description: deletedProject.description,
+          goal: deletedProject.goal,
+          estimatedStart: deletedProject.estimatedStart,
+          estimatedEnd: deletedProject.estimatedEnd,
+          trigger: deletedProject.trigger,
+          expectedMovement: deletedProject.expectedMovement,
+          alternativeOptions: deletedProject.alternativeOptions,
+          estimatedRisk: deletedProject.estimatedRisk,
+          outcomeScore: deletedProject.outcomeScore,
+          effortScore: deletedProject.effortScore,
+          status: deletedProject.status,
+          actualStart: deletedProject.actualStart,
+          actualEnd: deletedProject.actualEnd,
+          lessonsLearnt: deletedProject.lessonsLearnt,
+          retrospective: deletedProject.retrospective,
+          projectId: input.id,
+          icon: deletedProject.icon,
+          colour: deletedProject.colour,
+          stakeholders: deletedProject.stakeholders,
+          pid: deletedProject.pid,
+        },
+      });
+
+      const projectActivities = await ctx.prisma.activity.findMany({
+        where: {
+          projectId: input.id,
+        },
+      });
+      const softDeletedActivitiesPromises = projectActivities.map(
+        (activity) => {
+          console.log("soft deleting activity :", activity.id);
+          return ctx.prisma.activity.update({
+            where: {
+              id: activity.id,
+            },
+            data: {
+              status: "Deleted",
+            },
+          });
+        }
+      );
+
+      const updateActivitiesTrackerPromises = projectActivities.map(
+        (activity) => {
+          console.log("soft deleting activity :", activity.id);
+          return ctx.prisma.activityTracker.create({
+            data: {
+              changeType: "Delete",
+              createdAt: activity.createdAt,
+              projectId: activity.projectId,
+              name: activity.name,
+              description: activity.description,
+              engagementPattern: activity.engagementPattern,
+              valueCreated: activity.valueCreated,
+              startDate: activity.startDate,
+              endDate: activity.endDate,
+              status: activity.status,
+              outcomeScore: activity.outcomeScore,
+              effortScore: activity.effortScore,
+              hours: activity.hours,
+              stakeholders: activity.stakeholders,
+              reportComments: activity.reportComments,
+              activityId: activity.id!,
+            },
+          });
+        }
+      );
+
+      await Promise.all([
+        ...softDeletedActivitiesPromises,
+        ...updateActivitiesTrackerPromises,
+      ]);
     }),
 
   findByActivityId: protectedProcedure
@@ -165,7 +244,7 @@ export const projectsRouter = createTRPCRouter({
       });
     }),
 
-    findByStakeholderResponseId: protectedProcedure
+  findByStakeholderResponseId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
     .query(({ ctx, input }) => {
       return ctx.prisma.project.findFirst({
@@ -203,16 +282,15 @@ export const projectsRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          status: "Active"
+          status: "Active",
         },
       });
     }),
 
-    FindByProjectId: protectedProcedure
+  FindByProjectId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
     .query(async ({ ctx, input }) => {
-      const project = 
-      await ctx.prisma.project.findUnique({
+      const project = await ctx.prisma.project.findUnique({
         where: {
           id: input.id,
         },
@@ -221,10 +299,10 @@ export const projectsRouter = createTRPCRouter({
           Activity: {
             where: {
               NOT: {
-                status:"Deleted",
-              }
-            }
-          }
+                status: "Deleted",
+              },
+            },
+          },
         },
       });
       const isMemberFound = project?.members.some((member) => {
@@ -232,7 +310,10 @@ export const projectsRouter = createTRPCRouter({
       });
 
       if (!isMemberFound) {
-        throw new TRPCError ({code: "UNAUTHORIZED", message: "User is not a member of this project"})
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User is not a member of this project",
+        });
       }
       return project;
     }),

@@ -12,31 +12,33 @@ import { Button } from "../components/ui/Button";
 import { useProjectDeletion } from "~/hooks/useProjectDeletion";
 import { LoadingPage } from "~/components/ui/loading";
 
-
 export default function Project() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
   const [loading, setLoading] = useState(false);
 
-  const query = api.projects.FindByProjectId.useQuery({ id: id }, {
-    suspense: true,
-    onError: (error) => {
-      if (error.data?.code === "UNAUTHORIZED") {
-        router.push("/");
-      }
+  const query = api.projects.FindByProjectId.useQuery(
+    { id: id },
+    {
+      suspense: true,
+      onError: (error) => {
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
+      },
     }
-  });
+  );
 
   const project = query.data;
   const activities = project?.Activity;
 
   const { data: sessionData } = useSession();
-  const isMemberFound = project?.members.some(member => {
+  const isMemberFound = project?.members.some((member) => {
     return member.userId === sessionData?.user.id;
   });
 
-  const { projectHandleDelete } = useProjectDeletion(id);
+  const { projectDelete } = useProjectDeletion(id);
 
   useEffect(() => {
     if (!isMemberFound) {
@@ -55,7 +57,6 @@ export default function Project() {
   });
 
   const users = queryUsers.data;
-
 
   const projectMembers = project?.members.map((member) =>
     users?.find((user) => user.id === member.userId)
@@ -77,9 +78,7 @@ export default function Project() {
 
   //data lineage for "reactivating" a project
 
-  const mutationProjecTracker = api.projectTracker.edit.useMutation({
-
-  });
+  const mutationProjecTracker = api.projectTracker.edit.useMutation({});
 
   const methodProjectTracker = useZodForm({
     schema: ProjectChangeSchema,
@@ -153,13 +152,14 @@ export default function Project() {
     <>
       {isMemberFound ? (
         <div className="p-8"
-          style={{
-            borderTopColor: `${project.colour}`,
-            borderTopStyle: "solid",
-            borderTopWidth: "10px",
-          }}>
+        style={{
+          borderTopColor: `${project.colour}`,
+          borderTopStyle: "solid",
+          borderTopWidth: "10px",
+        }}
+        >
           <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
-          
+         
             <>
               <div className="flex flex-row">
                 <Label className="font-medium">Project Name:</Label>
@@ -171,7 +171,9 @@ export default function Project() {
               </div>
               <div className="flex flex-row">
                 <Label className="font-medium">Estimated Start Date:</Label>
-                <p className="ml-1">{project.estimatedStart.toLocaleDateString()}</p>
+                <p className="ml-1">
+                  {project.estimatedStart.toLocaleDateString()}
+                </p>
               </div>
               <div className="flex flex-row">
                 <Label className="font-medium">Description:</Label>
@@ -188,13 +190,21 @@ export default function Project() {
                 <p className="ml-1">{project.stakeholders}</p>
               </div>
               <div className="flex flex-row">
-                <Label className="font-medium">Link to Project Initiation Document: </Label>
-                {project.pid ?
-                  <a className="ml-1 text-blue-600 hover:underline" href={project.pid ?? ""} rel="noopener noreferrer"
-                    target="_blank">Click Here</a>
-                  :
+                <Label className="font-medium">
+                  Link to Project Initiation Document:{" "}
+                </Label>
+                {project.pid ? (
+                  <a
+                    className="ml-1 text-blue-600 hover:underline"
+                    href={project.pid ?? ""}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Click Here
+                  </a>
+                ) : (
                   <p className="ml-1"> N/A</p>
-                }
+                )}
               </div>
             </>
             {isReadMoreShown && (
@@ -215,14 +225,11 @@ export default function Project() {
               <Label className="font-medium">Estimated Risks:</Label>
               <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
             </div>
-
           </>
-
-            )}
-
+          )}
 
  
-<Button variant={"withIcon"}
+      <Button variant={"withIcon"}
       size={"sm"}
       className="mt-2 bg-slate-100" 
       onClick={toggleReadMore}> {!isReadMoreShown ? "See More...": "See Less..."}
@@ -250,7 +257,9 @@ export default function Project() {
             window.location.reload();
           })}
           >
-            <svg aria-hidden="true" className="w-4 h-4 mr-2 fill-current" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"></path></svg>
+            <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path clip-rule="evenodd" fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z"></path>
+            </svg>
             Make Active
           </Link>
 
@@ -262,7 +271,11 @@ export default function Project() {
             Edit Project
           </Link>
 
-        <DeletionDialog object="Project" id={id} handleDelete={projectHandleDelete}></DeletionDialog> 
+          <DeletionDialog
+              object="Project"
+              id={id}
+              handleDelete={() => projectDelete({ id: id })}
+            ></DeletionDialog>
 
         </div>
       </div>

@@ -191,9 +191,9 @@ export default function Project() {
             className="space-y-2"
           >
             <InputSection
-              label="Name"
+              label="Activity Title"
               methods={methods}
-              infoContent="Name for the activity"
+              infoContent="Title or name for the activity"
               methodsField="name"
               placeHolder=""
               type=""

@@ -265,7 +265,7 @@ export default function Project() {
                 }),
               ]);
               methods.reset();
-              router.push("/" + project?.id);
+              router.push("/activity/" + activity?.id);
             })}
             className="space-y-2"
           >

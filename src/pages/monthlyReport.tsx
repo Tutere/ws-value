@@ -16,6 +16,7 @@ import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 import emailjs from '@emailjs/browser';
 import { EmailConfirmation } from "~/components/ui/emailConfirmation";
+import { RemoveDialog } from "~/components/ui/removeDialogue";
 
 export default function MonthlyReport({
   className,
@@ -72,7 +73,7 @@ export default function MonthlyReport({
   })
 
   // get all projects and their activities (so all hooks used each render)
-  const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
+  const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[]; }[] = [];
   
   const getProjectMembersOfActivity = (activity: any) => {
      return api.projectmember.readByActivityId.useQuery({ id: activity.id }).data;
@@ -93,13 +94,24 @@ export default function MonthlyReport({
     };
   };
 
+  const useActivityHide = () => {
+    const [hidden, setHidden] = useState(false);
+  
+    return {
+      hidden,
+      setHidden,
+    };
+  };
+
+
   //add all activities to each project, along with fields and states for later user
   projects && projects.map((project) => {
-    const activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[] = [];
+    const activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[] = [];
     
     project.Activity.forEach(activity => {
       const projectMembersOfActivity = getProjectMembersOfActivity(activity);
       const { comments, setComments, commentsSaved, setCommentSaved } = useActivityComments( activity);
+      const {hidden, setHidden} = useActivityHide();
 
       activities.push({
         activity: activity,
@@ -108,6 +120,8 @@ export default function MonthlyReport({
         setCommentSaved: setCommentSaved,
         comments: comments,
         setComments: setComments,
+        hidden: hidden,
+        setHidden:setHidden,
       });
     })
 
@@ -123,7 +137,7 @@ export default function MonthlyReport({
   //setup for all activities and projects in date range
 
   const projectsInDateRange: (Project & { Activity: Activity[]; members: (ProjectMember & { user: User; })[]; })[] = [];
-  const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; }[]; }[] = [];
+  const projectsWithActivitiesInRange: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activitiesInRange: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[]; }[] = [];
 
   projects && projects.map((project) => {
 
@@ -140,23 +154,52 @@ export default function MonthlyReport({
   })
   
   allProjectsAndActivities && allProjectsAndActivities.map((element) => {
-    const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; }[] = [];
+    const activitiesInRange: { activity: any; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: any; setComments: React.Dispatch<any>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[] = [];
 
     element.activities.forEach(activity => {
     const activityEnd = activity.activity.endDate?.getTime();
+    const activityStart = activity.activity.startDate?.getTime();
+    const activityStatus = activity.activity.status;
     const selectedEnd = date?.to?.getTime();
     const selectedStart = date?.from?.getTime();
 
-    if (
-          activityEnd &&
+    // if (
+    //       activityEnd &&
+    //       activityStart &&
+    //       selectedEnd &&
+    //       selectedStart &&
+    //       activityStart <= selectedEnd + 86400000 &&
+    //       activityEnd <= selectedEnd + 86400000 &&
+    //       activityEnd >= selectedStart
+    //     ) {
+
+    //       activitiesInRange.push(activity)
+    //     }
+
+        if (
+          !activityEnd &&
+          activityStart &&
           selectedEnd &&
           selectedStart &&
-          activityEnd <= selectedEnd + 86400000 &&
-          activityEnd >= selectedStart
+          activityStart <= selectedEnd + 86400000 &&
+          activityStatus !== "Deleted"
         ) {
 
           activitiesInRange.push(activity)
-    }});
+        }
+        else if (
+          activityEnd &&
+          activityStart &&
+          selectedEnd &&
+          selectedStart &&
+          activityEnd <= selectedEnd + 86400000 &&
+          activityEnd >= selectedStart &&
+          activityStatus !== "Deleted"
+        ) {
+
+          activitiesInRange.push(activity)
+        }
+  });
     
     if (activitiesInRange.length > 0) {
       projectsWithActivitiesInRange.push({
@@ -207,14 +250,24 @@ export default function MonthlyReport({
   //email setup .... should this be in it's own component?
 
   const activitiesForEmail = projectsWithActivitiesInRange.map(project => {
-    const activities = project.activitiesInRange.map(activity => `
+    let allActivitiesHidden = true;
+    project.activitiesInRange.forEach(element => {
+      if (element.hidden === false) {
+        allActivitiesHidden = false;
+      }
+    })
+    const activities = project.activitiesInRange.filter(activity => !activity.hidden)
+    .map(activity => `
       <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
         <p style="margin-right: 5px;">${project.project.icon}</p>
         <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
         <p className="ml-1">
-        ${" "}
-        - Completed:${" "}
-        ${activity.activity.endDate?.toDateString()}
+        ${activity.activity.endDate ? (
+          "- Completed: " +
+        activity.activity.endDate?.toDateString()
+        ): (
+          " - Ongoing (not yet completed)"
+        )}
         </p>
       </div>
       <ul style="margin-top: 0px; padding-top: 0px;">
@@ -228,7 +281,7 @@ export default function MonthlyReport({
   
     return `
       <div style="margin-bottom: 30px;">
-        <p style="font-size: 15px; margin-bottom: 0px;"><b>${project.project.name}</b></p>
+        <p style="font-size: 15px; margin-bottom: 0px; ${allActivitiesHidden? "display: none;" : ""}"><b>${project.project.name}</b></p>
         ${activities}
       </div>
     `;
@@ -308,12 +361,20 @@ export default function MonthlyReport({
         <div className="flex-[1] border-r-2">
           
 
-            <h1 className="text-3xl font-bold mb-12 underline" >Activities Completed (by project)</h1>
+            <h1 className="text-3xl font-bold mb-12 underline" >Activities Worked On (by project)</h1>
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
 
+                //check if user has removed all activities from project
+                let allActivitiesHidden = true;
+                project.activitiesInRange.forEach(element => {
+                  if (element.hidden === false) {
+                    allActivitiesHidden = false;
+                  }
+                })
+
                 return (
-                  <div>
+                  <div className={allActivitiesHidden === true ? "hidden" : ""}>
                     <Link className="text-xl mb-5 hover:underline" 
                     href={"/" + project.project.id} 
                     rel="noopener noreferrer" 
@@ -354,7 +415,7 @@ export default function MonthlyReport({
                             }}
                           > 
                             
-                            <div className="mb-5 ml-5 w-3/4">
+                            <div className= {activity.hidden === true ? "hidden" :"mb-5 ml-5 w-3/4"}>
                             <Link className="hover:underline"  href={"/activity/" + activity.activity.id} 
                               rel="noopener noreferrer" 
                               target="_blank">
@@ -364,23 +425,28 @@ export default function MonthlyReport({
                                   {activity.activity.name}
                                 </p>
                                 <p className="ml-1">
-                                  {" "}
-                                  - Completed:{" "}
-                                  {activity.activity.endDate?.toDateString()}{" "}
+                                  {activity.activity.endDate ? (
+                                   " - Completed: " + 
+                                  activity.activity.endDate?.toDateString() + " "
+                                  ) : (
+                                    " - Ongoing (not yet completed)"
+                                  )}
+                                 
                                 </p>
                               </div>
                               </Link>
-
-                              <p className="">Outcome Score: {activity.activity.outcomeScore}{" "}</p>
-                              <p className="">Contributors: {contributorNames.join(", ")}{" "}</p>
-                              <p className="">Stakeholders Involved:{" "} {activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders}{" "}</p>
-                              <p className="mb-5 mt-5">Value Statement: {activity.activity.valueCreated}{" "}</p>
-
+                              
+                              <ul className="list-disc ml-5">
+                                <li className="">Outcome Score: {activity.activity.outcomeScore}{" "}</li>
+                                <li className="">Contributors: {contributorNames.join(", ")}{" "}</li>
+                                <li className="">Stakeholders Involved:{" "} {activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders}{" "}</li>
+                                <li className="mb-5">Value Statement: {activity.activity.valueCreated}{" "}</li>
+                              </ul>
                               {activity?.commentSaved === false || activity?.comments === ""? (
                                 <>
 
                               <div className="grid w-full max-w-md items-center gap-1.5">
-                                  <Label htmlFor="reportComment">Optional Comments (for Monthly report)</Label>
+                                  <Label htmlFor="reportComment">Optional Comments (for Monthly report):</Label>
                                   <div className="flex items-center">
                                       <Textarea
                                         className="mr-4 whitespace-pre-wrap resize"
@@ -419,7 +485,11 @@ export default function MonthlyReport({
                               </button>
                               </>
                               )}
-                              
+                              <div className="mt-5">
+                                <RemoveDialog 
+                                setHidden={project.activitiesInRange[index]?.setHidden ?? (() => {})} 
+                                />
+                              </div>              
                             </div>
                           </form>
                         );
