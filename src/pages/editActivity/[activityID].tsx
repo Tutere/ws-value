@@ -376,7 +376,7 @@ export default function Project() {
                     handleChangeStakeholder(newValue as Option[])
                   }
                 />
-                <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+                <InfoIcon content="The external stakeholders that were involved in this activity (to edit dropdown selection, please do so at the project level)" />
               </div>
             </div>
 
