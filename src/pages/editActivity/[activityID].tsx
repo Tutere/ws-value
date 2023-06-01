@@ -270,9 +270,9 @@ export default function Project() {
             className="space-y-2"
           >
             <InputSection
-              label="Name"
+              label="Activity Title"
               methods={methods}
-              infoContent="Name for the activity"
+              infoContent="Title or name for the activity"
               methodsField="name"
               placeHolder=""
               type=""
@@ -291,16 +291,6 @@ export default function Project() {
             />
 
             <TextAreaSection
-              label="Engagement Pattern"
-              methods={methods}
-              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
-              methodsField="engagementPattern"
-              placeHolder="Optional"
-              defaultValue={activity.engagementPattern ?? ""}
-              required={false}
-            />
-
-            <TextAreaSection
               label="Value Created (Outcome)"
               methods={methods}
               infoContent="Brief statement on the outcome/value that was achieved by carrying out this activity."
@@ -310,7 +300,7 @@ export default function Project() {
               required={false}
             />
 
-            <InputSection
+<InputSection
               label="Start Date"
               methods={methods}
               infoContent="The date that work was started for the activity"
@@ -380,6 +370,16 @@ export default function Project() {
               </div>
             </div>
 
+            <TextAreaSection
+              label="Engagement Pattern"
+              methods={methods}
+              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
+              methodsField="engagementPattern"
+              placeHolder="Optional"
+              defaultValue={activity.engagementPattern ?? ""}
+              required={false}
+            />
+
             <InputSection
               label="Hours taken to complete"
               methods={methods}
@@ -403,7 +403,7 @@ export default function Project() {
                   closeMenuOnSelect={false}
                   onChange={(newValue) => handleChange(newValue as Option[])}
                 />
-                <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+                <InfoIcon content="Innovation Team Members that also contributed. Only shows members of this project." />
               </div>
             </div>
 
