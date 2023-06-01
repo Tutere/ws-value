@@ -55,14 +55,13 @@ export default function EmailPreferences() {
         >
 
           <InputSection
-          label="Preferred Email (for monthly report)"
-          methods={methods}
-          infoContent="This email will be cc'd when monthly reports are sent via the monthly report page"
-          methodsField="email"
-          placeHolder=""
-          type=""
-          defaultValue={currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "" }
-          />
+            label="Preferred Email (for monthly report)"
+            methods={methods}
+            infoContent="This email will be cc'd when monthly reports are sent via the monthly report page"
+            methodsField="email"
+            placeHolder=""
+            type=""
+            defaultValue={currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email ?? ""} required={false}          />
 
           <Button
             type="submit"
