@@ -306,6 +306,7 @@ export default function Project() {
             </Link>
           ))}
       </div>
+      {/*  test */}
 
       <Link href={"/newActivity/" + id } className={project.status=="Complete"? "pointer-events-none":""} onClick={() => setLoading(true)}>
         <Button type="submit" variant={project?.status=="Active"?"withIcon":"subtle"} className={project.status=="Active"?"mt-5 text-green-600":"mt-5"}>
