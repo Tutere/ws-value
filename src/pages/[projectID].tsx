@@ -301,7 +301,7 @@ export default function Project() {
               className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
               onClick={() => setLoading(true)}
             >
-              <h3 className="text-xl font-bold">{activity.name}</h3>
+              <h3 className="text-xl font-bold mx-1">{activity.name}</h3>
               <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
             </Link>
           ))}
