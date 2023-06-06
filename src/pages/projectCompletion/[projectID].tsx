@@ -192,20 +192,22 @@ export default function ProjectCompletion() {
 
 
             <DiscreteSlider
-              defaultValue={project.effortScore!}
+              defaultValue={project.effortScore??1}
               methods={methods}
               methodsField="effortScore"
               label="Effort Score"
               infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"
               renderType={"effort"}
+              
             />
             <DiscreteSlider
-              defaultValue={project.outcomeScore!}
+              defaultValue={project.outcomeScore??1}
               methods={methods}
               methodsField="outcomeScore"
               label="Outcome Score"
               infoContent="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"
               renderType={"outcome"}
+              
             />
 
 

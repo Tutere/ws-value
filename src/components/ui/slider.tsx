@@ -12,7 +12,7 @@ function valuetext(value: number) {
 interface InputSectionProps<T extends FieldValues> {
     methods: UseFormReturn<T, any>;
     methodsField: Path<T>;
-    defaultValue: number;
+    defaultValue: number ;
     label: string;
     infoContent: string;
     renderType: 'effort' | 'outcome' | 'benefits' | 'experience';
@@ -21,7 +21,7 @@ interface InputSectionProps<T extends FieldValues> {
 export default function DiscreteSlider<T extends FieldValues>(
     props: InputSectionProps<T>
 ) {
-    const [value, setValue] = React.useState(1);
+    const [value, setValue] = React.useState(props.defaultValue);
 
     const handleSliderChange = (event: any, newValue: React.SetStateAction<number>) => {
         setValue(newValue);
@@ -59,14 +59,14 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 7:
                 return 'Gave it a good solid amount of effort but could have made more if really needed';
             case 8:
-                return 'Large amount of effort, if I put in this much in an assignment I deserve an A at least';
+                return '';
             case 9:
-                return 'People noticed and was impressed and maybe concerned by the amount of effort and time I put in ';
+                return ' ';
             case 10:
-                return 'The best effort I have ever put in, it consumed my life and was all I can think about';
+                return 'The best effort I have ever put in';
 
             default:
-                return 'description';
+                return 'No score yet';
         }
     }
 
@@ -93,7 +93,7 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 10:
                 return 'The outcome was so immense it affected the wider community';
             default:
-                return 'description';
+                return 'No score yet';
         }
     }
 
@@ -120,7 +120,7 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 10:
                 return 'Lives have changed positively because of how beneficial this was';
             default:
-                return 'description';
+                return '';
         }
     }
 
@@ -147,7 +147,7 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 10:
                 return 'Lives have changed positively because of how much experience this gave';
             default:
-                return 'description';
+                return '';
         }
     }
 
@@ -164,20 +164,21 @@ export default function DiscreteSlider<T extends FieldValues>(
                         onChange={handleSliderChange} //its this error again!! I can't remember how we fixed it last time!!
                         aria-label="Score"
                         getAriaValueText={valuetext}
-                        valueLabelDisplay="auto"
+                        valueLabelDisplay='auto'
                         step={1}
                         marks
                         min={1}
                         max={10}
                         track={false}
                         defaultValue={props.defaultValue}
+                        
 
                     />
 
                 </Box>
                 <InfoIcon content={props.infoContent} />
             </div>
-            {value} - {renderSwitch(value)}
+            {value}  {renderSwitch(value)}
 
         </div>
     );
