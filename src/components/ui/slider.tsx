@@ -12,7 +12,7 @@ function valuetext(value: number) {
 interface InputSectionProps<T extends FieldValues> {
     methods: UseFormReturn<T, any>;
     methodsField: Path<T>;
-    defaultValue: string | number;
+    defaultValue: number;
     label: string;
     infoContent: string;
     renderType: 'effort' | 'outcome' | 'benefits' | 'experience';
@@ -21,7 +21,7 @@ interface InputSectionProps<T extends FieldValues> {
 export default function DiscreteSlider<T extends FieldValues>(
     props: InputSectionProps<T>
 ) {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(1);
 
     const handleSliderChange = (event: any, newValue: React.SetStateAction<number>) => {
         setValue(newValue);
@@ -47,7 +47,24 @@ export default function DiscreteSlider<T extends FieldValues>(
             case 1:
                 return 'No Effort at all';
             case 2:
-                return 'Very little effort';
+                return 'Bare minimum effort';
+            case 3:
+                return 'Little bit effort';
+            case 4:
+                return 'Just under average effort';
+            case 5:
+                return 'Average effort';
+            case 6:
+                return 'Just over average effort';
+            case 7:
+                return 'Gave it a good solid amount of effort but could have made more if really needed';
+            case 8:
+                return 'Large amount of effort, if I put in this much in an assignment I deserve an A at least';
+            case 9:
+                return 'People noticed and was impressed and maybe concerned by the amount of effort and time I put in ';
+            case 10:
+                return 'The best effort I have ever put in, it consumed my life and was all I can think about';
+
             default:
                 return 'description';
         }
@@ -56,9 +73,25 @@ export default function DiscreteSlider<T extends FieldValues>(
     function renderOutcome(param: number) {
         switch (param) {
             case 1:
-                return 'Nothing changed';
+                return 'Nothing changed, no success';
             case 2:
                 return 'Very little change, not noticeable';
+            case 3:
+                return 'A little bit of a change, not very successful';
+            case 4:
+                return 'There was a below average success';
+            case 5:
+                return 'There was good enough outcome for it to be a success';
+            case 6:
+                return 'There was successful change and a little bit more';
+            case 7:
+                return 'Good success, satisfactory ';
+            case 8:
+                return 'Great outcome, better than expected';
+            case 9:
+                return 'Amazing outcome, made some waves for the stakeholders';
+            case 10:
+                return 'The outcome was so immense it affected the wider community';
             default:
                 return 'description';
         }
@@ -67,9 +100,25 @@ export default function DiscreteSlider<T extends FieldValues>(
     function renderBenefits(param: number) {
         switch (param) {
             case 1:
-                return 'No Benefit at all';
+                return 'No benefit at all';
             case 2:
                 return 'Very little benefit, not noticeable';
+            case 3:
+                return '';
+            case 4:
+                return '';
+            case 5:
+                return 'Average Benefit';
+            case 6:
+                return '';
+            case 7:
+                return '';
+            case 8:
+                return '';
+            case 9:
+                return 'Hugely Beneficial, exceeded expectations';
+            case 10:
+                return 'Lives have changed positively because of how beneficial this was';
             default:
                 return 'description';
         }
@@ -78,16 +127,32 @@ export default function DiscreteSlider<T extends FieldValues>(
     function renderExperience(param: number) {
         switch (param) {
             case 1:
-                return 'No Benefit at all';
+                return 'No experience gained at all';
             case 2:
-                return 'Very little benefit, not noticeable';
+                return 'Very little experience, not noticeable';
+            case 3:
+                return 'Some experience gained';
+            case 4:
+                return '';
+            case 5:
+                return 'Gained an average amount of experience';
+            case 6:
+                return '';
+            case 7:
+                return '';
+            case 8:
+                return '';
+            case 9:
+                return 'Huge experiences gained, exceeded expectations';
+            case 10:
+                return 'Lives have changed positively because of how much experience this gave';
             default:
                 return 'description';
-        }description
+        }
     }
 
     return (
-        <div className="grid w-full max-w-md items-center gap-1.5">
+        <div className="grid w-full max-w-md items-center gap-1.5 py-3">
             <div className="flex">
                 <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
             </div>
@@ -97,19 +162,22 @@ export default function DiscreteSlider<T extends FieldValues>(
                         {...props.methods.register(props.methodsField)}
 
                         onChange={handleSliderChange} //its this error again!! I can't remember how we fixed it last time!!
-                        aria-label="Effort Score"
+                        aria-label="Score"
                         getAriaValueText={valuetext}
                         valueLabelDisplay="auto"
                         step={1}
                         marks
                         min={1}
                         max={10}
+                        track={false}
+                        defaultValue={props.defaultValue}
+
                     />
 
                 </Box>
                 <InfoIcon content={props.infoContent} />
             </div>
-            {value} {renderSwitch(value)}
+            {value} - {renderSwitch(value)}
 
         </div>
     );
