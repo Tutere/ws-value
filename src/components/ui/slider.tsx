@@ -73,7 +73,7 @@ export default function DiscreteSlider<T extends FieldValues>(
     function renderOutcome(param: number) {
         switch (param) {
             case 1:
-                return 'Negligible outcome, no significant change';
+                return 'Negligible outcome, no change';
               case 2:
                 return 'Minimal outcome, barely noticeable change';
               case 3:
