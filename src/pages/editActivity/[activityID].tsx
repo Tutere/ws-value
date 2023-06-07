@@ -238,7 +238,7 @@ export default function Project() {
         <div className="p-8">
           <h2 className="mb-5 text-3xl font-bold">Project: {project.name}</h2>
 
-          <h2 className="mt-7 text-xl font-bold">Edit Activity</h2>
+          <h2 className="mt-7 mb-5 text-xl font-bold">Edit Activity</h2>
           <form
             onSubmit={methods.handleSubmit(async (values) => {
               setFormSubmitted(true);
@@ -301,7 +301,7 @@ export default function Project() {
               required={false}
             />
 
-<InputSection
+            <InputSection
               label="Start Date"
               methods={methods}
               infoContent="The date that work was started for the activity"
@@ -338,7 +338,7 @@ export default function Project() {
               label="Effort Score"
               infoContent="If you had to rate the effort you had to put in to deliver this initiatve"
               renderType={"effort"}
-
+              required={false}
             />
             <DiscreteSlider
               defaultValue={activity.outcomeScore ?? 1}
@@ -347,7 +347,7 @@ export default function Project() {
               label="Outcome Score"
               infoContent="If you had to rate the outcome that was achieved by this initiative"
               renderType={"outcome"}
-
+              required={false}
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
