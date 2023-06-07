@@ -198,7 +198,7 @@ export default function ProjectCompletion() {
               label="Effort Score"
               infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"
               renderType={"effort"}
-              
+              required={true}
             />
             <DiscreteSlider
               defaultValue={project.outcomeScore??1}
@@ -207,7 +207,7 @@ export default function ProjectCompletion() {
               label="Outcome Score"
               infoContent="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"
               renderType={"outcome"}
-              
+              required={true}
             />
 
 

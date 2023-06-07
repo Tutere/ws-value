@@ -106,13 +106,13 @@ export default function stakeholderSurveyForm() {
 
 
             <DiscreteSlider
-
               methods={methods}
               methodsField="benefitsRating"
               label="How would you rate the benefits from this project?"
               infoContent="If you had to rate the benefits that was achieved by this initiative"
               renderType={"benefits"}
-              defaultValue={1}
+              defaultValue={5}
+              required={false}
             />
 
           </div>
@@ -125,7 +125,8 @@ export default function stakeholderSurveyForm() {
               label="How would you rate the experience gained from this project? "
               infoContent="If you had to rate the experience gained that was achieved by this initiative"
               renderType={"experience"}
-              defaultValue={1}
+              defaultValue={5}
+              required={false}
             />
           </div>
 
