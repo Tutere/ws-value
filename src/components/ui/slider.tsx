@@ -178,7 +178,7 @@ export default function DiscreteSlider<T extends FieldValues>(
                 </Box>
                 <InfoIcon content={props.infoContent} />
             </div>
-            {value}  {renderSwitch(value)}
+            {value} - {renderSwitch(value)}
 
         </div>
     );
