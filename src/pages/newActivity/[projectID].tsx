@@ -298,32 +298,112 @@ export default function Project() {
               
             />
 
-          <InputSection
-            label="Hours taken to complete"
-            methods={methods}
-            infoContent="How many hours has it taken to complete this activity?"
-            methodsField="hours"
-            placeHolder="Optional"
-            defaultValue=""
-            type=""
-            required={false}
-          />
-
-          <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">Activity members</Label>
-            <div className="flex items-center">
-              <Select
-                options={options}
-                className="mr-4 w-full"
-                isMulti
-                defaultValue={defaultValue}
-                value={selectedOption}
-                closeMenuOnSelect={false}
-                onChange={(newValue) => handleChange(newValue as Option[])}
-              />
-              <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
+            <div className="grid w-full max-w-md items-center gap-1.5">
+              <Label htmlFor="name">Stakeholders Involved</Label>
+              <div className="flex items-center">
+                <Select
+                  options={stakeholderOptions}
+                  className="mr-4 w-full"
+                  isMulti
+                  // defaultValue={defaultValue}
+                  value={stakeholderSelectedOptions}
+                  closeMenuOnSelect={false}
+                  onChange={(newValue) =>
+                    handleChangeStakeholder(newValue as Option[])
+                  }
+                  placeholder="Optional"
+                />
+                <InfoIcon content="The external stakeholders that were involved in this activity (to edit dropdown selection, please do so at the project level)" />
+              </div>
+              {methods.formState.errors.members?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.members?.message}
+                </p>
+              )}
             </div>
-            {/* {methods.formState.errors.icon?.message && (
+
+            <TextAreaSection
+              label="Engagement Pattern"
+              methods={methods}
+              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
+              methodsField="engagementPattern"
+              placeHolder="Optional"
+              defaultValue=""
+              required={false}
+            />
+
+            <div className="grid w-full max-w-md items-center gap-1.5">
+              <Label htmlFor="name">Stakeholders Involved</Label>
+              <div className="flex items-center">
+                <Select
+                  options={stakeholderOptions}
+                  className="mr-4 w-full"
+                  isMulti
+                  // defaultValue={defaultValue}
+                  value={stakeholderSelectedOptions}
+                  closeMenuOnSelect={false}
+                  onChange={(newValue) =>
+                    handleChangeStakeholder(newValue as Option[])
+                  }
+                  placeholder="Optional"
+                />
+                <InfoIcon content="The external stakeholders that were involved in this activity (to edit dropdown selection, please do so at the project level)" />
+              </div>
+              {methods.formState.errors.members?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.members?.message}
+                </p>
+              )}
+            </div>
+
+            <TextAreaSection
+              label="Engagement Pattern"
+              methods={methods}
+              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
+              methodsField="engagementPattern"
+              placeHolder="Optional"
+              defaultValue=""
+              required={false}
+            />
+
+            <InputSection
+              label="Outcome Score (1-10)"
+              methods={methods}
+              infoContent="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"
+              methodsField="outcomeScore"
+              label="Outcome Score"
+              infoContent="If you had to rate the outcome that was achieved by this initiative"
+              renderType={"outcome"}
+              defaultValue={1}
+              
+            />
+
+            <InputSection
+              label="Hours taken to complete"
+              methods={methods}
+              infoContent="How many hours has it taken to complete this activity?"
+              methodsField="hours"
+              placeHolder="Optional"
+              defaultValue=""
+              type=""
+              required={false}
+            />
+
+            <div className="grid w-full max-w-md items-center gap-1.5">
+              <Label htmlFor="name">Activity members</Label>
+              <div className="flex items-center">
+                <Select
+                  options={options}
+                  className="mr-4 w-full"
+                  isMulti
+                  defaultValue={defaultValue}
+                  value={selectedOption}
+                  closeMenuOnSelect={false}
+                  onChange={(newValue) => handleChange(newValue as Option[])}
+                />
+                <InfoIcon content="Innovation Team Members that also contributed. Only shows members of this project." />
+              </div>
+              {/* {methods.formState.errors.icon?.message && (
               <p className="text-red-700">
                 {methods.formState.errors.icon?.message}
               </p>
