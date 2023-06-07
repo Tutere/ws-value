@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Button } from "src/components/ui/Button";
-import { Input } from "src/components/ui/Input";
-import { Textarea } from "src/components/ui/TextArea";
 import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { InfoIcon } from "~/components/ui/infoIcon";
 import { InputSection } from "~/components/ui/inputSection";

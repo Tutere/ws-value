@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { Button } from "src/components/ui/Button";
 import { Input } from "src/components/ui/Input";
-import { Textarea } from "src/components/ui/TextArea";
 import { InfoIcon } from "src/components/ui/infoIcon";
 import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { InputSection } from "~/components/ui/inputSection";

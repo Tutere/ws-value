@@ -1,8 +1,6 @@
 import { type NextPage } from "next";
-import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button } from "~/components/ui/Button";
 import { LoadingPage } from "~/components/ui/loading";

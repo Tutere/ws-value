@@ -1,15 +1,7 @@
-import { Label } from "@radix-ui/react-label";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import Select from 'react-select';
 import { Button } from "src/components/ui/Button";
-import { Input } from "src/components/ui/Input";
-import { InfoIcon } from "src/components/ui/infoIcon";
-import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { InputSection } from "~/components/ui/inputSection";
 import { useZodForm } from "~/hooks/useZodForm";
-import { CreateProjectSchema } from "~/schemas/projects";
 import { WorkEmailSchema } from "~/schemas/users";
 import { api } from "~/utils/api";
 
