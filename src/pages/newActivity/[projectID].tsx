@@ -12,14 +12,15 @@ import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
 import { useCurrentDate } from "~/hooks/useCurrentDate";
 import { LoadingPage } from "~/components/ui/loading";
+import DiscreteSlider from "~/components/ui/slider";
 
 export default function Project() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
-  const query = api.projects.FindByProjectId.useQuery({id:id}, {
-    suspense:true,
+  const query = api.projects.FindByProjectId.useQuery({ id: id }, {
+    suspense: true,
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
         router.push("/");
@@ -155,114 +156,146 @@ export default function Project() {
     };
   }, [formSubmitted]);
 
-  if(loading) {
-    return  <LoadingPage></LoadingPage>
+  if (loading) {
+    return <LoadingPage></LoadingPage>
   }
 
   return (
     <>
-        <div className="p-8">
-          <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
+      <div className="p-8">
+        <h2 className="mb-5 text-3xl font-bold">Project: {project?.name}</h2>
 
-          <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
-          <form
-            onSubmit={methods.handleSubmit(async (values) => {
-              setFormSubmitted(true);
-              await Promise.all([
-                await mutation.mutateAsync({
-                  ...values,
-                  members: selectedOption.map((option) => option.value),
-                  stakeholders: stakeholderSelectedOptions
-                    .map((option) => option.value)
-                    .join(","),
-                }),
-                await mutationActivityTracker.mutateAsync({
-                  ...values,
-                  id: methods.getValues("id"), // update id feild with the created activity's id
-                  members: selectedOption.map((option) => option.value),
-                  stakeholders: stakeholderSelectedOptions
-                    .map((option) => option.value)
-                    .join(","),
-                }),
-              ]);
-              methods.reset();
-              router.push("/" + id);
-            })}
-            className="space-y-2"
-          >
-            <InputSection
-              label="Activity Title"
-              methods={methods}
-              infoContent="Title or name for the activity"
-              methodsField="name"
-              placeHolder=""
-              type=""
-              defaultValue=""
-              required={true}
-            />
+        <h2 className="mt-7 text-xl font-bold">Add a New Activity</h2>
+        <form
+          onSubmit={methods.handleSubmit(async (values) => {
+            setFormSubmitted(true);
+            await Promise.all([
+              await mutation.mutateAsync({
+                ...values,
+                members: selectedOption.map((option) => option.value),
+                stakeholders: stakeholderSelectedOptions
+                  .map((option) => option.value)
+                  .join(","),
+              }),
+              await mutationActivityTracker.mutateAsync({
+                ...values,
+                id: methods.getValues("id"), // update id feild with the created activity's id
+                members: selectedOption.map((option) => option.value),
+                stakeholders: stakeholderSelectedOptions
+                  .map((option) => option.value)
+                  .join(","),
+              }),
+            ]);
+            methods.reset();
+            router.push("/" + id);
+          })}
+          className="space-y-2"
+        >
+          <InputSection
+            label="Name"
+            methods={methods}
+            infoContent="Name for the activity"
+            methodsField="name"
+            placeHolder=""
+            type=""
+            defaultValue=""
+            required={true}
+          />
 
-            <TextAreaSection
-              label="Description"
-              methods={methods}
-              infoContent="Description of the activity"
-              methodsField="description"
-              placeHolder=""
-              defaultValue=""
-              required={true}
-            />
+          <TextAreaSection
+            label="Description"
+            methods={methods}
+            infoContent="Description of the activity"
+            methodsField="description"
+            placeHolder=""
+            defaultValue=""
+            required={true}
+          />
 
-            <TextAreaSection
-              label="Value Created (Outcome)"
-              methods={methods}
-              infoContent="Brief statement on the outcome/value that was achieved by carrying out this activity."
-              methodsField="valueCreated"
-              placeHolder=""
-              defaultValue=""
-              required={true}
-            />
+          <div className="grid w-full max-w-md items-center gap-1.5">
+            <Label htmlFor="name">Stakeholders Involved</Label>
+            <div className="flex items-center">
+              <Select
+                options={stakeholderOptions}
+                className="mr-4 w-full"
+                isMulti
+                // defaultValue={defaultValue}
+                value={stakeholderSelectedOptions}
+                closeMenuOnSelect={false}
+                onChange={(newValue) =>
+                  handleChangeStakeholder(newValue as Option[])
+                }
+                placeholder="Optional"
+              />
+              <InfoIcon content="External Stakeholders that were involved. Only shows up if indicated they are involved in the project overall." />
+            </div>
+            {methods.formState.errors.members?.message && (
+              <p className="text-red-700">
+                {methods.formState.errors.members?.message}
+              </p>
+            )}
+          </div>
 
-            <InputSection
-              label="Start Date"
-              methods={methods}
-              infoContent="The date that work was started for the activity"
-              methodsField="startDate"
-              placeHolder=""
-              type="date"
-              defaultValue={useCurrentDate()}
-              required={true}
-            />
+          <TextAreaSection
+            label="Engagement Pattern"
+            methods={methods}
+            infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
+            methodsField="engagementPattern"
+            placeHolder="Optional"
+            defaultValue=""
+            required={false}
+          />
 
-            <InputSection
-              label="End Date"
-              methods={methods}
-              infoContent="The date that work was finished for the activity"
-              methodsField="endDate"
-              placeHolder=""
-              type="date"
-              defaultValue=""
-              required={false}
-            />
+          <TextAreaSection
+            label="Value Created (Outcome)"
+            methods={methods}
+            infoContent="Brief statement on the outcome/value that was achieved by carrying out this activity."
+            methodsField="valueCreated"
+            placeHolder=""
+            defaultValue=""
+            required={true}
+          />
 
-            <InputSection
-              label="Outcome Score (1-10)"
+          <InputSection
+            label="Start Date"
+            methods={methods}
+            infoContent="The date that work was started for the activity"
+            methodsField="startDate"
+            placeHolder=""
+            type="date"
+            defaultValue={useCurrentDate()}
+            required={true}
+          />
+
+          <InputSection
+            label="End Date"
+            methods={methods}
+            infoContent="The date that work was finished for the activity"
+            methodsField="endDate"
+            placeHolder=""
+            type="date"
+            defaultValue=""
+            required={false}
+          />
+
+          <DiscreteSlider
+
+            methods={methods}
+            methodsField="effortScore"
+            label="Effort Score"
+            infoContent="If you had to rate the effort you had to put in to deliver this initiatve"
+            renderType={"effort"}
+            defaultValue={1}
+          />
+            <DiscreteSlider
+             
               methods={methods}
-              infoContent="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"
               methodsField="outcomeScore"
-              placeHolder=""
-              defaultValue=""
-              type=""
-              required={true}
-            />
-
-            <InputSection
-              label="Effort Score (1-10) "
-              methods={methods}
-              infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"
-              methodsField="effortScore"
-              placeHolder=""
-              defaultValue=""
-              type=""
-              required={true}
+              label="Outcome Score"
+              infoContent="If you had to rate the outcome that was achieved by this initiative"
+              renderType={"outcome"}
+              defaultValue={1}
+              
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
@@ -299,6 +332,51 @@ export default function Project() {
               required={false}
             />
 
+            <div className="grid w-full max-w-md items-center gap-1.5">
+              <Label htmlFor="name">Stakeholders Involved</Label>
+              <div className="flex items-center">
+                <Select
+                  options={stakeholderOptions}
+                  className="mr-4 w-full"
+                  isMulti
+                  // defaultValue={defaultValue}
+                  value={stakeholderSelectedOptions}
+                  closeMenuOnSelect={false}
+                  onChange={(newValue) =>
+                    handleChangeStakeholder(newValue as Option[])
+                  }
+                  placeholder="Optional"
+                />
+                <InfoIcon content="The external stakeholders that were involved in this activity (to edit dropdown selection, please do so at the project level)" />
+              </div>
+              {methods.formState.errors.members?.message && (
+                <p className="text-red-700">
+                  {methods.formState.errors.members?.message}
+                </p>
+              )}
+            </div>
+
+            <TextAreaSection
+              label="Engagement Pattern"
+              methods={methods}
+              infoContent="Brief summary on how engaging your stakeholders were - were they proactive, reactive, passive etc."
+              methodsField="engagementPattern"
+              placeHolder="Optional"
+              defaultValue=""
+              required={false}
+            />
+
+            <InputSection
+              label="Outcome Score (1-10)"
+              methods={methods}
+              infoContent="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"
+              methodsField="outcomeScore"
+              label="Outcome Score"
+              infoContent="If you had to rate the outcome that was achieved by this initiative"
+              renderType={"outcome"}
+              defaultValue={1}
+              
+            />
 
             <InputSection
               label="Hours taken to complete"
@@ -330,17 +408,17 @@ export default function Project() {
                 {methods.formState.errors.icon?.message}
               </p>
             )} */}
-            </div>
+          </div>
 
-            <Button
-              type="submit"
-              variant={"default"}
-              disabled={mutation.isLoading}
-            >
-              {mutation.isLoading ? "Loading" : "Add Activity"}
-            </Button>
-          </form>
-        </div>
+          <Button
+            type="submit"
+            variant={"default"}
+            disabled={mutation.isLoading}
+          >
+            {mutation.isLoading ? "Loading" : "Add Activity"}
+          </Button>
+        </form>
+      </div>
     </>
   );
 }

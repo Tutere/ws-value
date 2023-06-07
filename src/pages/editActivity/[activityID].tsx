@@ -11,6 +11,7 @@ import { EditActivitySchema } from "~/schemas/activities";
 import { FindActivityMemberSchema } from "~/schemas/activityMember";
 import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
+import DiscreteSlider from "~/components/ui/slider";
 
 export default function Project() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function Project() {
       changeType: "Edit",
       status: project?.status!,
       members: [],
-      reportComments: activity?.reportComments?? "",
+      reportComments: activity?.reportComments ?? "",
     },
   });
 
@@ -330,26 +331,23 @@ export default function Project() {
               required={false}
             />
 
-            <InputSection
-              label="Outcome Score (1-10)"
+            <DiscreteSlider
+              defaultValue={activity.effortScore ?? 1}
               methods={methods}
-              infoContent="If you had to rate the outcome that was achieved by this initiative, in the range of 1-10"
-              methodsField="outcomeScore"
-              placeHolder=""
-              defaultValue={activity.outcomeScore ?? ""}
-              type=""
-              required={false}
-            />
-
-            <InputSection
-              label="Effort Score (1-10) "
-              methods={methods}
-              infoContent="If you had to rate the effort you had to put in to deliver this initiatve,in the range of 1-10"
               methodsField="effortScore"
-              placeHolder=""
-              defaultValue={activity.effortScore ?? ""}
-              type=""
-              required={false}
+              label="Effort Score"
+              infoContent="If you had to rate the effort you had to put in to deliver this initiatve"
+              renderType={"effort"}
+
+            />
+            <DiscreteSlider
+              defaultValue={activity.outcomeScore ?? 1}
+              methods={methods}
+              methodsField="outcomeScore"
+              label="Outcome Score"
+              infoContent="If you had to rate the outcome that was achieved by this initiative"
+              renderType={"outcome"}
+
             />
 
             <div className="grid w-full max-w-md items-center gap-1.5">
@@ -412,7 +410,7 @@ export default function Project() {
               variant={"default"}
               disabled={mutation.isLoading}
             >
-              <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path clip-rule="evenodd" fill-rule="evenodd" d="M5.5 17a4.5 4.5 0 01-1.44-8.765 4.5 4.5 0 018.302-3.046 3.5 3.5 0 014.504 4.272A4 4 0 0115 17H5.5zm3.75-2.75a.75.75 0 001.5 0V9.66l1.95 2.1a.75.75 0 101.1-1.02l-3.25-3.5a.75.75 0 00-1.1 0l-3.25 3.5a.75.75 0 101.1 1.02l1.95-2.1v4.59z"></path>
               </svg>
               {mutation.isLoading ? "Loading" : "Save Changes"}
