@@ -409,7 +409,7 @@ export default function ProjectForm() {
             <TextAreaSection
               label="Stakeholders (separate by comma)"
               methods={methods}
-              infoContent=""
+              infoContent="The stakeholders that will be involved in this project (please seperate each stakeholder by comma)"
               methodsField="stakeholders"
               placeHolder="Optional"
               defaultValue={project.stakeholders ?? ""}
