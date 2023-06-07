@@ -45,25 +45,25 @@ export default function DiscreteSlider<T extends FieldValues>(
     function renderEffort(param: number) {
         switch (param) {
             case 1:
-                return 'No Effort at all';
-            case 2:
-                return 'Bare minimum effort';
-            case 3:
-                return 'Little bit effort';
-            case 4:
-                return 'Just under average effort';
-            case 5:
+                return 'No effort at all';
+              case 2:
+                return 'Minimal effort';
+              case 3:
+                return 'Some effort';
+              case 4:
+                return 'Below average effort';
+              case 5:
                 return 'Average effort';
-            case 6:
-                return 'Just over average effort';
-            case 7:
-                return 'Gave it a good solid amount of effort but could have made more if really needed';
-            case 8:
-                return '';
-            case 9:
-                return ' ';
-            case 10:
-                return 'The best effort I have ever put in';
+              case 6:
+                return 'Above average effort';
+              case 7:
+                return 'Good amount of effort, but room for improvement';
+              case 8:
+                return 'Significant effort';
+              case 9:
+                return 'Outstanding effort';
+              case 10:
+                return 'Exceptional effort';
 
             default:
                 return 'No score yet';
@@ -73,25 +73,25 @@ export default function DiscreteSlider<T extends FieldValues>(
     function renderOutcome(param: number) {
         switch (param) {
             case 1:
-                return 'Nothing changed, no success';
-            case 2:
-                return 'Very little change, not noticeable';
-            case 3:
-                return 'A little bit of a change, not very successful';
-            case 4:
-                return 'There was a below average success';
-            case 5:
-                return 'There was good enough outcome for it to be a success';
-            case 6:
-                return 'There was successful change and a little bit more';
-            case 7:
-                return 'Good success, satisfactory ';
-            case 8:
-                return 'Great outcome, better than expected';
-            case 9:
-                return 'Amazing outcome, made some waves for the stakeholders';
-            case 10:
-                return 'The outcome was so immense it affected the wider community';
+                return 'Negligible outcome, no significant change';
+              case 2:
+                return 'Minimal outcome, barely noticeable change';
+              case 3:
+                return 'Minor outcome, not very impactful';
+              case 4:
+                return 'Below-average outcome, limited success';
+              case 5:
+                return 'Moderate outcome, satisfactory level of success';
+              case 6:
+                return 'Substantial outcome, notable progress';
+              case 7:
+                return 'Good outcome, commendable achievement';
+              case 8:
+                return 'Excellent outcome, exceeding expectations';
+              case 9:
+                return 'Remarkable outcome, significant impact on stakeholders';
+              case 10:
+                return 'Transformative outcome, profound effect on the community';
             default:
                 return 'No score yet';
         }
@@ -101,24 +101,24 @@ export default function DiscreteSlider<T extends FieldValues>(
         switch (param) {
             case 1:
                 return 'No benefit at all';
-            case 2:
+              case 2:
                 return 'Very little benefit, not noticeable';
-            case 3:
-                return '';
-            case 4:
-                return '';
-            case 5:
-                return 'Average Benefit';
-            case 6:
-                return '';
-            case 7:
-                return '';
-            case 8:
-                return '';
-            case 9:
-                return 'Hugely Beneficial, exceeded expectations';
-            case 10:
-                return 'Lives have changed positively because of how beneficial this was';
+              case 3:
+                return 'Limited benefit, minimal impact';
+              case 4:
+                return 'Below-average benefit, some positive effect';
+              case 5:
+                return 'Average benefit, moderate positive impact';
+              case 6:
+                return 'Decent benefit, noticeable improvement';
+              case 7:
+                return 'Significant benefit, substantial positive impact';
+              case 8:
+                return 'Great benefit, surpassing expectations';
+              case 9:
+                return 'Hugely beneficial, transformative impact';
+              case 10:
+                return 'Life-changing benefit, profound positive transformation';
             default:
                 return '';
         }
@@ -128,24 +128,24 @@ export default function DiscreteSlider<T extends FieldValues>(
         switch (param) {
             case 1:
                 return 'No experience gained at all';
-            case 2:
+              case 2:
                 return 'Very little experience, not noticeable';
-            case 3:
+              case 3:
                 return 'Some experience gained';
-            case 4:
-                return '';
-            case 5:
-                return 'Gained an average amount of experience';
-            case 6:
-                return '';
-            case 7:
-                return '';
-            case 8:
-                return '';
-            case 9:
-                return 'Huge experiences gained, exceeded expectations';
-            case 10:
-                return 'Lives have changed positively because of how much experience this gave';
+              case 4:
+                return 'Limited experience, minor learning';
+              case 5:
+                return 'Average amount of experience gained';
+              case 6:
+                return 'Decent experience, noticeable learning';
+              case 7:
+                return 'Significant experience, substantial learning';
+              case 8:
+                return 'Great experience, surpassing expectations';
+              case 9:
+                return 'Huge experiences gained, transformative learning';
+              case 10:
+                return 'Life-changing experience, profound positive transformation';
             default:
                 return '';
         }
