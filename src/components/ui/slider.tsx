@@ -24,7 +24,7 @@ export default function DiscreteSlider<T extends FieldValues>(
 ) {
     const [value, setValue] = React.useState(props.defaultValue);
 
-    const handleSliderChange = (event: any, newValue: React.SetStateAction<number>) => {
+    const handleSliderChange = (event: any, newValue: React.SetStateAction<number> | number | number[] | any) => {
         setValue(newValue);
     };
 
