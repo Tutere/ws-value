@@ -44,7 +44,7 @@ export function EmailConfirmation(props: {emailSending: boolean | undefined, sen
         <DialogHeader>
           <DialogTitle>Send Email?</DialogTitle>
           <DialogDescription>
-            An email will be sent to $EMAIL using the exact infomation provided on this page, in the same format.
+            An email will be sent to tuteredurie@hotmail.com using the exact infomation provided on this page, in the same format.
             <b> No preview will be available.</b>
             <br/> 
             <br/> 
