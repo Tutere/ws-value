@@ -244,6 +244,7 @@ export default function ProjectCompletion() {
               >
                 <p>Link Here</p>
               </Link>
+              <InfoIcon content="This is a survey form that can be sent to external stakeholders for feedback. This link does not require a login or authentication to access." />
             </div>
           </div>
 
