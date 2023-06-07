@@ -92,7 +92,7 @@ model ActivityMember {
     id              String        @id @default(cuid())
     createdAt       DateTime      @default(now())
     updatedAt       DateTime      @updatedAt
-    members         ProjectMember @relation(fields: [projectMemberId], references: [id])
+    members         ProjectMember @relation(fields: [projectMemberId], references: [id], onDelete: Cascade)
     projectMemberId String
     activity        Activity      @relation(fields: [activityId], references: [id], onDelete: Cascade)
     activityId      String
