@@ -163,19 +163,6 @@ export default function MonthlyReport({
     const selectedEnd = date?.to?.getTime();
     const selectedStart = date?.from?.getTime();
 
-    // if (
-    //       activityEnd &&
-    //       activityStart &&
-    //       selectedEnd &&
-    //       selectedStart &&
-    //       activityStart <= selectedEnd + 86400000 &&
-    //       activityEnd <= selectedEnd + 86400000 &&
-    //       activityEnd >= selectedStart
-    //     ) {
-
-    //       activitiesInRange.push(activity)
-    //     }
-
         if (
           !activityEnd &&
           activityStart &&
@@ -271,9 +258,9 @@ export default function MonthlyReport({
         </p>
       </div>
       <ul style="margin-top: 0px; padding-top: 0px;">
-        <li>Outcome score: ${activity.activity.outcomeScore}</li>
         <li>Contributors: ${activity.projectMembers?.map(pm => pm.user.name).join(", ")}</li>
         <li>Stakeholders: ${activity.activity.stakeholders === "" ? activity.activity.stakeholders : "N/A"}</li>
+        <li>Description: ${activity.activity.description}</li>
         <li>Value Statement: ${activity.activity.valueCreated}</li>
         <li style="white-space: pre-wrap;">Additional Comments: ${activity.comments ? activity.comments.replace(/\n/g, '<br>') : ""}</li>
       </ul>
@@ -301,8 +288,6 @@ export default function MonthlyReport({
         </div>
 
         <ul style="margin-top: 0px; padding-top: 0px;">
-          <li>Outcome score: ${project.outcomeScore}</li>
-          <li>Effort Score: ${project.effortScore}</li>
           <li>Contributors: ${project.members.map(pm => pm.user.name).join(", ")}</li>
           <li>Stakeholders: ${project.stakeholders}</li>
           <li>Retrospective: ${project.retrospective}</li>
@@ -437,9 +422,9 @@ export default function MonthlyReport({
                               </Link>
                               
                               <ul className="list-disc ml-5">
-                                <li className="">Outcome Score: {activity.activity.outcomeScore}{" "}</li>
                                 <li className="">Contributors: {contributorNames.join(", ")}{" "}</li>
                                 <li className="">Stakeholders Involved:{" "} {activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders}{" "}</li>
+                                <li className="">Description: {activity.activity.description}{" "}</li>
                                 <li className="mb-5">Value Statement: {activity.activity.valueCreated}{" "}</li>
                               </ul>
                               {activity?.commentSaved === false || activity?.comments === ""? (
@@ -519,8 +504,6 @@ export default function MonthlyReport({
                   <p className="ml-1"> - Completed: {project.actualEnd?.toDateString()} </p>
                 </div>
                 <div className="mb-5 ml-5 w-3/4">     
-                    <p className="">Outcome Score: {project.outcomeScore} </p>
-                    <p className="">Effort Score: {project.effortScore} </p>
                     <p className="">Contributors: {project.members.map(pm => pm.user.name).join(", ")} </p>
                     <p className="">Stakeholders: {project.stakeholders} </p>
                     <p className="">Retrospective: {project.retrospective} </p>
