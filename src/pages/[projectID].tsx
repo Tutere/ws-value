@@ -252,7 +252,7 @@ export default function Project() {
           {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
           </Link>
 
-          <Link href={"/" + project?.id} type="button" className={project.status=="Active" ? "hidden":"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"}
+          <Link href={"/" + project?.id} type="button" className={project.status=="Active" ? "hidden":"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"}
           onClick={methods.handleSubmit(async (values) => {
             await console.log(project);
             await console.log(methodProjectTracker.getValues());
