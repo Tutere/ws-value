@@ -45,7 +45,7 @@ if (stakeholderResponse === null || stakeholderResponse === undefined ) {
       </div>
       <div className="flex flex-row mb-4 ">
         <Label className="font-medium">Complaints:</Label>
-        <p className="ml-1">{stakeholderResponse.complaints}</p>
+        <p className="ml-1">{stakeholderResponse.positives}</p>
       </div>
       <div className="flex flex-row mb-4">
         <Label className="font-medium">Date Submitted:</Label>
