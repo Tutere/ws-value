@@ -17,7 +17,7 @@ import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/s
             benefitsRating: input.benefitsRating,
             experienceRating: input.experienceRating,
             improvements: input.improvements,
-            complaints: input.complaints,
+            positives: input.positives,
             status: "Active",
           },
         });

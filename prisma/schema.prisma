@@ -223,8 +223,8 @@ model StakeholderResponse {
     organisation     String
     benefitsRating   Int?
     experienceRating Int?
-    improvements     String?
-    complaints       String?
+    improvements     String?  @db.Text
+    positives        String?  @db.Text
     createdAt        DateTime @default(now())
     status           String?
 

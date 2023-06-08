@@ -86,7 +86,7 @@ export default function ProjectCompletion() {
   //handling the exiting of a page (pop up confirmation)
   const [formSubmitted, setFormSubmitted] = useState(false);
   useEffect(() => {
-    const warningText = 'You have unsaved changes - are you sure you wish to leave this page?';
+    const warningText = 'You may have unsaved changes - are you sure you wish to leave this page?';
 
     const handleWindowClose = (e: BeforeUnloadEvent) => {
       if (formSubmitted) return;
