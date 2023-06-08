@@ -103,8 +103,6 @@ export default function stakeholderSurveyForm() {
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
-
-
             <DiscreteSlider
               methods={methods}
               methodsField="benefitsRating"
@@ -114,12 +112,10 @@ export default function stakeholderSurveyForm() {
               defaultValue={5}
               required={false}
             />
-
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
             <DiscreteSlider
-
               methods={methods}
               methodsField="experienceRating"
               label="How would you rate the experience gained from this project? "
@@ -133,7 +129,7 @@ export default function stakeholderSurveyForm() {
 
 
           <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">How can we improve your experience?</Label>
+            <Label htmlFor="name">How could we have improved your experience with us?</Label>
             <div className="flex items-center">
               <Textarea {...methods.register("improvements")} className="mr-4" />
               <InfoIcon content="TO BE COMPLETED" />
@@ -147,15 +143,15 @@ export default function stakeholderSurveyForm() {
           </div>
 
           <div className="grid w-full max-w-md items-center gap-1.5">
-            <Label htmlFor="name">What was missing or disappointing in your experience with us?</Label>
+            <Label htmlFor="name">What worked well during your experience with us?</Label>
             <div className="flex items-center">
-              <Textarea {...methods.register("complaints")} className="mr-4" />
+              <Textarea {...methods.register("positives")} className="mr-4" />
               <InfoIcon content="TO BE COMPLETED" />
             </div>
 
-            {methods.formState.errors.complaints?.message && (
+            {methods.formState.errors.positives?.message && (
               <p className="text-red-700">
-                {methods.formState.errors.complaints?.message}
+                {methods.formState.errors.positives?.message}
               </p>
             )}
           </div>
