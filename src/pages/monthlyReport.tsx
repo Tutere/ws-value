@@ -29,10 +29,6 @@ export default function MonthlyReport({
 
   const { data: sessionData } = useSession();
 
-  const { data: projectMembers } = api.projectmember.readByUserId.useQuery({ id: sessionData?.user.id ?? "" }, {
-    suspense: true,
-  });
-
   const query = api.projects.read.useQuery(undefined, {
     suspense: true,
   });
@@ -48,29 +44,6 @@ export default function MonthlyReport({
     
     },
   });
-
-  const activityMembersList: ActivityMember[] = [];
-  const activities: ((Activity & { members: ActivityMember[]; }) | null | undefined)[] = [];
-
-  projectMembers?.forEach(element => {
-    const { data: activityMembers } = api.activitymember.readByProjectMemberId.useQuery({ id: element.id ?? "" }, {
-      suspense: true,
-    });
-
-    if (activityMembers && activityMembers?.length > 0) {
-      activityMembers.forEach(element => {
-        activityMembersList.push(element)
-      })
-    }
-  });
-
-  activityMembersList.forEach(element => {
-    const { data: activity } = api.activities.readSpecific.useQuery({ id: element.activityId ?? "" }, {
-      suspense: true,
-    });
-
-    activities.push(activity);
-  })
 
   // get all projects and their activities (so all hooks used each render)
   const allProjectsAndActivities: { project: Project & { Activity: Activity[]; members: ProjectMember[]; }; activities: { activity: Activity; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[] | undefined; commentSaved: boolean; setCommentSaved: React.Dispatch<React.SetStateAction<boolean>>; comments: string; setComments: React.Dispatch<React.SetStateAction<string>>; hidden: boolean; setHidden: React.Dispatch<React.SetStateAction<boolean>>; }[]; }[] = [];
