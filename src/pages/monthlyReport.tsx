@@ -113,16 +113,19 @@ export default function MonthlyReport({
       const { comments, setComments, commentsSaved, setCommentSaved } = useActivityComments( activity);
       const {hidden, setHidden} = useActivityHide();
 
-      activities.push({
-        activity: activity,
-        projectMembers: projectMembersOfActivity,
-        commentSaved: commentsSaved,
-        setCommentSaved: setCommentSaved,
-        comments: comments,
-        setComments: setComments,
-        hidden: hidden,
-        setHidden:setHidden,
-      });
+      //check to make sure that the user is parrt of the activity
+      if (projectMembersOfActivity?.some(value => value.userId === sessionData?.user.id)) {
+        activities.push({
+          activity: activity,
+          projectMembers: projectMembersOfActivity,
+          commentSaved: commentsSaved,
+          setCommentSaved: setCommentSaved,
+          comments: comments,
+          setComments: setComments,
+          hidden: hidden,
+          setHidden:setHidden,
+        });
+      }
     })
 
 

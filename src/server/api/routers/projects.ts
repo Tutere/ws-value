@@ -67,7 +67,11 @@ export const projectsRouter = createTRPCRouter({
             user: true,
           },
         },
-        Activity: true,
+        Activity: {
+          include: {
+            members: true
+          }
+        }
       },
     });
   }),
