@@ -162,7 +162,7 @@ export default function Project() {
           </Link>
 
 
-          <DeletionDialog object="Project" id={id} handleDelete={ActivityhandleDelete}></DeletionDialog> 
+          <DeletionDialog object="Activity" id={id} handleDelete={ActivityhandleDelete}></DeletionDialog> 
 
         </div>
         </div>
