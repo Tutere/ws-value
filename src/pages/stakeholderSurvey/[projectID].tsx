@@ -14,7 +14,7 @@ export default function stakeholderSurveyForm() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().stakeholderResponse;
-  const query = api.projects.FindByProjectId.useQuery({ id: id }, {
+  const query = api.projects.PublicFindByProjectId.useQuery({ id: id }, {
     suspense: true,
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
