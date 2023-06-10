@@ -25,7 +25,12 @@ if (stakeholderResponse === null || stakeholderResponse === undefined ) {
   return (
     <>
     {isMemberFound ? (
-    <div className="p-8 bg-white rounded-lg shadow-md">
+      <div className="p-8"
+      style={{
+        borderTopColor: `${stakeholderResponse.project.colour}`,
+        borderTopStyle: "solid",
+        borderTopWidth: "10px",
+      }} >
       <h2 className="mb-5 text-3xl font-bold">Survey Response Details:</h2>
       <div className="flex flex-row mb-4">
         <Label className="font-medium">Orgsanisation Name:</Label>
