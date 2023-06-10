@@ -22,13 +22,12 @@ export function InputSection<T extends FieldValues>(
     <div className="grid w-full max-w-md items-center gap-1.5">
       <div className="flex">
         <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
-        <p className="text-red-600 ml-auto mr-10"> {props.required? "* required" : ""}</p>
       </div>
       <div className="flex items-center">
         <Input
           {...props.methods.register(props.methodsField)}
-          className="mr-4"
-          placeholder={props.placeHolder}
+          className={props.required === true?  "mr-4 placeholder-red-600" : "mr-4 placeholder:text-slate-400"}
+          placeholder={props.required === true? "* Required" : props.placeHolder}
           type={props.type}
           defaultValue={props.defaultValue}
         />
