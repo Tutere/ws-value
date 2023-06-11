@@ -34,10 +34,10 @@ export function DeletionDialog(props: { object: string; id: string, handleDelete
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure you sure?</DialogTitle>
+          <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your{" "}
-            {props.object} from our database.
+            This will delete your{" "}
+            {props.object} from the application. This action can only be undone through a database administrator. 
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
