@@ -158,17 +158,16 @@ export default function Project() {
           borderTopWidth: "10px",
         }}
         >
-          <h2 className="mb-5 text-3xl font-bold">Project Details</h2>
-         
-            <>
-              <div className="flex flex-row">
-                <Label className="font-medium">Project Name:</Label>
-                <p className="ml-1">{project.name}</p>
-              </div>
+
+          <h2 className="mb-5 text-3xl font-bold">{project.name}</h2>
+          <div 
+          className={`${isReadMoreShown ? 'max-h-[1000px]' : 'max-h-0'} transition-all duration-500 ease overflow-hidden`} //won't stretch to max height unless content fills that much space
+          >
               <div className="flex flex-row">
                 <Label className="font-medium">Goal:</Label>
                 <p className="ml-1">{project.goal}</p>
               </div>
+              
               <div className="flex flex-row">
                 <Label className="font-medium">Estimated Start Date:</Label>
                 <p className="ml-1">
@@ -206,9 +205,7 @@ export default function Project() {
                   <p className="ml-1"> N/A</p>
                 )}
               </div>
-            </>
-            {isReadMoreShown && (
-            <>
+            
             <div className="flex flex-row">
               <Label className="font-medium">Trigger:</Label>
               <p className="ml-1">{project.trigger === "" ? "N/A" : project.trigger}</p>
@@ -225,25 +222,18 @@ export default function Project() {
               <Label className="font-medium">Estimated Risks:</Label>
               <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
             </div>
-          </>
-          )}
+          
 
- 
-      <Button variant={"withIcon"}
-      size={"sm"}
-      className="mt-2 bg-slate-100" 
-      onClick={toggleReadMore}> {!isReadMoreShown ? "See More...": "See Less..."}
-      </Button>
 
-      <div className="mt-10 flex gap-7"> 
+        <div className="mt-5 mb-5 flex gap-7"> 
         <div className="inline-flex rounded-md shadow-sm" role="group">
           <Link href={"/editProject/" + project.id} onClick={() => setLoading(true)} type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
             <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"></path>
               <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"></path>
             </svg>
-            Edit Project
-        </Link>
+            Edit Project Details
+         </Link>
         
           <Link href={"/projectCompletion/" + project.id} onClick={() => setLoading(true)} type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
           <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -278,6 +268,29 @@ export default function Project() {
 
         </div>
       </div>
+      </div>
+
+      <Button variant={"withIcon"}
+      size={"sm"}
+      className="" 
+      onClick={toggleReadMore}>
+      {!isReadMoreShown ? (     
+        <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path clip-rule="evenodd" fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z"></path>
+        </svg>
+      ): (
+        <svg fill="none" className="w-4 h-4 mr-2"  stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"></path>
+        </svg>
+      )
+      }
+
+      <p>
+        {!isReadMoreShown ? 'View & Edit Project Details' : (isReadMoreShown ? 'Hide Details' : '')}
+      </p>
+      </Button>
+
+      
 
       <h2 className="mt-10 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-row flex-wrap gap-5 py-2">

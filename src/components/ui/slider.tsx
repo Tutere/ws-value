@@ -156,7 +156,6 @@ export default function DiscreteSlider<T extends FieldValues>(
         <div className="grid w-full max-w-md items-center gap-1.5 py-3">
             <div className="flex">
                 <Label htmlFor={props.methodsField.toString()}>{props.label}</Label>
-                <p className="text-red-600 ml-auto mr-10"> {props.required? "* required" : ""}</p>
             </div>
             <div className="flex items-center">
                 <Box sx={{ width: 415 }} className="mr-4">

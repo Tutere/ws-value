@@ -42,6 +42,9 @@ import {CreateStakeholderResponseSchema,ReadStakeholderResponseSchema} from "~/s
       return ctx.prisma.stakeholderResponse.findUnique({
         where: {
           id: input.id,
+        },
+        include: {
+          project: true,
         }
       });
     }),
