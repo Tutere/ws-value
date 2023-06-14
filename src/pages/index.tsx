@@ -16,10 +16,6 @@ const Home: NextPage = () => {
     },
   });
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
   const projects = query.data;
 
   if (loading) {
