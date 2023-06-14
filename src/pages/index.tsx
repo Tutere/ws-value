@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/Button";
 import { LoadingPage } from "~/components/ui/loading";
 import { api } from "~/utils/api";
@@ -15,6 +15,10 @@ const Home: NextPage = () => {
       console.error(error);
     },
   });
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const projects = query.data;
 
