@@ -18,11 +18,11 @@ const Home: NextPage = () => {
 
   const projects = query.data;
 
-  // if (loading) {
-  //   return (
-  //     <LoadingPage></LoadingPage>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <LoadingPage></LoadingPage>
+    );
+  }
 
   return (
     <>
