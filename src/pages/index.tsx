@@ -10,7 +10,7 @@ const Home: NextPage = () => {
   const utils = api.useContext().projects;
   const [loading, setLoading] = useState(false);
   const query = api.projects.read.useQuery(undefined, {
-    suspense: true,
+    // suspense: true,
     onError: (error) => {
       console.error(error);
     },
