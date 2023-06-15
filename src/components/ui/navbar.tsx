@@ -3,33 +3,30 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./Button";
 
-interface NavbarProps {
-  onClickLink: (path: string) => void;
-}
 
-export function Navbar({onClickLink}: NavbarProps) {
+export function Navbar() {
     const { data: sessionData } = useSession();
     
   return (
     <div className="sticky top-0">
       <div className="flex items-center justify-between bg-gray-800 h-[70px]">
         <div className="flex items-center px-8 cursor-pointer">
-          <Link href={"/"} onClick={() => onClickLink("/")}>
+          <Link href={"/"} >
             <h1 className="text-xl font-bold text-white cursor-pointer mr-14">
               Measuring Value
             </h1>
           </Link>
           <div className="flex items-center gap-8">
-          <Link href={"/"} className="text-white" onClick={() => onClickLink("/")}>
+          <Link href={"/"} className="text-white" >
             Home
           </Link>
-          <Link href={"/monthlyReport"} className="text-white" onClick={() => onClickLink("/monthlyReport")}>
+          <Link href={"/monthlyReport"} className="text-white">
             Monthly Report
           </Link>
-          <Link href={"/emailPreferences"} className="text-white" onClick={() => onClickLink("/emailPreferences")}>
+          <Link href={"/emailPreferences"} className="text-white">
             Email Preferences
           </Link>
-          <Link href={"/newProject"} className="text-white" onClick={() => onClickLink("/newProject")}>
+          <Link href={"/newProject"} className="text-white">
             <Button variant={"subtle"}>
               Start New Project
             </Button>

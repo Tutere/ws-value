@@ -43,7 +43,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <AuthGuard>
-      <Navbar onClickLink={handleClickLink} />
+      <Navbar />
         {isLoading ? (
           <LoadingPage></LoadingPage>
         ) : (
