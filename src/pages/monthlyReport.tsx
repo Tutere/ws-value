@@ -305,10 +305,10 @@ export default function MonthlyReport({
 
   useEffect(() => {
     // Check if all queries are loaded
-    if (projectsInDateRange !== undefined) {
+    if (projectsWithActivitiesInRange !== undefined) {
       setIsLoading(false);
     }
-  }, [projects, allProjectsAndActivities, projectsInDateRange]);
+  }, [projectsWithActivitiesInRange]);
 
   if (isLoading) {
     return (
