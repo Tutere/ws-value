@@ -29,9 +29,8 @@ export default function MonthlyReport({
   })
 
   const { data: sessionData } = useSession();
-  const [isLoading, setIsLoading] = useState(true);
 
-  const {data: projects} = api.projects.read.useQuery(undefined, {
+  const {data: projects, isLoading} = api.projects.read.useQuery(undefined, {
     suspense: true,
   });
 
@@ -302,13 +301,6 @@ export default function MonthlyReport({
           setEmailSending(false);
       });
   };
-
-  useEffect(() => {
-    // Check if all queries are loaded
-    if (projectsWithActivitiesInRange !== undefined) {
-      setIsLoading(false);
-    }
-  }, [projectsWithActivitiesInRange]);
 
   if (isLoading) {
     return (
