@@ -10,7 +10,6 @@ const Home: NextPage = () => {
   const utils = api.useContext().projects;
  
   const {data: projects, isLoading, } = api.projects.read.useQuery(undefined, {
-    suspense: true,
     onError: (error) => {
       console.error(error);
     },
@@ -58,7 +57,7 @@ const Home: NextPage = () => {
 
                         <p className="m-1 text-sm italic line-clamp-3">
                           {project.description}
-                        </p>
+                        </p>                    
                       </Link>
                     );
                   }

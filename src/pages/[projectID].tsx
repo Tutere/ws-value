@@ -20,7 +20,6 @@ export default function Project() {
   const {data: project, isLoading} = api.projects.FindByProjectId.useQuery(
     { id: id },
     {
-      suspense: true,
       onError: (error) => {
         if (error.data?.code === "UNAUTHORIZED") {
           router.push("/");
@@ -38,13 +37,6 @@ export default function Project() {
 
   const { projectDelete } = useProjectDeletion(id);
 
-  useEffect(() => {
-    if (!isMemberFound) {
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
-    }
-  }, [isMemberFound, router]);
 
 
   const mutation = api.projects.activate.useMutation({
