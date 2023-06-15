@@ -3,11 +3,8 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./Button";
 
-interface NavbarProps {
-  onClickLink: (path: string) => void;
-}
 
-export function Navbar({onClickLink}: NavbarProps) {
+export function Navbar() {
     const { data: sessionData } = useSession();
     
   return (
@@ -23,7 +20,7 @@ export function Navbar({onClickLink}: NavbarProps) {
           <Link href={"/"} className="text-white" >
             Home
           </Link>
-          <Link href={"/monthlyReport"} className="text-white" onClick={() => onClickLink("/monthlyReport")}>
+          <Link href={"/monthlyReport"} className="text-white">
             Monthly Report
           </Link>
           <Link href={"/emailPreferences"} className="text-white">

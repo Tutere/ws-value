@@ -18,37 +18,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
 
 
-  //setup to handle loading states when using the Navbar
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClickLink = (path: Url) => {
-    setIsLoading(true);
-    router.push(path); //is this needed??
-  };
-
-  // Handle the router change events to remove the loading state when the new page has rendered
-  useEffect(() => {
-    const handleRouteChangeComplete = () => {
-      setIsLoading(false);
-    };
-
-    router.events.on("routeChangeComplete", handleRouteChangeComplete);
-
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChangeComplete);
-    };
-  }, []);
-
   return (
     <SessionProvider session={session}>
       <AuthGuard>
-      <Navbar onClickLink={handleClickLink} />
-        {isLoading ? (
-          <LoadingPage></LoadingPage>
-        ) : (
-          <Component {...pageProps} />
-        )}
+      <Navbar />
+        <Component {...pageProps} /> 
       </AuthGuard>
     </SessionProvider>
   );
