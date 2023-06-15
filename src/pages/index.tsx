@@ -8,17 +8,17 @@ import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const utils = api.useContext().projects;
-  const [loading, setLoading] = useState(false);
-  const query = api.projects.read.useQuery(undefined, {
+ 
+  const {data: projects, isLoading, } = api.projects.read.useQuery(undefined, {
     suspense: true,
     onError: (error) => {
       console.error(error);
     },
   });
 
-  const projects = query.data;
 
-  if (loading) {
+
+  if (isLoading) {
     return (
       <LoadingPage></LoadingPage>
     );
@@ -50,7 +50,6 @@ const Home: NextPage = () => {
                           borderTopWidth: "thick",
                         }}
                         className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
-                        onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
                           <div className="mr-2 text-lg">{project.icon}</div>
@@ -95,7 +94,6 @@ const Home: NextPage = () => {
                           borderTopWidth: "thick",
                         }}
                         className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
-                        onClick={() => setLoading(true)}
                       >
                         <div className="flex justify-start">
                           <div className="mr-2 text-lg">{project.icon}</div>
