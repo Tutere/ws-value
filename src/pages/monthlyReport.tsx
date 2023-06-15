@@ -3,7 +3,7 @@ import { Label } from "@radix-ui/react-label";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import * as React from "react";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DateRange } from "react-day-picker";
 import { Button, buttonVariants } from "~/components/ui/Button";
 import { Textarea } from "~/components/ui/TextArea";
@@ -17,6 +17,7 @@ import { cn } from "~/utils/cn";
 import emailjs from '@emailjs/browser';
 import { EmailConfirmation } from "~/components/ui/emailConfirmation";
 import { RemoveDialog } from "~/components/ui/removeDialogue";
+import { LoadingPage } from "~/components/ui/loading";
 
 export default function MonthlyReport({
   className,
@@ -28,12 +29,11 @@ export default function MonthlyReport({
   })
 
   const { data: sessionData } = useSession();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const query = api.projects.read.useQuery(undefined, {
+  const {data: projects} = api.projects.read.useQuery(undefined, {
     suspense: true,
   });
-
-  const projects = query.data;
 
   const mutation = api.activities.reportComments.useMutation();
 
@@ -50,7 +50,6 @@ export default function MonthlyReport({
   
   const getProjectMembersOfActivity = (activity: any) => {
      return api.projectmember.readByActivityId.useQuery({ id: activity.id }).data;
-    
   };
 
   const useActivityComments = (activity: { reportComments: string | null; }) => {
@@ -304,7 +303,18 @@ export default function MonthlyReport({
       });
   };
 
- 
+  useEffect(() => {
+    // Check if all queries are loaded
+    if (projects !== undefined && allProjectsAndActivities !== undefined && projectsInDateRange !== undefined) {
+      setIsLoading(false);
+    }
+  }, [projects, allProjectsAndActivities, projectsInDateRange]);
+
+  if (isLoading) {
+    return (
+      <LoadingPage></LoadingPage>
+    );
+  }
 
   return (
     <div>

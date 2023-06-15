@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { Button } from "src/components/ui/Button";
 import { InputSection } from "~/components/ui/inputSection";
+import { LoadingPage } from "~/components/ui/loading";
 import { useZodForm } from "~/hooks/useZodForm";
 import { WorkEmailSchema } from "~/schemas/users";
 import { api } from "~/utils/api";
@@ -11,10 +12,9 @@ export default function EmailPreferences() {
     const router = useRouter();
     // const session = useSession();
 
-    const currentUser = api.users.currentUser.useQuery(undefined,{
-        suspense:true,
-    }).data;
-    
+    const {data: currentUser, isLoading} = api.users.currentUser.useQuery(undefined,{
+  
+    })
 
   const mutation = api.users.updateWorkEmail.useMutation({
     onSuccess: async (data) => {
@@ -29,7 +29,9 @@ export default function EmailPreferences() {
     },
   });
 
-
+  if (isLoading) {
+    return <LoadingPage></LoadingPage>
+  }
 
   return (
     <>
