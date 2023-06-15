@@ -46,19 +46,6 @@ export default function Project() {
     }
   }, [isMemberFound, router]);
 
-  //project members
-  const queryUsers = api.users.read.useQuery(undefined, {
-    suspense: true,
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
-  const users = queryUsers.data;
-
-  const projectMembers = project?.members.map((member) =>
-    users?.find((user) => user.id === member.userId)
-  );
 
   const mutation = api.projects.activate.useMutation({
     onSuccess: async () => {
@@ -140,6 +127,7 @@ export default function Project() {
   const toggleReadMore = () => {
     setIsReadMoreShown(prevState => !prevState)
   }
+
   if (isLoading) {
     return <LoadingPage></LoadingPage>
   }
@@ -179,7 +167,7 @@ export default function Project() {
               <div className="flex flex-row">
                 <Label className="font-medium">Project Members:</Label>
                 <p className="ml-1">
-                  {projectMembers?.map((member) => member?.name).join(", ")}
+                  {project.members?.map((member) => member?.user.name).join(", ")}
                 </p>
               </div>
               <div className="flex flex-row">

@@ -299,7 +299,11 @@ export const projectsRouter = createTRPCRouter({
           id: input.id,
         },
         include: {
-          members: true,
+          members: {
+            include: {
+              user: true,
+            }
+          },
           Activity: {
             where: {
               NOT: {
