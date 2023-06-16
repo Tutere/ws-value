@@ -13,16 +13,17 @@ import { api } from "~/utils/api";
 import { Button } from "../../components/ui/Button";
 import DiscreteSlider from "~/components/ui/slider";
 import Link from "next/link";
+import { LoadingPage } from "~/components/ui/loading";
 
 export default function Project() {
   const router = useRouter();
   const id = router.query.activityID as string;
   const utils = api.useContext().activities;
 
-  const { data: activity } = api.activities.readSpecific.useQuery(
+  const { data: activity, isLoading } = api.activities.readSpecific.useQuery(
     { id: id },
     {
-      suspense: true,
+      // suspense: true,
     }
   );
 
@@ -224,6 +225,11 @@ export default function Project() {
       router.events.off("routeChangeStart", handleBrowseAway);
     };
   }, [formSubmitted]);
+
+  if(isLoading) {
+    return <LoadingPage></LoadingPage>
+
+  }
 
   if (activity === null || activity === undefined) {
     return <p>Error finding Activity</p>;

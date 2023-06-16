@@ -14,20 +14,20 @@ import { FindProjectmemberSchema } from "~/schemas/projectmember";
 import { EditProjectSchema } from "~/schemas/projects";
 import { api } from "~/utils/api";
 import Link from "next/link";
+import { LoadingPage } from "~/components/ui/loading";
 
 export default function ProjectForm() {
   const router = useRouter();
   const id = router.query.projectID as string;
 
   const utils = api.useContext().projects;
-  const query = api.projects.read.useQuery(undefined, {
-    suspense: true,
+  const {data:projects,isLoading } = api.projects.read.useQuery(undefined, {
+    // suspense: true,
     onError: (error) => {
       console.error(error);
     },
   });
 
-  const projects = query.data;
   const project = projects ? projects.find((p) => p.id === id) : null;
 
   const mutation = api.projects.edit.useMutation({
@@ -206,6 +206,11 @@ export default function ProjectForm() {
       router.events.off("routeChangeStart", handleBrowseAway);
     };
   }, [formSubmitted]);
+
+  if(isLoading) {
+    return <LoadingPage></LoadingPage>
+
+  }
 
   if (project === null || project === undefined) {
     return <p>Error finding project</p>;
