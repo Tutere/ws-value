@@ -16,17 +16,8 @@ import { api } from "~/utils/api";
 
 export default function ProjectForm() {
   const utils = api.useContext().projects;
-  const query = api.projects.read.useQuery(undefined, {
-    suspense: true,
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
 
   const router = useRouter();
-
-  const projects = query.data;
 
   const mutation = api.projects.create.useMutation({
     onSuccess: async (data) => {

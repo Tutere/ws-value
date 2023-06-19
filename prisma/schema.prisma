@@ -109,7 +109,7 @@ model Project {
     colour             String?
     name               String
     description        String?         @db.Text
-    goal               String
+    goal               String          @db.Text
     estimatedStart     DateTime        @default(now())
     estimatedEnd       DateTime?
     trigger            String?         @db.Text
