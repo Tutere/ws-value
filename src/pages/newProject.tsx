@@ -263,6 +263,7 @@ export default function ProjectForm() {
                 value={selectedOption}
                 closeMenuOnSelect={false}
                 onChange={(newValue) => handleChange(newValue as Option[])}
+                noOptionsMessage={() => "Not Found - Maybe they don't have an account here yet?"}
               />
               <InfoIcon content="Innovation Team Members that also contributed. Only shows members who have an account on Measuring Value." />
             </div>

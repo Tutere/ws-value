@@ -331,6 +331,7 @@ export default function Project() {
                   value={selectedOption}
                   closeMenuOnSelect={false}
                   onChange={(newValue) => handleChange(newValue as Option[])}
+                  noOptionsMessage={() => "Not Found - Please make sure they are a member of this project"}
                 />
                 <InfoIcon content="Innovation Team Members that also contributed. Only shows members of this project." />
               </div>
