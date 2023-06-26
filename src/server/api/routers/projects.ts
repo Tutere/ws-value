@@ -50,13 +50,10 @@ export const projectsRouter = createTRPCRouter({
     }),
 
   read: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.project.findMany({
+
+    if (ctx.session.user.id === 'clh8vfdfq0000mj085tgdm0or') { //ganesh access
+      return ctx.prisma.project.findMany({
       where: {
-        members: {
-          some: {
-            userId: ctx.session.user.id,
-          },
-        },
         NOT: {
           status: "Deleted",
         },
@@ -74,6 +71,34 @@ export const projectsRouter = createTRPCRouter({
         }
       },
     });
+    } else {
+      return ctx.prisma.project.findMany({
+        where: {
+          members: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
+          NOT: {
+            status: "Deleted",
+          },
+        },
+        include: {
+          members: {
+            include: {
+              user: true,
+            },
+          },
+          Activity: {
+            include: {
+              members: true,
+            }
+          }
+        },
+      });
+    }
+
+    
   }),
 
   complete: protectedProcedure
@@ -314,7 +339,14 @@ export const projectsRouter = createTRPCRouter({
         },
       });
       const isMemberFound = project?.members.some((member) => {
-        return member.userId === ctx.session?.user.id;
+        if (member.userId === ctx.session?.user.id) {
+          return true;
+        } else if (ctx.session.user.id === 'clh8vfdfq0000mj085tgdm0or') { //ganesh access
+          return true;
+        } else{
+          return false;
+        }
+         ;
       });
 
       if (!isMemberFound) {
