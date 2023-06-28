@@ -129,45 +129,6 @@ export default function MonthlyReport({
     }
   });
 
-  // lineage
-  const mutationActivityTracker = api.activityTracker.edit.useMutation({
-                            
-  });
-
-  const methodsActivityTracker = useZodForm({
-    schema: ActivityChangeSchema,
-    defaultValues: {
-      changeType: "Edit",
-    },
-  });
-
-  const setValuesTracking = async (activity: Activity, projMemIds: string[], comments: string,) => {
-    methodsActivityTracker.setValue("id", activity.id);
-      methodsActivityTracker.setValue("projectId", activity.projectId);
-      methodsActivityTracker.setValue("name", activity.name);
-      methodsActivityTracker.setValue("description", activity.description);
-      methodsActivityTracker.setValue("engagementPattern",activity.engagementPattern ?? "");
-      methodsActivityTracker.setValue("valueCreated",activity.valueCreated?.toString());
-      methodsActivityTracker.setValue("startDate",activity.startDate?.toISOString()!);
-      methodsActivityTracker.setValue("endDate",activity?.endDate?.toISOString() || "");
-      methodsActivityTracker.setValue("outcomeScore", activity.outcomeScore);
-      methodsActivityTracker.setValue("effortScore", activity.effortScore);
-      methodsActivityTracker.setValue("status", activity.status);
-      methodsActivityTracker.setValue("hours", activity.hours);
-      methodsActivityTracker.setValue("stakeholders", activity.stakeholders!);
-      methodsActivityTracker.setValue("members",projMemIds);
-      methodsActivityTracker.setValue("reportComments", comments);
-  }
-
-
-  //used for loading state of button 
-  const [emailSending,setEmailSending] = useState(false);
-
-  //to figure out current user email for sending
-  const currentUser = api.users.currentUser.useQuery(undefined,{
-    suspense:true,
-  }).data;
-
 
   if (isLoading) {
     return (
