@@ -51,7 +51,7 @@ export const projectsRouter = createTRPCRouter({
 
   read: protectedProcedure.query(({ ctx }) => {
 
-    if (ctx.session.user.id === 'clh8vfdfq0000mj085tgdm0or') { //ganesh access
+    if (ctx.session.user.id === 'clh8vfdfq0000mj085tgdm0or' ||ctx.session.user.id === 'cliw6g6xp0000ik08aaxfch59' ) { //ganesh access
       return ctx.prisma.project.findMany({
       where: {
         NOT: {
