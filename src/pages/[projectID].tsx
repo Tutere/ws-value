@@ -59,7 +59,7 @@ export default function Project() {
     schema: ActivateProjectSchema,
     defaultValues: {
       status: "Active",
-      id: id,
+      id: id, //use query input rather than project object to ensure value is stored at load time
     },
   });
 
