@@ -51,6 +51,7 @@ export default function Project() {
   const mutation = api.projects.activate.useMutation({
     onSuccess: async () => {
       await utilsProjects.invalidate();
+      await utils.read.invalidate();
     },
   });
 
