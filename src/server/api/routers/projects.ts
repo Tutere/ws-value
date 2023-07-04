@@ -18,8 +18,10 @@ import { Activity } from "@prisma/client";
 export const projectsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(CreateProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.create({
+    .mutation(async ({ ctx, input }) => {
+      const createdProject = 
+
+      await ctx.prisma.project.create({
         data: {
           icon: input.icon,
           colour: input.colour,
@@ -45,6 +47,35 @@ export const projectsRouter = createTRPCRouter({
               }),
             },
           },
+        },
+      });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Create",
+          name: createdProject.name,
+          createdAt: createdProject.createdAt,
+          description: createdProject.description,
+          goal: createdProject.goal,
+          estimatedStart: createdProject.estimatedStart,
+          estimatedEnd: createdProject.estimatedEnd,
+          trigger: createdProject.trigger,
+          expectedMovement: createdProject.expectedMovement,
+          alternativeOptions: createdProject.alternativeOptions,
+          estimatedRisk: createdProject.estimatedRisk,
+          outcomeScore: createdProject.outcomeScore,
+          effortScore: createdProject.effortScore,
+          status: createdProject.status,
+          actualStart: createdProject.actualStart,
+          actualEnd: createdProject.actualEnd,
+          lessonsLearnt: createdProject.lessonsLearnt,
+          retrospective: createdProject.retrospective,
+          projectId: createdProject.id,
+          icon: createdProject.icon,
+          colour: createdProject.colour,
+          stakeholders: createdProject.stakeholders,
+          pid: createdProject.pid,
+          members: input.members.join(','),
         },
       });
     }),

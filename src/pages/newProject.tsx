@@ -21,7 +21,7 @@ export default function ProjectForm() {
 
   const mutation = api.projects.create.useMutation({
     onSuccess: async (data) => {
-      methods.setValue("projectId", data.id);
+      // methods.setValue("projectId", data.id);
       await utils.read.invalidate();
     },
   });
@@ -34,13 +34,9 @@ export default function ProjectForm() {
       changeType: "Create",
       projectId: "",//placeholder before getting id from newly created project
       members: [],
-
     },
   });
 
-  const mutationProjecTracker = api.projectTracker.create.useMutation({
-
-  });
 
   const { data: sessionData } = useSession();
 
@@ -119,11 +115,6 @@ export default function ProjectForm() {
                 ...values,
                 members: selectedOption.map((option) => option.value)
               }),
-              await mutationProjecTracker.mutateAsync({
-                ...values,
-                projectId: methods.getValues("projectId"),
-                members: selectedOption.map((option) => option.value),
-              })
             ])
             methods.reset();
             router.push("/");
