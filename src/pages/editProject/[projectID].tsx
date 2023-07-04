@@ -21,18 +21,22 @@ export default function ProjectForm() {
   const id = router.query.projectID as string;
 
   const utils = api.useContext().projects;
-  const {data:projects,isLoading } = api.projects.read.useQuery(undefined, {
-    // suspense: true,
-    onError: (error) => {
-      console.error(error);
-    },
-  });
 
-  const project = projects ? projects.find((p) => p.id === id) : null;
+  const {data: project, isLoading} = api.projects.FindByProjectId.useQuery(
+    { id: id },
+    {
+      suspense: true,
+      onError: (error) => {
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
+      },
+    }
+  );
 
   const mutation = api.projects.edit.useMutation({
     onSuccess: async () => {
-      await utils.read.invalidate();
+      await utils.invalidate();
     },
   });
 
