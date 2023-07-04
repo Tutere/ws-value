@@ -77,15 +77,6 @@ export default function ProjectForm() {
     }
   }, [isMemberFound, router]);
 
-  /****  For Data lineage *******/
-
-  const mutationProjecTracker = api.projectTracker.edit.useMutation({
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
-  /***********/
 
   // ****** get users for dropdown selection options**********
   const queryUsers = api.users.read.useQuery(undefined, {
@@ -248,11 +239,7 @@ export default function ProjectForm() {
                       (value) =>
                         !defaultValues.some((option) => option.value === value)
                     ), //don't include option that were already added to project
-                }),
-                mutationProjecTracker.mutateAsync({
-                  ...values,
-                  members: selectedOption.map((option) => option.value),
-                }),
+                }),     
               ]);
               methods.reset();
               router.push("/" + id);

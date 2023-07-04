@@ -54,7 +54,7 @@ export const projectsRouter = createTRPCRouter({
         data: {
           changeType: "Create",
           name: createdProject.name,
-          createdAt: createdProject.createdAt,
+          // createdAt: createdProject.createdAt,
           description: createdProject.description,
           goal: createdProject.goal,
           estimatedStart: createdProject.estimatedStart,
@@ -153,8 +153,9 @@ export const projectsRouter = createTRPCRouter({
 
   edit: protectedProcedure
     .input(EditProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.update({
+    .mutation(async ({ ctx, input }) => {
+      const editedProject = 
+      await ctx.prisma.project.update({
         where: {
           id: input.id,
         },
@@ -183,7 +184,39 @@ export const projectsRouter = createTRPCRouter({
             },
           },
         },
+        include : {
+          members:true,
+        }
       });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Edit",
+          name: editedProject.name,
+          description: editedProject.description,
+          goal: editedProject.goal,
+          estimatedStart: editedProject.estimatedStart,
+          estimatedEnd: editedProject.estimatedEnd,
+          trigger: editedProject.trigger,
+          expectedMovement: editedProject.expectedMovement,
+          alternativeOptions: editedProject.alternativeOptions,
+          estimatedRisk: editedProject.estimatedRisk,
+          outcomeScore: editedProject.outcomeScore,
+          effortScore: editedProject.effortScore,
+          status: editedProject.status,
+          actualStart: editedProject.actualStart,
+          actualEnd: editedProject.actualEnd,
+          lessonsLearnt: editedProject.lessonsLearnt,
+          retrospective: editedProject.retrospective,
+          projectId: editedProject.id,
+          icon: editedProject.icon,
+          colour: editedProject.colour,
+          stakeholders: editedProject.stakeholders,
+          pid: editedProject.pid,
+          members: editedProject.members.map(member => member.userId).join(','),
+        },
+      });
+
     }),
 
   delete: protectedProcedure
