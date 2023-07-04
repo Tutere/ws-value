@@ -17,12 +17,16 @@ export default function ProjectCompletion() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().projects;
-  const query = api.projects.read.useQuery(undefined, {
-    suspense: true,
-  });
-
-  const projects = query.data;
-  const project = projects ? projects.find((p) => p.id === id) : null;
+  const {data: project, isLoading} = api.projects.FindByProjectId.useQuery(
+    { id: id },
+    {
+      onError: (error) => {
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
+      },
+    }
+  );
 
   const mutation = api.projects.complete.useMutation({
     onSuccess: async () => {
@@ -79,15 +83,6 @@ export default function ProjectCompletion() {
     }
   }, [isMemberFound, router]);
 
-  /****  For Data lineage *******/
-
-  const mutationProjecTracker = api.projectTracker.edit.useMutation({
-    onSuccess: async () => {
-      // await utilsprojectTracker.read.invalidate();
-    },
-  });
-
-  /****   *******/
 
   //handling the exiting of a page (pop up confirmation)
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -144,7 +139,6 @@ export default function ProjectCompletion() {
               setFormSubmitted(true);
               await Promise.all([
                 mutation.mutateAsync(values),
-                mutationProjecTracker.mutateAsync(values)
               ])
               methods.reset();
               router.push('/');

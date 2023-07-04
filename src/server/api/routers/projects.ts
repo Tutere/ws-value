@@ -134,8 +134,9 @@ export const projectsRouter = createTRPCRouter({
 
   complete: protectedProcedure
     .input(CompleteProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.update({
+    .mutation(async ({ ctx, input }) => {
+      const completedProject = 
+      await ctx.prisma.project.update({
         where: {
           id: input.id,
         },
@@ -147,6 +148,37 @@ export const projectsRouter = createTRPCRouter({
           lessonsLearnt: input.lessonsLearnt,
           retrospective: input.retrospective,
           status: input.status,
+        },
+        include: {
+          members: true,
+        }
+      });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Complete",
+          name: completedProject.name,
+          description: completedProject.description,
+          goal: completedProject.goal,
+          estimatedStart: completedProject.estimatedStart,
+          estimatedEnd: completedProject.estimatedEnd,
+          trigger: completedProject.trigger,
+          expectedMovement: completedProject.expectedMovement,
+          alternativeOptions: completedProject.alternativeOptions,
+          estimatedRisk: completedProject.estimatedRisk,
+          outcomeScore: completedProject.outcomeScore,
+          effortScore: completedProject.effortScore,
+          status: completedProject.status,
+          actualStart: completedProject.actualStart,
+          actualEnd: completedProject.actualEnd,
+          lessonsLearnt: completedProject.lessonsLearnt,
+          retrospective: completedProject.retrospective,
+          projectId: completedProject.id,
+          icon: completedProject.icon,
+          colour: completedProject.colour,
+          stakeholders: completedProject.stakeholders,
+          pid: completedProject.pid,
+          members: completedProject.members.map(member => member.userId).join(','),
         },
       });
     }),
