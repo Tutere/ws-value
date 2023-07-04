@@ -243,6 +243,7 @@ export default function ProjectForm() {
                       (value) =>
                         !defaultValues.some((option) => option.value === value)
                     ), //don't include option that were already added to project
+                    membersTracker: selectedOption.map((option) => option.value),
                 }),     
               ]);
               methods.reset();

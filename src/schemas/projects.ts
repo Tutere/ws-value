@@ -70,6 +70,7 @@ export const EditProjectSchema = z.object({
   stakeholders: z.string().optional(),
   members: z.array(z.string()),
   pid: z.string().optional(),
+  membersTracker: z.array(z.string()).optional(),
 });
 
 export const DeleteProjectSchema = z.object({

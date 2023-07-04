@@ -184,9 +184,6 @@ export const projectsRouter = createTRPCRouter({
             },
           },
         },
-        include : {
-          members:true,
-        }
       });
 
       await ctx.prisma.projectTracker.create({
@@ -213,7 +210,7 @@ export const projectsRouter = createTRPCRouter({
           colour: editedProject.colour,
           stakeholders: editedProject.stakeholders,
           pid: editedProject.pid,
-          members: editedProject.members.map(member => member.userId).join(','),
+          members: input.membersTracker?.join(','),
         },
       });
 
