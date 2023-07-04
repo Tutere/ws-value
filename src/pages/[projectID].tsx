@@ -59,7 +59,7 @@ export default function Project() {
     schema: ActivateProjectSchema,
     defaultValues: {
       status: "Active",
-      id: project?.id,
+      id: id,
     },
   });
 
