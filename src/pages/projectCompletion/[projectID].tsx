@@ -36,7 +36,7 @@ export default function ProjectCompletion() {
 
   const methods = useZodForm({
     schema: EditProjectSchema, //using this schema because it has all fields for project tracking
-    defaultValues: {
+    defaultValues: { //need to edit now that tracking moved to server side
       status: "Complete",
       changeType: "Complete",
       id: project?.id.toString(),
