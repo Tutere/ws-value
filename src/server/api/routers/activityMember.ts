@@ -53,16 +53,16 @@ import {
       });
     }),
 
-  // deleteSpecific: protectedProcedure
-  // .input(FindActivityMemberSchema)
-  // .mutation(({ ctx, input }) => {
-  //   return ctx.prisma.activityMember.deleteMany(
-  //     {
-  //       where: {
-  //         id: input.id
-  //       }
-  //     }
-  //   );
-  // }),
+  deleteSpecific: protectedProcedure
+  .input(FindActivityMemberSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activityMember.delete(
+      {
+        where: {
+          id: input.id
+        }
+      }
+    );
+  }),
   
   });

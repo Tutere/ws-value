@@ -105,7 +105,7 @@ export default function Project() {
 
   //turn current activity memebers to type Option, then add to selectedOption/dropdown
   useEffect(() => {
-    // find all options where value is in project.members array and set to default values
+    // find all options where value is in activity.members array and set to default values
     const defaultValues = activity?.members
       .filter((member) =>
         options?.some((option) => option.value === member.projectMemberId)
@@ -130,7 +130,7 @@ export default function Project() {
   };
 
   //activity memeber deletion setup
-  const mutationActivityMemberDeletion = api.activitymember.delete.useMutation({
+  const mutationActivityMemberDeletion = api.activitymember.deleteSpecific.useMutation({
     onSuccess: async () => {
       await utils.read.invalidate();
     },
@@ -150,10 +150,10 @@ export default function Project() {
     );
 
     membersToDelete.forEach(async (element) => {
-      const projectmemberId = project?.members.find(
-        (member) => member.userId === element.value
+      const activityMemberId = activity?.members.find(
+        (member) => member.projectMemberId === element.value
       )?.id as string;
-      await methodsActivityMemberDeletion.setValue("id", projectmemberId);
+      await methodsActivityMemberDeletion.setValue("id", activityMemberId);
       await mutationActivityMemberDeletion.mutateAsync(
         methodsActivityMemberDeletion.getValues()
       ); //use same id input as projectMember deletion
