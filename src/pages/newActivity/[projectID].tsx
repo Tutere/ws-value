@@ -34,7 +34,6 @@ export default function Project() {
 
   const mutation = api.activities.create.useMutation({
     onSuccess: async (data) => {
-      methods.setValue("id", data.id);
       await utils.read.invalidate();
     },
   });
@@ -52,9 +51,6 @@ export default function Project() {
 
   const { data: sessionData } = useSession();
 
-
-  /****  For Data lineage *******/
-  const mutationActivityTracker = api.activityTracker.edit.useMutation();
 
   // *** get users for later searching ***//
   const queryUsers = api.users.read.useQuery(undefined, {
@@ -182,14 +178,6 @@ export default function Project() {
               await Promise.all([
                 await mutation.mutateAsync({
                   ...values,
-                  members: selectedOption.map((option) => option.value),
-                  stakeholders: stakeholderSelectedOptions
-                    .map((option) => option.value)
-                    .join(","),
-                }),
-                await mutationActivityTracker.mutateAsync({
-                  ...values,
-                  id: methods.getValues("id"), // update id feild with the created activity's id
                   members: selectedOption.map((option) => option.value),
                   stakeholders: stakeholderSelectedOptions
                     .map((option) => option.value)

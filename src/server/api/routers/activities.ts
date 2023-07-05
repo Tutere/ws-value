@@ -10,8 +10,9 @@ import {
 export const activitiesRouter = createTRPCRouter({
   create: protectedProcedure
     .input(CreateActivitySchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.activity.create({
+    .mutation(async ({ ctx, input }) => {
+      const createdActivity = 
+      await ctx.prisma.activity.create({
         data: {
           name: input.name,
           description: input.description,
@@ -36,6 +37,30 @@ export const activitiesRouter = createTRPCRouter({
           },
         },
       });
+
+      await ctx.prisma.activityTracker.create(
+        {
+          data: {
+            name: createdActivity.name,
+            description: createdActivity.description,
+            projectId: createdActivity.projectId,
+            engagementPattern: createdActivity.engagementPattern,
+            valueCreated: createdActivity.valueCreated,
+            startDate: createdActivity.startDate,
+            endDate: createdActivity.endDate,
+            changeType: input.changeType,
+            activityId: createdActivity.id,
+            outcomeScore: createdActivity.outcomeScore,
+            effortScore: createdActivity.effortScore,
+            hours: createdActivity.hours,
+            status: createdActivity.status,
+            stakeholders: createdActivity.stakeholders,
+            members: input.members.join(','),
+            reportComments:createdActivity.reportComments,
+          }
+        }
+      );
+
     }),
 
   read: protectedProcedure
