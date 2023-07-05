@@ -183,7 +183,7 @@ export const activitiesRouter = createTRPCRouter({
           hours: editedActivity.hours,
           status: editedActivity.status,
           stakeholders: editedActivity.stakeholders,
-          members: input.membersTracking.join(','),
+          members: input.membersTracking?.join(','),
           reportComments:editedActivity.reportComments,
         }
       }

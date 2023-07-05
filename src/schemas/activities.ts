@@ -51,7 +51,7 @@ export const ReadActivitySchema = z.object({
     hours: z.preprocess((val) => Number(val), z.number()),
     members: z.array(z.string()),
     reportComments: z.string().optional(),
-    membersTracking : z.array(z.string()),
+    membersTracking : z.array(z.string()).optional(),
   });
 
   export const ReportCommentSchema = z.object({
