@@ -16,6 +16,7 @@ export default function Project() {
   const router = useRouter();
   const id = router.query.projectID as string;
   const utils = api.useContext().activities;
+  const utilsProjects = api.useContext().projects;
   const [loading, setLoading] = useState(false);
 
 
@@ -49,6 +50,7 @@ export default function Project() {
 
   const mutation = api.projects.activate.useMutation({
     onSuccess: async () => {
+      await utilsProjects.invalidate();
       await utils.read.invalidate();
     },
   });
@@ -57,70 +59,10 @@ export default function Project() {
     schema: ActivateProjectSchema,
     defaultValues: {
       status: "Active",
-      id: project?.id,
+      id: id, //use query input rather than project object to ensure value is stored at load time
     },
   });
 
-  //data lineage for "reactivating" a project
-
-  const mutationProjecTracker = api.projectTracker.edit.useMutation({});
-
-  const methodProjectTracker = useZodForm({
-    schema: ProjectChangeSchema,
-    defaultValues: {
-      changeType: "Re-Activate",
-      projectId: project?.id.toString(),
-      icon: project?.icon?.toString(),
-      name: project?.name?.toString(),
-      description: project?.description?.toString(),
-      goal: project?.goal?.toString(),
-      estimatedStart: project?.estimatedStart?.toISOString(),
-      estimatedEnd: project?.estimatedEnd?.toISOString()?? "",
-      trigger: project?.trigger?.toString(),
-      expectedMovement: project?.expectedMovement?.toString(),
-      alternativeOptions: project?.alternativeOptions?.toString(),
-      estimatedRisk: project?.estimatedRisk?.toString(),
-      outcomeScore: project?.outcomeScore!,
-      effortScore: project?.effortScore!,
-      actualStart: project?.actualStart?.toISOString(),
-      actualEnd: project?.actualEnd?.toISOString(),
-      lessonsLearnt: project?.lessonsLearnt!,
-      retrospective: project?.retrospective!,
-      status: project?.status!,
-      colour: project?.colour!,
-      stakeholders: project?.stakeholders! || "",
-      members: project?.members.map(member => member.userId),
-    },
-  });
-
-  useEffect(() => { 
-    if (project) {
-      methodProjectTracker.reset({
-        changeType: "Re-Activate",
-        projectId: project.id.toString(),
-        icon: project.icon?.toString(),
-        name: project.name?.toString(),
-        description: project.description?.toString(),
-        goal: project.goal?.toString(),
-        estimatedStart: project.estimatedStart?.toISOString(),
-        estimatedEnd: project.estimatedEnd?.toISOString() ?? "",
-        trigger: project.trigger?.toString(),
-        expectedMovement: project.expectedMovement?.toString(),
-        alternativeOptions: project.alternativeOptions?.toString(),
-        estimatedRisk: project.estimatedRisk?.toString(),
-        outcomeScore: project.outcomeScore!,
-        effortScore: project.effortScore!,
-        actualStart: project.actualStart?.toISOString(),
-        actualEnd: project.actualEnd?.toISOString(),
-        lessonsLearnt: project.lessonsLearnt!,
-        retrospective: project.retrospective!,
-        status: project.status!,
-        colour: project.colour!,
-        stakeholders: project.stakeholders! || "",
-        members: project.members.map((member) => member.userId),
-      });
-    }
-  }, [project, methodProjectTracker]);
 
   //used for read more button
   const [isReadMoreShown, setIsReadMoreShown] = useState(false);
@@ -228,13 +170,13 @@ export default function Project() {
           {project.status === 'Complete' ? "View Project Completion Details" :"Complete Project"}
           </Link>
 
-          <Link href={"/" + project?.id} type="button" className={project.status=="Active" ? "hidden":"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"}
+          <Link href={"/" + project?.id} type="button" className={project.status=="Active" ? "hidden": mutation.isLoading ? "opacity-50 pointer-events-none inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white" : "inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"}
           onClick={methods.handleSubmit(async (values) => {
             await console.log(project);
-            await console.log(methodProjectTracker.getValues());
+            await console.log(methods.getValues());
             await Promise.all ([
+              methods.setValue("id", project.id),
               mutation.mutateAsync(values),
-              mutationProjecTracker.mutateAsync(methodProjectTracker.getValues())
             ])
             methods.reset();
             window.location.reload();
@@ -243,7 +185,7 @@ export default function Project() {
             <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path clipRule="evenodd" fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z"></path>
             </svg>
-            Make Active
+            {mutation.isLoading ? "Loading..." : "Make Active"}
           </Link>
 
           <DeletionDialog

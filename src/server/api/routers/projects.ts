@@ -18,8 +18,10 @@ import { Activity } from "@prisma/client";
 export const projectsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(CreateProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.create({
+    .mutation(async ({ ctx, input }) => {
+      const createdProject = 
+
+      await ctx.prisma.project.create({
         data: {
           icon: input.icon,
           colour: input.colour,
@@ -45,6 +47,35 @@ export const projectsRouter = createTRPCRouter({
               }),
             },
           },
+        },
+      });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Create",
+          name: createdProject.name,
+          // createdAt: createdProject.createdAt,
+          description: createdProject.description,
+          goal: createdProject.goal,
+          estimatedStart: createdProject.estimatedStart,
+          estimatedEnd: createdProject.estimatedEnd,
+          trigger: createdProject.trigger,
+          expectedMovement: createdProject.expectedMovement,
+          alternativeOptions: createdProject.alternativeOptions,
+          estimatedRisk: createdProject.estimatedRisk,
+          outcomeScore: createdProject.outcomeScore,
+          effortScore: createdProject.effortScore,
+          status: createdProject.status,
+          actualStart: createdProject.actualStart,
+          actualEnd: createdProject.actualEnd,
+          lessonsLearnt: createdProject.lessonsLearnt,
+          retrospective: createdProject.retrospective,
+          projectId: createdProject.id,
+          icon: createdProject.icon,
+          colour: createdProject.colour,
+          stakeholders: createdProject.stakeholders,
+          pid: createdProject.pid,
+          members: input.members.join(','),
         },
       });
     }),
@@ -103,8 +134,9 @@ export const projectsRouter = createTRPCRouter({
 
   complete: protectedProcedure
     .input(CompleteProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.update({
+    .mutation(async ({ ctx, input }) => {
+      const completedProject = 
+      await ctx.prisma.project.update({
         where: {
           id: input.id,
         },
@@ -117,13 +149,45 @@ export const projectsRouter = createTRPCRouter({
           retrospective: input.retrospective,
           status: input.status,
         },
+        include: {
+          members: true,
+        }
+      });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Complete",
+          name: completedProject.name,
+          description: completedProject.description,
+          goal: completedProject.goal,
+          estimatedStart: completedProject.estimatedStart,
+          estimatedEnd: completedProject.estimatedEnd,
+          trigger: completedProject.trigger,
+          expectedMovement: completedProject.expectedMovement,
+          alternativeOptions: completedProject.alternativeOptions,
+          estimatedRisk: completedProject.estimatedRisk,
+          outcomeScore: completedProject.outcomeScore,
+          effortScore: completedProject.effortScore,
+          status: completedProject.status,
+          actualStart: completedProject.actualStart,
+          actualEnd: completedProject.actualEnd,
+          lessonsLearnt: completedProject.lessonsLearnt,
+          retrospective: completedProject.retrospective,
+          projectId: completedProject.id,
+          icon: completedProject.icon,
+          colour: completedProject.colour,
+          stakeholders: completedProject.stakeholders,
+          pid: completedProject.pid,
+          members: completedProject.members.map(member => member.userId).join(','),
+        },
       });
     }),
 
   edit: protectedProcedure
     .input(EditProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.update({
+    .mutation(async ({ ctx, input }) => {
+      const editedProject = 
+      await ctx.prisma.project.update({
         where: {
           id: input.id,
         },
@@ -153,6 +217,35 @@ export const projectsRouter = createTRPCRouter({
           },
         },
       });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Edit",
+          name: editedProject.name,
+          description: editedProject.description,
+          goal: editedProject.goal,
+          estimatedStart: editedProject.estimatedStart,
+          estimatedEnd: editedProject.estimatedEnd,
+          trigger: editedProject.trigger,
+          expectedMovement: editedProject.expectedMovement,
+          alternativeOptions: editedProject.alternativeOptions,
+          estimatedRisk: editedProject.estimatedRisk,
+          outcomeScore: editedProject.outcomeScore,
+          effortScore: editedProject.effortScore,
+          status: editedProject.status,
+          actualStart: editedProject.actualStart,
+          actualEnd: editedProject.actualEnd,
+          lessonsLearnt: editedProject.lessonsLearnt,
+          retrospective: editedProject.retrospective,
+          projectId: editedProject.id,
+          icon: editedProject.icon,
+          colour: editedProject.colour,
+          stakeholders: editedProject.stakeholders,
+          pid: editedProject.pid,
+          members: input.membersTracker?.join(','),
+        },
+      });
+
     }),
 
   delete: protectedProcedure
@@ -305,13 +398,45 @@ export const projectsRouter = createTRPCRouter({
 
   activate: protectedProcedure
     .input(ActivateProjectSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.project.update({
+    .mutation(async ({ ctx, input }) => {
+      const activatedProject = 
+      await ctx.prisma.project.update({
         where: {
           id: input.id,
         },
         data: {
           status: "Active",
+        },
+        include: {
+          members: true,
+        }
+      });
+
+      await ctx.prisma.projectTracker.create({
+        data: {
+          changeType: "Re-Activate",
+          name: activatedProject.name,
+          description: activatedProject.description,
+          goal: activatedProject.goal,
+          estimatedStart: activatedProject.estimatedStart,
+          estimatedEnd: activatedProject.estimatedEnd,
+          trigger: activatedProject.trigger,
+          expectedMovement: activatedProject.expectedMovement,
+          alternativeOptions: activatedProject.alternativeOptions,
+          estimatedRisk: activatedProject.estimatedRisk,
+          outcomeScore: activatedProject.outcomeScore,
+          effortScore: activatedProject.effortScore,
+          status: activatedProject.status,
+          actualStart: activatedProject.actualStart,
+          actualEnd: activatedProject.actualEnd,
+          lessonsLearnt: activatedProject.lessonsLearnt,
+          retrospective: activatedProject.retrospective,
+          projectId: activatedProject.id,
+          icon: activatedProject.icon,
+          colour: activatedProject.colour,
+          stakeholders: activatedProject.stakeholders,
+          pid: activatedProject.pid,
+          members: activatedProject.members.map(member => member.userId).join(','),
         },
       });
     }),

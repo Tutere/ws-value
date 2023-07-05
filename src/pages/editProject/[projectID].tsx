@@ -21,18 +21,22 @@ export default function ProjectForm() {
   const id = router.query.projectID as string;
 
   const utils = api.useContext().projects;
-  const {data:projects,isLoading } = api.projects.read.useQuery(undefined, {
-    // suspense: true,
-    onError: (error) => {
-      console.error(error);
-    },
-  });
 
-  const project = projects ? projects.find((p) => p.id === id) : null;
+  const {data: project, isLoading} = api.projects.FindByProjectId.useQuery(
+    { id: id },
+    {
+      suspense: true,
+      onError: (error) => {
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
+      },
+    }
+  );
 
   const mutation = api.projects.edit.useMutation({
     onSuccess: async () => {
-      await utils.read.invalidate();
+      await utils.invalidate();
     },
   });
 
@@ -77,15 +81,6 @@ export default function ProjectForm() {
     }
   }, [isMemberFound, router]);
 
-  /****  For Data lineage *******/
-
-  const mutationProjecTracker = api.projectTracker.edit.useMutation({
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
-  /***********/
 
   // ****** get users for dropdown selection options**********
   const queryUsers = api.users.read.useQuery(undefined, {
@@ -248,11 +243,8 @@ export default function ProjectForm() {
                       (value) =>
                         !defaultValues.some((option) => option.value === value)
                     ), //don't include option that were already added to project
-                }),
-                mutationProjecTracker.mutateAsync({
-                  ...values,
-                  members: selectedOption.map((option) => option.value),
-                }),
+                    membersTracker: selectedOption.map((option) => option.value),
+                }),     
               ]);
               methods.reset();
               router.push("/" + id);
