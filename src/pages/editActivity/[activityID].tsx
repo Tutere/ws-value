@@ -23,7 +23,7 @@ export default function Project() {
   const { data: activity, isLoading } = api.activities.readSpecific.useQuery(
     { id: id },
     {
-      // suspense: true,
+      suspense: true,
     }
   );
 
