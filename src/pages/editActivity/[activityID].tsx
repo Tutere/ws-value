@@ -66,15 +66,6 @@ export default function Project() {
     }
   }, [isMemberFound, router]);
 
-  /****  For Data lineage *******/
-
-  const mutationActivityTracker = api.activityTracker.edit.useMutation({
-    onSuccess: async () => {
-      //TBC
-    },
-  });
-
-  /****   *******/
 
   // *** get users for later searching ***//
   const queryUsers = api.users.read.useQuery(undefined, {
@@ -278,14 +269,7 @@ export default function Project() {
                   stakeholders: stakeholderSelectedOptions
                     .map((option) => option.value)
                     .join(","),
-                }),
-                mutationActivityTracker.mutateAsync({
-                  ...values,
-                  id: methods.getValues("id"), // update id feild with the created activity's id
-                  members: selectedOption.map((option) => option.value),
-                  stakeholders: stakeholderSelectedOptions
-                    .map((option) => option.value)
-                    .join(","),
+                  membersTracking: selectedOption.map((option) => option.value),
                 }),
               ]);
               methods.reset();

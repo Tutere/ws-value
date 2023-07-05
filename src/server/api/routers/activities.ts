@@ -134,8 +134,9 @@ export const activitiesRouter = createTRPCRouter({
 
   edit: protectedProcedure
   .input(EditActivitySchema)
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.activity.update(
+  .mutation(async ({ ctx, input }) => {
+    const editedActivity = 
+    await ctx.prisma.activity.update(
       {
         where: {
           id: input.id,
@@ -164,6 +165,30 @@ export const activitiesRouter = createTRPCRouter({
         }
       }
     );
+
+    await ctx.prisma.activityTracker.create(
+      {
+        data: {
+          name: editedActivity.name,
+          description: editedActivity.description,
+          projectId: editedActivity.projectId,
+          engagementPattern: editedActivity.engagementPattern,
+          valueCreated: editedActivity.valueCreated,
+          startDate: editedActivity.startDate,
+          endDate: editedActivity.endDate,
+          changeType: input.changeType,
+          activityId: editedActivity.id,
+          outcomeScore: editedActivity.outcomeScore,
+          effortScore: editedActivity.effortScore,
+          hours: editedActivity.hours,
+          status: editedActivity.status,
+          stakeholders: editedActivity.stakeholders,
+          members: input.membersTracking.join(','),
+          reportComments:editedActivity.reportComments,
+        }
+      }
+    );
+    
   }),
 
   reportComments: publicProcedure
