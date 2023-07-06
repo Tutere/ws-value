@@ -391,7 +391,7 @@ export default function Project() {
               infoContent="How many hours has it taken to complete this activity?"
               methodsField="hours"
               placeHolder="Optional"
-              defaultValue={activity.hours ?? ""}
+              defaultValue={activity.hours?.toString() ?? ""}
               type=""
               required={false}
             />

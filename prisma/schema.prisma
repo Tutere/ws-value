@@ -151,7 +151,7 @@ model Activity {
     effortScore       Int?
     stakeholders      String?
     members           ActivityMember[]
-    hours             Int?
+    hours             Decimal?
     reportComments    String?          @db.Text
     // ActivityTracker   ActivityTracker[]
 
@@ -207,7 +207,7 @@ model ActivityTracker {
     status            String?
     outcomeScore      Int?
     effortScore       Int?
-    hours             Int?
+    hours             Decimal?
     stakeholders      String?
     members           String?   @db.Text
     reportComments    String?   @db.Text
