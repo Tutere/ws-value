@@ -45,10 +45,12 @@ export default function DiscreteSlider<T extends FieldValues>(
 
     function renderEffort(param: number) {
         switch (param) {
+            case 0:
+              return 'No effort at all'
             case 1:
-                return 'No effort at all';
-              case 2:
                 return 'Minimal effort';
+              case 2:
+                return 'Slight effort';
               case 3:
                 return 'Some effort';
               case 4:
