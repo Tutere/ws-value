@@ -52,19 +52,19 @@ export default function DiscreteSlider<T extends FieldValues>(
               case 3:
                 return 'Some effort';
               case 4:
-                return 'Below average effort';
+                return 'Slightly below average effort';
               case 5:
                 return 'Average effort';
               case 6:
-                return 'Above average effort';
+                return 'Slightly above average effort';
               case 7:
-                return 'Good amount of effort, but room for improvement';
+                return 'Moderate effort';
               case 8:
-                return 'Significant effort';
+                return 'High effort';
               case 9:
-                return 'Outstanding effort';
+                return 'Significant effort';
               case 10:
-                return 'Exceptional effort';
+                return 'Maximum effort';
 
             default:
                 return 'No score yet';
@@ -168,7 +168,7 @@ export default function DiscreteSlider<T extends FieldValues>(
                         valueLabelDisplay='auto'
                         step={1}
                         marks
-                        min={1}
+                        min={0}
                         max={10}
                         track={false}
                         defaultValue={props.defaultValue}
