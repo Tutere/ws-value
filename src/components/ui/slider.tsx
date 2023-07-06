@@ -75,8 +75,10 @@ export default function DiscreteSlider<T extends FieldValues>(
 
     function renderOutcome(param: number) {
         switch (param) {
-            case 1:
-                return 'Negligible outcome, no change';
+            case 0:
+              return 'No change, or negative impact'
+              case 1:
+                return 'Negligible outcome';
               case 2:
                 return 'Minimal outcome, barely noticeable change';
               case 3:
@@ -102,7 +104,9 @@ export default function DiscreteSlider<T extends FieldValues>(
 
     function renderBenefits(param: number) {
         switch (param) {
-            case 1:
+          case 0:
+            return 'Negative benefits or impact'
+          case 1:
                 return 'No benefit at all';
               case 2:
                 return 'Very little benefit, not noticeable';
@@ -129,6 +133,8 @@ export default function DiscreteSlider<T extends FieldValues>(
 
     function renderExperience(param: number) {
         switch (param) {
+          case 0:
+            return 'Negative experience'
             case 1:
                 return 'No experience gained at all';
               case 2:
