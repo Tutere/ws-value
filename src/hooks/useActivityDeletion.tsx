@@ -11,17 +11,16 @@ export function useActivityDeletion(id:string) {
 
   const router = useRouter();
 
-  const query = api.projects.findByActivityId.useQuery({ id: id },{
+  //to avoid pulling all project data through to client side
+  const {data: projectId} = api.projects.GetProjectIdByActivityId.useQuery({ id: id },{
       suspense: true,
     }
   );
     
-  const project = query.data;
-
   const { mutate: ActivityhandleDelete } = api.activities.softDeleteByActivityId.useMutation({
     onSuccess: async () => {
       await utils.read.invalidate();
-      router.push("/" + project?.id);
+      router.push("/" + projectId);
     },
   });
 

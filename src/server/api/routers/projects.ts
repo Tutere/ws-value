@@ -496,4 +496,23 @@ export const projectsRouter = createTRPCRouter({
         },
       });
     }),
+
+    GetProjectIdByActivityId: protectedProcedure
+    .input(FindProjectByActivityIdSchema)
+    .query(async ({ ctx, input }) => {
+      const project = 
+      await ctx.prisma.project.findFirst({
+        where: {
+          Activity: {
+            some: {
+              id: input.id,
+            },
+          },
+        },
+        include: {
+          members: true,
+        },
+      });
+      return project?.id
+    })
 });
