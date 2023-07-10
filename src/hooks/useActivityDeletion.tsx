@@ -25,15 +25,5 @@ export function useActivityDeletion(id:string) {
   });
 
   return { ActivityhandleDelete };
-  
-    // const ActivityhandleDelete = async () => {
-    //     await Promise.all([
-    //         await mutationSpecificActivy.mutateAsync(
-    //           methodSpecificActivity.getValues()
-    //         ),
-    //       ]);
-    //       router.push("/" + project?.id);
-    // };
-  
-    // return { ActivityhandleDelete };
+
   }
