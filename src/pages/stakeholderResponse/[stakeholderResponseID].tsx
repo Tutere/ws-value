@@ -62,7 +62,11 @@ if (stakeholderResponse === null || stakeholderResponse === undefined ) {
             Edit Activity
         </Button>
       </Link> */}
-      <DeletionDialog object="Stakeholder Response" id={id} handleDelete={stakeholderResponseHandleDelete}></DeletionDialog>
+      <DeletionDialog 
+      object="Stakeholder Response" 
+      id={id} 
+      handleDelete={() => stakeholderResponseHandleDelete({ id: id })}
+      ></DeletionDialog>
       </div>
 
     </div>

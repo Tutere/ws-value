@@ -368,8 +368,9 @@ export const projectsRouter = createTRPCRouter({
 
   findByStakeholderResponseId: protectedProcedure
     .input(FindProjectByActivityIdSchema)
-    .query(({ ctx, input }) => {
-      return ctx.prisma.project.findFirst({
+    .query(async ({ ctx, input }) => {
+      const project = 
+      await ctx.prisma.project.findFirst({
         where: {
           StakeholderResponse: {
             some: {
@@ -381,6 +382,7 @@ export const projectsRouter = createTRPCRouter({
           members: true,
         },
       });
+      return project?.id
     }),
 
   findByProjectId: protectedProcedure

@@ -7,33 +7,21 @@ import { api } from "~/utils/api";
 
 export function useStakeholderResponseDeletion(id:string) {
     const router = useRouter();
-    
-    const mutationStakeholderResponse = api.stakeholderResponse.softDelete.useMutation();
-  
-    const methodsStakeholderResponse = useZodForm({
-        schema: ReadStakeholderResponseSchema,
-        defaultValues: {
-          id: id,
-        },
-      });
+    const utils = api.useContext().projects;
 
-      const queryProjectByStakeholderRsponse =
-      api.projects.findByStakeholderResponseId.useQuery(
-        { id: id },
-        {
+      const {data :projectId} =
+      api.projects.findByStakeholderResponseId.useQuery({ id: id },{
           suspense: true,
         }
       );
   
-    const projectByStakeholderResponse = queryProjectByStakeholderRsponse.data;
-    
-  
-    const stakeholderResponseHandleDelete = async () => {
-      await Promise.all([
-        await mutationStakeholderResponse.mutateAsync( methodsStakeholderResponse.getValues()),
-      ]);
-      router.push("/projectCompletion/" + projectByStakeholderResponse?.id);
-    };
+
+    const { mutate: stakeholderResponseHandleDelete } = api.stakeholderResponse.softDelete.useMutation({
+      onSuccess: async () => {
+        await utils.invalidate();
+        router.push("/projectCompletion/" + projectId);
+      },
+    });
   
     return { stakeholderResponseHandleDelete };
   }
