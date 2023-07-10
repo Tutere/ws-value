@@ -19,7 +19,9 @@ export function DeletionDialog(props: { object: string; id: string, handleDelete
   const handleDeleteClick = async () => {
     await props.handleDelete();
     await setIsOpen(false);
-    await router.push("/");
+    if (props.object === "Project") {
+      await router.push("/");
+    }
   };
 
   return (

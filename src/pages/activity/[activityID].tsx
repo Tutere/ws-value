@@ -23,7 +23,7 @@ export default function Project() {
 
   const project = activity?.project;
 
-  const { ActivityhandleDelete } = useActivityDeletion(activity?.id ?? "");
+  const { ActivityhandleDelete } = useActivityDeletion(id);
 
   const { data: sessionData } = useSession();
   const isMemberFound = project?.members.some(member => {
@@ -168,8 +168,11 @@ export default function Project() {
           </Link>
 
 
-          <DeletionDialog object="Activity" id={id} handleDelete={ActivityhandleDelete}></DeletionDialog> 
-
+          <DeletionDialog 
+          object="Activity" 
+          id={id} 
+          handleDelete={() => ActivityhandleDelete({ id: id })}
+          ></DeletionDialog> 
         </div>
         </div>
 

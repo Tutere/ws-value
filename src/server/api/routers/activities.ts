@@ -221,17 +221,44 @@ export const activitiesRouter = createTRPCRouter({
 
   softDeleteByActivityId: protectedProcedure
   .input(ReadSpecificActivitySchema)
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.activity.update(
+  .mutation(async ({ ctx, input }) => {
+    const deletedActivity = 
+    await ctx.prisma.activity.update(
       {
         where: {
           id: input.id,
         },
         data: {
           status: "Deleted"
+        },
+        include: {
+          members: true,
         }
       }
     );
+
+    await ctx.prisma.activityTracker.create(
+      {
+        data: {
+          name: deletedActivity.name,
+          description: deletedActivity.description,
+          projectId: deletedActivity.projectId,
+          engagementPattern: deletedActivity.engagementPattern,
+          valueCreated: deletedActivity.valueCreated,
+          startDate: deletedActivity.startDate,
+          endDate: deletedActivity.endDate,
+          changeType: "Delete",
+          activityId: deletedActivity.id,
+          outcomeScore: deletedActivity.outcomeScore,
+          effortScore: deletedActivity.effortScore,
+          hours: deletedActivity.hours,
+          status: deletedActivity.status,
+          stakeholders: deletedActivity.stakeholders,
+          members: deletedActivity.members.map(member => member.projectMemberId).join(','),
+          reportComments:deletedActivity.reportComments,
+        }
+      }
+    ); 
   }),
 
 
