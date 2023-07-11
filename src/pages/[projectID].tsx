@@ -79,13 +79,18 @@ export default function Project() {
   return (
     <>
       {isMemberFound ? (
-        <div className="p-8"
+        <div className=""
         style={{
           borderTopColor: `${project.colour}`,
           borderTopStyle: "solid",
           borderTopWidth: "10px",
         }}
         >
+          <div className="pl-24 pr-24 pt-10"
+          style={{
+            backgroundImage: 'linear-gradient(' + project.colour + '4D' + ', #FFFFFF)',
+          }}
+          >
           <div className="flex flex-col items-center">
             <h2 className="mb-5 text-3xl font-bold">{project.name}</h2>
           </div>
@@ -217,10 +222,12 @@ export default function Project() {
       <p>
         {!isReadMoreShown ? 'View & Edit Project Details' : (isReadMoreShown ? 'Hide Details' : '')}
       </p>
-      </Button></div>
+      </Button>
+      </div>
+      </div>
 
       
-
+      <div className="p-8">
       <h2 className="mt-10 text-2xl font-bold">Project Activities</h2>
       <div className="flex flex-row flex-wrap gap-5 py-2">
         {activities &&
@@ -262,6 +269,8 @@ export default function Project() {
           <div>
             <p>TO BE COMPLETED</p>
           </div>
+        </div>
+        
         </div>
 
       ) : (
