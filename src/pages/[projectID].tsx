@@ -86,43 +86,44 @@ export default function Project() {
           borderTopWidth: "10px",
         }}
         >
-
-          <h2 className="mb-5 text-3xl font-bold">{project.name}</h2>
+          <div className="flex flex-col items-center">
+            <h2 className="mb-5 text-3xl font-bold">{project.name}</h2>
+          </div>
           <div 
-          className={`${isReadMoreShown ? 'max-h-[1000px]' : 'max-h-0'} transition-all duration-500 ease overflow-hidden`} //won't stretch to max height unless content fills that much space
+          className={`${isReadMoreShown ? 'max-h-[1000px]' : 'max-h-0'} transition-all duration-500 ease overflow-hidden grid gap-5`} //won't stretch to max height unless content fills that much space
           >
-              <div className="flex flex-row">
-                <Label className="font-medium">Goal:</Label>
-                <p className="ml-1">{project.goal}</p>
+              <div className="flex flex-col items-center">
+                <Label className="font-bold">Goal:</Label>
+                <p className="text-center">{project.goal}</p>
               </div>
               
-              <div className="flex flex-row">
-                <Label className="font-medium">Estimated Start Date:</Label>
-                <p className="ml-1">
+              <div className="flex flex-col items-center">
+                <Label className="font-bold">Estimated Start Date:</Label>
+                <p className="text-center">
                   {project.estimatedStart.toLocaleDateString()}
                 </p>
               </div>
-              <div className="flex flex-row">
-                <Label className="font-medium">Description:</Label>
-                <p className="ml-1">{project.description}</p>
+              <div className="flex flex-col items-center">
+                <Label className="font-bold">Description:</Label>
+                <p className="text-center">{project.description}</p>
               </div>
-              <div className="flex flex-row">
-                <Label className="font-medium">Project Members:</Label>
-                <p className="ml-1">
+              <div className="flex flex-col items-center">
+                <Label className="font-bold">Project Members:</Label>
+                <p className="text-center">
                   {project.members?.map((member) => member?.user.name).join(", ")}
                 </p>
               </div>
-              <div className="flex flex-row">
-                <Label className="font-medium">Stakeholders:</Label>
-                <p className="ml-1">{project.stakeholders}</p>
+              <div className="flex flex-col items-center">
+                <Label className="font-bold">Stakeholders:</Label>
+                <p className="text-center">{project.stakeholders}</p>
               </div>
-              <div className="flex flex-row">
-                <Label className="font-medium">
+              <div className="flex flex-col items-center">
+                <Label className="font-bold">
                   Link to Project Initiation Document:{" "}
                 </Label>
                 {project.pid ? (
                   <a
-                    className="ml-1 text-blue-600 hover:underline"
+                    className="text-center text-blue-600 hover:underline"
                     href={project.pid ?? ""}
                     rel="noopener noreferrer"
                     target="_blank"
@@ -130,30 +131,29 @@ export default function Project() {
                     Click Here
                   </a>
                 ) : (
-                  <p className="ml-1"> N/A</p>
+                  <p className="text-center"> N/A</p>
                 )}
               </div>
             
-            <div className="flex flex-row">
-              <Label className="font-medium">Trigger:</Label>
-              <p className="ml-1">{project.trigger === "" ? "N/A" : project.trigger}</p>
+            <div className="flex flex-col items-center">
+              <Label className="font-bold">Trigger:</Label>
+              <p className="text-center">{project.trigger === "" ? "N/A" : project.trigger}</p>
             </div>
-            <div className="flex flex-row">
-              <Label className="font-medium">Expected Outcome:</Label>
-              <p className="ml-1">{project.expectedMovement === "" ? "N/A" : project.expectedMovement}</p>
+            <div className="flex flex-col items-center">
+              <Label className="font-bold">Expected Outcome:</Label>
+              <p className="text-center">{project.expectedMovement === "" ? "N/A" : project.expectedMovement}</p>
             </div>
-            <div className="flex flex-row">
-              <Label className="font-medium">Alternatives Considered:</Label>
-              <p className="ml-1">{project.alternativeOptions === "" ? "N/A" : project.alternativeOptions}</p>
+            <div className="flex flex-col items-center">
+              <Label className="font-bold">Alternatives Considered:</Label>
+              <p className="text-center">{project.alternativeOptions === "" ? "N/A" : project.alternativeOptions}</p>
             </div>
-            <div className="flex flex-row">
-              <Label className="font-medium">Estimated Risks:</Label>
-              <p className="ml-1">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
+            <div className="flex flex-col items-center">
+              <Label className="font-bold">Estimated Risks:</Label>
+              <p className="text-center">{project.estimatedRisk === "" ? "N/A" : project.estimatedRisk}</p>
             </div>
           
 
-
-        <div className="mt-5 mb-5 flex gap-7"> 
+        <div className="mt-5 mb-10 flex gap-7 flex-col items-center"> 
         <div className="inline-flex rounded-md shadow-sm" role="group">
           <Link href={"/editProject/" + project.id} onClick={() => setLoading(true)}  type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
             <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -197,7 +197,8 @@ export default function Project() {
         </div>
       </div>
       </div>
-
+      
+      <div className="flex flex-col items-center">
       <Button variant={"withIcon"}
       size={"sm"}
       className="" 
@@ -216,7 +217,7 @@ export default function Project() {
       <p>
         {!isReadMoreShown ? 'View & Edit Project Details' : (isReadMoreShown ? 'Hide Details' : '')}
       </p>
-      </Button>
+      </Button></div>
 
       
 
