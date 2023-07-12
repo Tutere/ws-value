@@ -88,7 +88,7 @@ export default function Project() {
         >
           <div className="pl-24 pr-24 pt-10"
           style={{
-            backgroundImage: 'linear-gradient(' + project.colour + '4D' + ', #FFFFFF)',
+            backgroundImage: 'linear-gradient(' + project.colour + '9D' + ', #FFFFFF)',
           }}
           >
           <div className="flex flex-col items-center">
