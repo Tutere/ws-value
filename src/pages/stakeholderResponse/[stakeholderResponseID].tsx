@@ -32,23 +32,23 @@ if (stakeholderResponse === null || stakeholderResponse === undefined ) {
         borderTopWidth: "10px",
       }} >
       <h2 className="mb-5 text-3xl font-bold">Survey Response Details:</h2>
-      <div className="flex flex-row mb-4">
+      <div className="flex flex-row">
         <Label className="font-medium">Orgsanisation Name:</Label>
         <p className="ml-1">{stakeholderResponse.organisation}</p>
       </div>
-      <div className="flex flex-row mb-4">
+      <div className="flex flex-row">
         <Label className="font-medium">Benefits Rating:</Label>
         <p className="ml-1">{stakeholderResponse.benefitsRating}</p>
       </div>
-      <div className="flex flex-row mb-4">
+      <div className="flex flex-row">
         <Label className="font-medium">Experience Rating:</Label>
         <p className="ml-1">{stakeholderResponse.experienceRating}</p>
       </div>
-      <div className="flex flex-row mb-4">
+      <div className="flex flex-row">
         <Label className="font-medium">Suggested Improvements:</Label>
         <p className="ml-1">{stakeholderResponse.improvements}</p>
       </div>
-      <div className="flex flex-row mb-4 ">
+      <div className="flex flex-row ">
         <Label className="font-medium">Complaints:</Label>
         <p className="ml-1">{stakeholderResponse.positives}</p>
       </div>
