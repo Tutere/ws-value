@@ -94,13 +94,14 @@ export default function Project() {
           <div className="flex flex-col items-center">
             <h2 className="mb-5 text-3xl font-bold">{project.name}</h2>
           </div>
+          <div className="flex flex-col items-center">
+                {/* <Label className="font-bold">Goal:</Label> */}
+                <p className="text-center mb-5  ">{project.goal}</p>
+              </div>
           <div 
           className={`${isReadMoreShown ? 'max-h-[1000px]' : 'max-h-0'} transition-all duration-500 ease overflow-hidden grid gap-5`} //won't stretch to max height unless content fills that much space
           >
-              <div className="flex flex-col items-center">
-                <Label className="font-bold">Goal:</Label>
-                <p className="text-center">{project.goal}</p>
-              </div>
+
               
               <div className="flex flex-col items-center">
                 <Label className="font-bold">Estimated Start Date:</Label>
