@@ -122,7 +122,7 @@ export default function Project() {
               <p className="ml-1">{activity.hours + " hours"}</p>
             </div>
           </>
-          {isReadMoreShown && (
+
             <>
               <div className="flex flex-row">
                 <Label className="font-medium">Start Date:</Label>
@@ -149,13 +149,9 @@ export default function Project() {
                 </p>
               </div>
             </>
-          )}
+          
 
-      <Button variant={"subtle"} 
-      className="mt-2" 
-      size={"sm"}
-      onClick={toggleReadMore}> {!isReadMoreShown ? "See More.." : "See Less..."}
-      </Button>
+
 
       <div className="mt-10 flex gap-7"> 
       <div className="inline-flex rounded-md shadow-sm mt-2" role="group">
