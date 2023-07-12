@@ -80,11 +80,11 @@ export default function Project() {
     <>
       {isMemberFound ? (
         <div className=""
-        style={{
-          borderTopColor: `${project.colour}`,
-          borderTopStyle: "solid",
-          borderTopWidth: "10px",
-        }}
+        // style={{
+        //   borderTopColor: `${project.colour}`,
+        //   borderTopStyle: "solid",
+        //   borderTopWidth: "10px",
+        // }}
         >
           <div className="pl-24 pr-24 pt-10"
           style={{
