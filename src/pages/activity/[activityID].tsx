@@ -79,11 +79,15 @@ export default function Project() {
     <>
       {isMemberFound ? (
         <div className="p-8"
+          // style={{
+          //   borderTopColor: `${project?.colour}`,
+          //   borderTopStyle: "solid",
+          //   borderTopWidth: "10px",
+          // }} 
           style={{
-            borderTopColor: `${project?.colour}`,
-            borderTopStyle: "solid",
-            borderTopWidth: "10px",
-          }} >
+            backgroundImage: 'linear-gradient(' + project?.colour + '5D' + ', #FFFFFF)',
+          }}
+          >
 
           <Link href={"/" + project?.id} onClick={() => setLoading(true)}>
             <Button className="mb-5" variant={"withIcon"}>
