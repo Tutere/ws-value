@@ -102,23 +102,23 @@ export default function Project() {
 
           <div className="grid gap-3">
 
-            <div className="flex flex-col gap-1 ">
+            <div className="flex flex-col">
               <Label className="font-bold">Description:</Label>
               <p className="">{activity.description}</p>
             </div>
-            <div className="flex flex-col gap-1 ">
+            <div className="flex flex-col">
               <Label className="font-bold">Value Created:</Label>
               <p className="">{activity.valueCreated}</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <Label className="font-bold">Outcome Score:</Label>
               <p className="">{activity.outcomeScore}</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <Label className="font-bold">Effort Score:</Label>
               <p className="">{activity.effortScore}</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col ">
               <Label className="font-bold">Hours Spent on Activity:</Label>
               <p className="">{activity.hours + " hours"}</p>
             </div>
@@ -126,21 +126,21 @@ export default function Project() {
               <Label className="font-bold">Start Date:</Label>
               <p className="">{activity.startDate?.toLocaleDateString()}</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <Label className="font-bold">End Date:</Label>
               <p className="">{activity.endDate?.toLocaleDateString() == null ? "N/A" : activity.endDate?.toLocaleDateString()}</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col ">
               <Label className="font-bold">Engagement Pattern:</Label>
               <p className="">{activity.engagementPattern === "" ? "N/A" : activity.engagementPattern }</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <Label className="font-bold">Activity Members:</Label>
               <p className="">
                 {activityMembers?.map((member) => member?.name).join(", ") === "" ? "N/A" : activityMembers?.map((member) => member?.name).join(", ")}
               </p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <Label className="font-bold">Stakeholders Involved:</Label>
               <p className="">
                 {activity?.stakeholders === "" ? "N/A" : activity?.stakeholders}
