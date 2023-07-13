@@ -99,7 +99,7 @@ export default function Project() {
                 <p className="text-center mb-5  ">{project.goal}</p>
               </div>
           <div 
-          className={`${isReadMoreShown ? 'max-h-[1000px]' : 'max-h-0'} transition-all duration-500 ease overflow-hidden grid gap-5`} //won't stretch to max height unless content fills that much space
+          className={`${isReadMoreShown ? 'max-h-[1000px]' : 'max-h-0'} transition-all duration-500 ease overflow-hidden grid gap-3`} //won't stretch to max height unless content fills that much space
           >
 
               
