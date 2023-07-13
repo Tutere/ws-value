@@ -121,7 +121,7 @@ export default function Project() {
               </div>
               <div className="flex flex-col items-center">
                 <Label className="font-bold">Stakeholders:</Label>
-                <p className="text-center">{project.stakeholders}</p>
+                <p className="text-center">{project.stakeholders === "" ? "N/A" : project.stakeholders}</p>
               </div>
               <div className="flex flex-col items-center">
                 <Label className="font-bold">
