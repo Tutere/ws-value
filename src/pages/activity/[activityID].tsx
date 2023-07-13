@@ -128,22 +128,22 @@ export default function Project() {
             </div>
             <div className="flex flex-col gap-1">
               <Label className="font-bold">End Date:</Label>
-              <p className="">{activity.endDate?.toLocaleDateString()}</p>
+              <p className="">{activity.endDate?.toLocaleDateString() == null ? "N/A" : activity.endDate?.toLocaleDateString()}</p>
             </div>
             <div className="flex flex-col gap-1">
               <Label className="font-bold">Engagement Pattern:</Label>
-              <p className="">{activity.engagementPattern}</p>
+              <p className="">{activity.engagementPattern === "" ? "N/A" : activity.engagementPattern }</p>
             </div>
             <div className="flex flex-col gap-1">
               <Label className="font-bold">Activity Members:</Label>
               <p className="">
-                {activityMembers?.map((member) => member?.name).join(", ")}
+                {activityMembers?.map((member) => member?.name).join(", ") === "" ? "N/A" : activityMembers?.map((member) => member?.name).join(", ")}
               </p>
             </div>
             <div className="flex flex-col gap-1">
               <Label className="font-bold">Stakeholders Involved:</Label>
               <p className="">
-                {activity?.stakeholders}
+                {activity?.stakeholders === "" ? "N/A" : activity?.stakeholders}
               </p>
             </div>
           </div>
