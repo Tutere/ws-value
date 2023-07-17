@@ -33,7 +33,7 @@ export function MonthlyReportProject<T extends FieldValues>(
   props: MonthlyReportProjectProps<T>
   ){
 
-  const [hiddenActivities, setHiddenActivities] = useState<boolean[]>(
+  const [hiddenActivities, setHiddenActivities] = useState<boolean[]>( //all activities and whether they are hidden or not
     new Array(props.project.activitiesInRange.length).fill(false)
   );
 

@@ -32,7 +32,7 @@ export default function MonthlyReport({
   const { data: sessionData } = useSession();
 
   const {data: projects, isLoading} = api.projects.read.useQuery(undefined, {
-    suspense: true,
+    // suspense: true,
   });
 
 
