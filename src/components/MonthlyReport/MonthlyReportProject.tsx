@@ -4,7 +4,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/client";
 import { MonthlyReportActivity } from "./MonthlyReportActivity";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
-
+import {useAtom} from "jotai";
+import { arrayAtom } from "~/pages/testReport";
 
 interface MonthlyReportProjectProps<T extends FieldValues> {
   children:React.ReactNode;
@@ -26,12 +27,15 @@ interface MonthlyReportProjectProps<T extends FieldValues> {
             ActivityMember: ActivityMember[];
         })[];
     }[];
-}
+},
+projectIndex: number;
 }
 
 export function MonthlyReportProject<T extends FieldValues>( 
   props: MonthlyReportProjectProps<T>
   ){
+
+  const [arrayAtom1, setArrayAtom1] = useAtom(arrayAtom);
 
   const [hiddenActivities, setHiddenActivities] = useState<boolean[]>( //all activities and whether they are hidden or not
     new Array(props.project.activitiesInRange.length).fill(false)
@@ -41,11 +45,17 @@ export function MonthlyReportProject<T extends FieldValues>(
     const newHiddenActivities = [...hiddenActivities];
     newHiddenActivities[index] = !newHiddenActivities[index];
     setHiddenActivities(newHiddenActivities);
+
+    const newArrayAtom1 = [...arrayAtom1];
+    newArrayAtom1[props.projectIndex]![index] = true;
+    setArrayAtom1(newArrayAtom1);
+    
   };
 
   const areAllActivitiesHidden = hiddenActivities.every((hidden) => hidden);
   console.log("Activities Hidden: " + areAllActivitiesHidden)
-
+  console.log(arrayAtom1);
+  
   return (
     <div className={areAllActivitiesHidden? "hidden" : ""}> 
       <Link className="text-xl mb-5 hover:underline" 

@@ -19,6 +19,9 @@ import { EmailConfirmation } from "~/components/ui/emailConfirmation";
 import { RemoveDialog } from "~/components/ui/removeDialogue";
 import { LoadingPage } from "~/components/ui/loading";
 import { MonthlyReportProject } from "~/components/MonthlyReport/MonthlyReportProject";
+import {atom, useAtom} from "jotai";
+
+export const arrayAtom = atom<any[][]>([])
 
 export default function MonthlyReport({
   className,
@@ -134,7 +137,17 @@ export default function MonthlyReport({
     const activityArrayWithStates =  new Array(project.activitiesInRange.length).fill(false);
     testArray.push(activityArrayWithStates);
   })
-  console.log(testArray);
+  // console.log(testArray);
+
+  const [arrayAtom1, setArrayAtom1] = useAtom(arrayAtom);
+
+  useEffect(() => {
+    if (testArray.length === projectsWithActivitiesInRange.length && testArray.length > 1) {
+      setArrayAtom1(testArray);
+      console.log(arrayAtom1);
+    }
+  }, [testArray.length, projectsWithActivitiesInRange.length, setArrayAtom1]);
+  console.log(arrayAtom1);
 
 
   if (isLoading) {
@@ -160,9 +173,9 @@ export default function MonthlyReport({
           
             <h1 className="text-3xl font-bold mb-12 underline" >Activities Worked On (by project)</h1>
             
-            {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
+            {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project, index) => {
                 return (
-                    <MonthlyReportProject project={project} > </MonthlyReportProject>
+                    <MonthlyReportProject project={project} projectIndex={index} > </MonthlyReportProject>
                 )
             })}
             
