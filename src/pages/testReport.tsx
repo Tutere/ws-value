@@ -129,6 +129,13 @@ export default function MonthlyReport({
     }
   });
 
+  const testArray: any[][] = [];
+  projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
+    const activityArrayWithStates =  new Array(project.activitiesInRange.length).fill(false);
+    testArray.push(activityArrayWithStates);
+  })
+  console.log(testArray);
+
 
   if (isLoading) {
     return (
