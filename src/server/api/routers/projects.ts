@@ -97,7 +97,15 @@ export const projectsRouter = createTRPCRouter({
         },
         Activity: {
           include: {
-            members: true,
+            members: {
+              include : {
+                members: {
+                  include : {
+                    user:true //for reporting purposes
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -122,7 +130,15 @@ export const projectsRouter = createTRPCRouter({
           },
           Activity: {
             include: {
-              members: true,
+              members: {
+                include : {
+                  members: {
+                    include : {
+                      user:true //for reporting purposes
+                    }
+                  }
+                }
+              }
             }
           }
         },

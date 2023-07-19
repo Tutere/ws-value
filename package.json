@@ -31,6 +31,7 @@
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
+    "jotai": "^2.2.2",
     "lucide-react": "^0.129.0",
     "next": "^13.2.1",
     "next-auth": "^4.19.0",
