@@ -171,7 +171,7 @@ const sendEmail = (e: { preventDefault: () => void; }) => {
         <DialogHeader>
           <DialogTitle>Send Email?</DialogTitle>
           <DialogDescription>
-            An email will be sent to tuteredurie@hotmail.com using the exact infomation provided on this page, in the same format.
+            An email will be sent to richmond.johnston@worksafe.govt.nz using the exact infomation provided on this page, in the same format.
             <b> No preview will be available.</b>
             <br/> 
             <br/> 
