@@ -61,7 +61,7 @@ export function EmailConfirmation <T extends FieldValues>(
   };
   
   const currentUser = api.users.currentUser.useQuery(undefined,{
-    suspense:true,
+    // suspense:true,
   }).data;
 
   const email = currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "";
@@ -69,6 +69,7 @@ export function EmailConfirmation <T extends FieldValues>(
   const sessionData = useSession().data;
 
   const activitiesForEmail = props.projectsWithActivitiesInRange.map((project, projectIndex) => {
+    if (arrayAtom1.length > 0) {
     let allActivitiesHidden = true;
     project.activitiesInRange.forEach((element, activityIndex) => {
       if (arrayAtom1[projectIndex]![activityIndex] === false) {
@@ -104,7 +105,7 @@ export function EmailConfirmation <T extends FieldValues>(
         ${activities}
       </div>
     `;
-  }).join('\n');
+  }}).join('\n');
 
   const projectsForEmail = props.projectsInDateRange.map(project => {
     return `
