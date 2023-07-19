@@ -20,6 +20,7 @@ import { RemoveDialog } from "~/components/ui/removeDialogue";
 import { LoadingPage } from "~/components/ui/loading";
 import { MonthlyReportProject } from "~/components/MonthlyReport/MonthlyReportProject";
 import {atom, useAtom} from "jotai";
+import { EmailConfirmationCopy } from "~/components/ui/emailConfirmation copy";
 
 export const arrayAtom = atom<any[][]>([])
 
@@ -150,6 +151,102 @@ export default function MonthlyReport({
   console.log(arrayAtom1);
 
 
+  //email setup
+
+  const currentUser = api.users.currentUser.useQuery(undefined,{
+    // suspense:true,
+  }).data;
+
+  const email = currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "";
+
+  const activitiesForEmail = projectsWithActivitiesInRange.map((project, projectIndex) => {
+    if (arrayAtom1.length > 0) {
+    let allActivitiesHidden = true;
+    project.activitiesInRange.forEach((element, activityIndex) => {
+      if (arrayAtom1[projectIndex]![activityIndex] === false) {
+        allActivitiesHidden = false;
+      }
+    })
+    const activities = project.activitiesInRange.filter((activity, activityIndex) => !arrayAtom1[projectIndex]![activityIndex])
+    .map(activity => `
+      <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
+        <p style="margin-right: 5px;">${project.project.icon}</p>
+        <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
+        <p className="ml-1">
+        ${activity.activity.endDate ? (
+          "- Completed: " +
+        activity.activity.endDate?.toDateString()
+        ): (
+          " - Ongoing (not yet completed)"
+        )}
+        </p>
+      </div>
+      <ul style="margin-top: 0px; padding-top: 0px;">
+        <li>Contributors: ${activity.projectMembers?.map(pm => pm.user.name).join(", ")}</li>
+        <li>Stakeholders: ${activity.activity.stakeholders === "" ? activity.activity.stakeholders : "N/A"}</li>
+        <li>Description: ${activity.activity.description}</li>
+        <li>Value Statement: ${activity.activity.valueCreated}</li>
+        <li style="white-space: pre-wrap;">Additional Comments: ${activity.activity.reportComments ? activity.activity.reportComments.replace(/\n/g, '<br>') : ""}</li>
+      </ul>
+    `).join('');
+  
+    return `
+      <div style="margin-bottom: 30px;">
+        <p style="font-size: 15px; margin-bottom: 0px; ${allActivitiesHidden? "display: none;" : ""}"><b>${project.project.name}</b></p>
+        ${activities}
+      </div>
+    `;
+  }}).join('\n');
+
+  const projectsForEmail = projectsInDateRange.map(project => {
+    return `
+      <div style="margin-bottom: 30px;">
+        <div style="font-size: 15px; display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px;">
+          <p style="margin-right: 5px;">${project.icon}</p>
+          <p style="margin-right: 5px;"><b>${project.name}</b></p>
+          <p className="ml-1">
+          ${" "}
+          - Completed:${" "}
+          ${project.actualEnd?.toDateString()}
+          </p>
+        </div>
+
+        <ul style="margin-top: 0px; padding-top: 0px;">
+          <li>Contributors: ${project.members.map(pm => pm.user.name).join(", ")}</li>
+          <li>Stakeholders: ${project.stakeholders}</li>
+          <li>Retrospective: ${project.retrospective}</li>
+          <li>Lessons Learnt: ${project.lessonsLearnt}</li>
+        </ul>
+
+      </div>
+    `;
+  }).join('\n');
+
+ //used for loading state of button 
+ const [emailSending,setEmailSending] = useState(false);
+
+const sendEmail = (e: { preventDefault: () => void; }) => {
+  e.preventDefault();
+  setEmailSending(true);
+
+  emailjs.send('service_0yn0tdg', 'template_i1cq8tc', 
+  {
+    user_name: sessionData?.user.name,
+    user_email: currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "" ,
+    activitiesCompleted: activitiesForEmail,
+    projectsCompleted: projectsForEmail,
+  },
+   'ZyIRYHSvCLfZ4nSsl')
+    .then((result) => {
+        alert("Email was sent!")
+        setEmailSending(false);
+    }, (error) => {
+        console.log(error.text);
+        alert("Error:" + error.text);
+        setEmailSending(false);
+    });
+};
+
   if (isLoading) {
     return (
       <LoadingPage></LoadingPage>
@@ -163,7 +260,10 @@ export default function MonthlyReport({
       <div className={cn("grid gap-2", className)}>
         <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
         <DatePicker date={date} setDate={setDate} />
-        {/* <EmailConfirmation sendEmail={sendEmail} emailSending={emailSending}></EmailConfirmation> */}
+        {/* <EmailConfirmation 
+          projectsWithActivitiesInRange={projectsWithActivitiesInRange}
+          projectsInDateRange={projectsInDateRange} ></EmailConfirmation> */}
+          <EmailConfirmationCopy sendEmail={sendEmail} emailSending={emailSending}></EmailConfirmationCopy>
       </div>
 
 
