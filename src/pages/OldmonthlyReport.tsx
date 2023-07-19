@@ -315,7 +315,7 @@ export default function MonthlyReport({
       <div className={cn("grid gap-2", className)}>
         <h1 className="text-2xl font-bold mx-auto mt-4" >Select dates for summary:</h1>
         <DatePicker date={date} setDate={setDate} />
-        <EmailConfirmation sendEmail={sendEmail} emailSending={emailSending}></EmailConfirmation>
+        {/* <EmailConfirmation sendEmail={sendEmail} emailSending={emailSending}></EmailConfirmation> */}
       </div>
 
 
