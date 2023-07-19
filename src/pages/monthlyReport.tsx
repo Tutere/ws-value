@@ -1,10 +1,10 @@
 import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/client";
 import { atom, useAtom } from "jotai";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import * as React from "react";
 import { useEffect } from 'react';
 import { DateRange } from "react-day-picker";
+import { MonthlyReportCompleteProject } from "~/components/MonthlyReport/MonthlyReportCompletedProject";
 import { MonthlyReportProject } from "~/components/MonthlyReport/MonthlyReportProject";
 import { DatePicker } from "~/components/ui/datePicker";
 import { EmailConfirmation } from "~/components/ui/emailConfirmation";
@@ -181,23 +181,7 @@ export default function MonthlyReport({
           {projectsInDateRange && projectsInDateRange.map((project) => {
 
               return (
-                <>
-                <div className="flex mb-5">
-                  {project.icon}
-                  <Link className="text-xl ml-2 font-bold hover:underline"
-                   href={"/" + project.id} 
-                   rel="noopener noreferrer" 
-                   target="_blank"
-                  >{project.name}</Link>
-                  <p className="ml-1"> - Completed: {project.actualEnd?.toDateString()} </p>
-                </div>
-                <div className="mb-5 ml-5 w-3/4">     
-                    <p className="">Contributors: {project.members.map(pm => pm.user.name).join(", ")} </p>
-                    <p className="">Stakeholders: {project.stakeholders} </p>
-                    <p className="">Retrospective: {project.retrospective} </p>
-                    <p className="mb-10">Lessons Learnt: {project.lessonsLearnt} </p>
-                </div>
-                </>
+                <MonthlyReportCompleteProject project={project}></MonthlyReportCompleteProject>
               )
           })}
         </div>
