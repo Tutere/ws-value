@@ -5,7 +5,7 @@ import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/
 import { MonthlyReportActivity } from "./MonthlyReportActivity";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import {useAtom} from "jotai";
-import { arrayAtom } from "~/pages/testReport";
+import { arrayAtom } from "~/pages/monthlyReport";
 
 interface MonthlyReportProjectProps<T extends FieldValues> {
   children:React.ReactNode;
