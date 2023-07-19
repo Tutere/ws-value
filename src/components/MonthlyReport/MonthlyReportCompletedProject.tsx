@@ -1,10 +1,6 @@
-import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/client";
-import { useAtom } from "jotai";
+import { Activity, Project, ProjectMember, User } from "@prisma/client";
 import Link from "next/link";
-import React, { useState } from "react";
 import { FieldValues } from "react-hook-form";
-import { arrayAtom } from "~/pages/monthlyReport";
-import { MonthlyReportActivity } from "./MonthlyReportActivity";
 
 interface MonthlyReportCompleteProjectProps<T extends FieldValues> {
     project: Project & {
