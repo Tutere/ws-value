@@ -15,7 +15,7 @@ import emailjs from '@emailjs/browser';
 import { Project, Activity, ActivityMember, ProjectMember } from "@prisma/client";
 import { User } from "next-auth";
 import { FieldValues } from "react-hook-form";
-import { arrayAtom } from "~/pages/monthlyReport";
+import { activityStatesAtom } from "~/pages/monthlyReport";
 import { useAtom } from "jotai";
 
 
@@ -52,7 +52,7 @@ export function EmailConfirmation <T extends FieldValues>(
   props: EmailProps<T>
   ) {
   
-  const [arrayAtom1, setArrayAtom1] = useAtom(arrayAtom);
+  const [activitiyStates, setArrayAtom1] = useAtom(activityStatesAtom);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSendClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -69,14 +69,14 @@ export function EmailConfirmation <T extends FieldValues>(
   const sessionData = useSession().data;
 
   const activitiesForEmail = props.projectsWithActivitiesInRange.map((project, projectIndex) => {
-    if (arrayAtom1.length > 0) {
+    if (activitiyStates.length > 0) {
     let allActivitiesHidden = true;
     project.activitiesInRange.forEach((element, activityIndex) => {
-      if (arrayAtom1[projectIndex]![activityIndex] === false) {
+      if (activitiyStates[projectIndex]![activityIndex] === false) {
         allActivitiesHidden = false;
       }
     })
-    const activities = project.activitiesInRange.filter((activity, activityIndex) => !arrayAtom1[projectIndex]![activityIndex])
+    const activities = project.activitiesInRange.filter((activity, activityIndex) => !activitiyStates[projectIndex]![activityIndex])
     .map(activity => `
       <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
         <p style="margin-right: 5px;">${project.project.icon}</p>

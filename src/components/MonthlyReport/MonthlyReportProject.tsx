@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import Link from "next/link";
 import React, { useState } from "react";
 import { FieldValues } from "react-hook-form";
-import { arrayAtom } from "~/pages/monthlyReport";
+import { activityStatesAtom } from "~/pages/monthlyReport";
 import { MonthlyReportActivity } from "./MonthlyReportActivity";
 
 interface MonthlyReportProjectProps<T extends FieldValues> {
@@ -34,7 +34,7 @@ export function MonthlyReportProject<T extends FieldValues>(
   props: MonthlyReportProjectProps<T>
   ){
 
-  const [arrayAtom1, setArrayAtom1] = useAtom(arrayAtom);
+  const [activitiyStates, setArrayAtom1] = useAtom(activityStatesAtom);
 
   const [hiddenActivities, setHiddenActivities] = useState<boolean[]>( //all activities and whether they are hidden or not
     new Array(props.project.activitiesInRange.length).fill(false)
@@ -45,7 +45,7 @@ export function MonthlyReportProject<T extends FieldValues>(
     newHiddenActivities[index] = !newHiddenActivities[index];
     setHiddenActivities(newHiddenActivities);
 
-    const newArrayAtom1 = [...arrayAtom1];
+    const newArrayAtom1 = [...activitiyStates];
     newArrayAtom1[props.projectIndex]![index] = true;
     setArrayAtom1(newArrayAtom1);
     
@@ -53,7 +53,7 @@ export function MonthlyReportProject<T extends FieldValues>(
 
   const areAllActivitiesHidden = hiddenActivities.every((hidden) => hidden);
   console.log("Activities Hidden: " + areAllActivitiesHidden)
-  console.log(arrayAtom1);
+  console.log(activitiyStates);
   
   return (
     <div className={areAllActivitiesHidden? "hidden" : ""}> 

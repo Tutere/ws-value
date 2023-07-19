@@ -12,7 +12,7 @@ import { LoadingPage } from "~/components/ui/loading";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 
-export const arrayAtom = atom<any[][]>([])
+export const activityStatesAtom = atom<any[][]>([])
 
 export default function MonthlyReport({
   className,
@@ -130,15 +130,15 @@ export default function MonthlyReport({
   })
   // console.log(testArray);
 
-  const [arrayAtom1, setArrayAtom1] = useAtom(arrayAtom);
+  const [activitiyStates, setArrayAtom1] = useAtom(activityStatesAtom);
 
   useEffect(() => {
     if (testArray.length === projectsWithActivitiesInRange.length && testArray.length > 1) {
       setArrayAtom1(testArray);
-      console.log(arrayAtom1);
+      console.log(activitiyStates);
     }
   }, [testArray.length, projectsWithActivitiesInRange.length, setArrayAtom1]);
-  console.log(arrayAtom1);
+  console.log(activitiyStates);
 
 
   if (isLoading) {
