@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/Button";
 import { LoadingPage } from "~/components/ui/loading";
-import { ProjectCard } from "~/components/ui/projectCard";
+import { Card } from "~/components/ui/Card";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -41,7 +41,7 @@ const Home: NextPage = () => {
                   if (project.status == "Active") {
 
                     return (
-                      <ProjectCard project={project}></ProjectCard>
+                      <Card project={project}></Card>
                     );
                   }
                 })}
@@ -67,7 +67,7 @@ const Home: NextPage = () => {
                 projects.map((project) => {
                   if (project.status == "Complete") {
                     return (
-                      <ProjectCard project={project}></ProjectCard>
+                      <Card project={project}></Card>
                     );
                   }
                 })}

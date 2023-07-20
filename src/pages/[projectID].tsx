@@ -11,6 +11,7 @@ import { api } from "~/utils/api";
 import { Button } from "../components/ui/Button";
 import { useProjectDeletion } from "~/hooks/useProjectDeletion";
 import { LoadingPage } from "~/components/ui/loading";
+import { Card } from "~/components/ui/Card";
 
 export default function Project() {
   const router = useRouter();
@@ -239,20 +240,7 @@ export default function Project() {
             return bStartDate - aStartDate; // sort the activities array by startDate in descending order
           })
           .map((activity) => (
-            <Link
-              href={"/activity/" + activity.id}
-              key={activity.id}
-              style={{
-                borderTopColor: `${project.colour}`,
-                borderTopStyle: "solid",
-                borderTopWidth: "thick",
-              }}
-              className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow`}
-              onClick={() => setLoading(true)}
-            >
-              <h3 className="text-xl font-bold mx-1">{activity.name}</h3>
-              <p className="line-clamp-3 m-1 italic text-sm">{activity.description}</p>
-            </Link>
+            <Card activity={activity} projectColour={project.colour}></Card>
           ))}
       </div>
 
