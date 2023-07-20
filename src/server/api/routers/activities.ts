@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { CreateActivitySchema, ReadActivitySchema,
   ReadSpecificActivitySchema, EditActivitySchema, ReportCommentSchema  } from "~/schemas/activities";
 
@@ -114,8 +115,9 @@ export const activitiesRouter = createTRPCRouter({
 
   readSpecific: protectedProcedure
   .input(ReadSpecificActivitySchema)
-  .query(({ ctx, input }) => {
-    return ctx.prisma.activity.findUnique(
+  .query(async ({ ctx, input }) => {
+    const activity = 
+    await ctx.prisma.activity.findUnique(
       {
         where: {
           id: input.id,
@@ -130,6 +132,24 @@ export const activitiesRouter = createTRPCRouter({
         },
       }
     );
+    const isMemberFound = activity?.project?.members.some((member) => {
+      if (member.userId === ctx.session?.user.id) {
+        return true;
+      } else if (ctx.session.user.id === 'clh8vfdfq0000mj085tgdm0or') { //ganesh access
+        return true;
+      } else{
+        return false;
+      }
+       ;
+    });
+
+    if (!isMemberFound) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User is not a member of this project",
+      });
+    }
+    return activity;
   }),
 
   edit: protectedProcedure

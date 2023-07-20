@@ -17,37 +17,23 @@ export default function Project() {
 
 
 
-  const { data: activity } = api.activities.readSpecific.useQuery({ id: id }, {
-    suspense: true,
+  const { data: activity, isLoading } = api.activities.readSpecific.useQuery({ id: id }, {
+    // suspense: true,
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        alert("Sorry, you are not a member of this activity");
+        router.push("/");
+      }
+    },
   });
 
   const project = activity?.project;
 
   const { ActivityhandleDelete } = useActivityDeletion(id);
 
-  const { data: sessionData } = useSession();
-  const isMemberFound = project?.members.some(member => {
-    if (member.userId === sessionData?.user.id) {
-      return true;
-    } else if (sessionData?.user.id === 'clh8vfdfq0000mj085tgdm0or') { //ganesh access
-      return true;
-    } else {
-      return false;
-    }
-  });
-
-  useEffect(() => {
-    if (!isMemberFound) {
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
-    }
-  }, [isMemberFound, router]);
-
-
   //get list of users first, then filter against activity members to get names
   const queryUsers = api.users.read.useQuery(undefined, {
-    suspense: true,
+    // suspense: true,
     onError: (error) => {
       console.error(error);
     },
@@ -55,20 +41,13 @@ export default function Project() {
 
   const users = queryUsers.data;
 
-
   const activityMembers = activity?.members.flatMap((member) => //flatmap to get rid of nesting
     users?.filter((user) =>
       user.projects?.some((projectMember) => projectMember.id === member.projectMemberId)
     )
   );
 
-  //used for read more button
-  const [isReadMoreShown, setIsReadMoreShown] = useState(false);
-  const toggleReadMore = () => {
-    setIsReadMoreShown(prevState => !prevState)
-  }
-
-  if (loading) {
+  if (loading || isLoading) {
     return <LoadingPage></LoadingPage>
 
   }
@@ -77,7 +56,6 @@ export default function Project() {
   }
   return (
     <>
-      {isMemberFound ? (
         <div className="p-8"
           // style={{
           //   borderTopColor: `${project?.colour}`,
@@ -171,13 +149,6 @@ export default function Project() {
           </div>
 
         </div>
-
-      ) : (
-        <div className="p-8">
-          <p>You are not a member of this project. Redirecting to homepage...</p>
-        </div>
-      )
-      }
 
     </>
   );
