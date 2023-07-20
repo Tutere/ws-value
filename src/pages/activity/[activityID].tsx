@@ -12,7 +12,7 @@ import { api } from "~/utils/api";
 export default function Project() {
   const router = useRouter();
   const id = router.query.activityID as string;
-  const utils = api.useContext().activities;
+  // const utils = api.useContext().activities;
   const [loading, setLoading] = useState(false);
 
 
