@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/Button";
 import { LoadingPage } from "~/components/ui/loading";
+import { ProjectCard } from "~/components/ui/projectCard";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -40,25 +41,7 @@ const Home: NextPage = () => {
                   if (project.status == "Active") {
 
                     return (
-                      <Link
-                        href={"/" + project.id}
-                        key={project.id}
-                        style={{
-                          borderTopColor: `${project.colour}`,
-                          borderTopStyle: "solid",
-                          borderTopWidth: "thick",
-                        }}
-                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
-                      >
-                        <div className="flex justify-start">
-                          <div className="mr-2 text-lg">{project.icon}</div>
-                          <h3 className="text-xl font-bold">{project.name}</h3>
-                        </div>
-
-                        <p className="m-1 text-sm italic line-clamp-3">
-                          {project.description}
-                        </p>                    
-                      </Link>
+                      <ProjectCard project={project}></ProjectCard>
                     );
                   }
                 })}
@@ -84,25 +67,7 @@ const Home: NextPage = () => {
                 projects.map((project) => {
                   if (project.status == "Complete") {
                     return (
-                      <Link
-                        href={"/" + project.id}
-                        key={project.id}
-                        style={{
-                          borderTopColor: `${project.colour}`,
-                          borderTopStyle: "solid",
-                          borderTopWidth: "thick",
-                        }}
-                        className={`top-4 basis-60 overflow-hidden rounded-lg p-4 shadow-lg`}
-                      >
-                        <div className="flex justify-start">
-                          <div className="mr-2 text-lg">{project.icon}</div>
-                          <h3 className="text-xl font-bold">{project.name}</h3>
-                        </div>
-
-                        <p className="m-1 text-sm italic line-clamp-3">
-                          {project.description}
-                        </p>
-                      </Link>
+                      <ProjectCard project={project}></ProjectCard>
                     );
                   }
                 })}
