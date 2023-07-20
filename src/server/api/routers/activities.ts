@@ -123,7 +123,15 @@ export const activitiesRouter = createTRPCRouter({
           id: input.id,
         },
         include: {
-          members: true,
+          members: {
+            include : {
+              members:{
+                include : {
+                  user: true,
+                }
+              }
+            }
+          },
           project: {
             include:{
               members:true,

@@ -31,22 +31,6 @@ export default function Project() {
 
   const { ActivityhandleDelete } = useActivityDeletion(id);
 
-  //get list of users first, then filter against activity members to get names
-  const queryUsers = api.users.read.useQuery(undefined, {
-    // suspense: true,
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
-  const users = queryUsers.data;
-
-  const activityMembers = activity?.members.flatMap((member) => //flatmap to get rid of nesting
-    users?.filter((user) =>
-      user.projects?.some((projectMember) => projectMember.id === member.projectMemberId)
-    )
-  );
-
   if (loading || isLoading) {
     return <LoadingPage></LoadingPage>
 
@@ -115,7 +99,7 @@ export default function Project() {
             <div className="flex flex-col">
               <Label className="font-bold">Activity Members:</Label>
               <p className="">
-                {activityMembers?.map((member) => member?.name).join(", ") === "" ? "N/A" : activityMembers?.map((member) => member?.name).join(", ")}
+                {activity.members.map(member => member.members.user.name).join(", ") === "" ? "N/A" : activity.members.map(member => member.members.user.name).join(", ")}
               </p>
             </div>
             <div className="flex flex-col">
