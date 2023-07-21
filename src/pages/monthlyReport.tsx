@@ -30,11 +30,11 @@ export default function MonthlyReport({
   });
 
 
-  // get all projects and their activities (so all hooks used each render)
+  // get all projects and their activities
   const allProjectsAndActivities: { project: Project & { Activity: (Activity & { members: ActivityMember[]; })[]; members: (ProjectMember & { user: User; })[]; }; activities: { activity: Activity & { members: ActivityMember[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[]; }[] = [];
   
 
-  //add all activities to each project, along with fields and states for later user
+  //add all activities to each project
   projects && projects.map((project) => {
     const activities: { activity: Activity & { members: ActivityMember[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[] = [];
     
@@ -123,21 +123,23 @@ export default function MonthlyReport({
     }
   });
 
-  const testArray: any[][] = [];
+  /* create an array that copies the structure of projectsWithActivitiesInRange and 
+  has a state for each activity --> will be used for Atom to manages which activites 
+  have been hidden */
+  const statesArray: any[][] = [];
   projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project) => {
     const activityArrayWithStates =  new Array(project.activitiesInRange.length).fill(false);
-    testArray.push(activityArrayWithStates);
+    statesArray.push(activityArrayWithStates);
   })
-  // console.log(testArray);
 
   const [activitiyStates, setArrayAtom1] = useAtom(activityStatesAtom);
 
   useEffect(() => {
-    if (testArray.length === projectsWithActivitiesInRange.length && testArray.length > 1) {
-      setArrayAtom1(testArray);
+    if (statesArray.length === projectsWithActivitiesInRange.length && statesArray.length > 1) {
+      setArrayAtom1(statesArray);
       console.log(activitiyStates);
     }
-  }, [testArray.length, projectsWithActivitiesInRange.length, setArrayAtom1]);
+  }, [statesArray.length, projectsWithActivitiesInRange.length, setArrayAtom1]);
   console.log(activitiyStates);
 
 
