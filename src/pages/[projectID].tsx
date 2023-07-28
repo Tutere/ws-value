@@ -38,7 +38,7 @@ export default function Project() {
   const isMemberFound = project?.members.some((member) => {
      if (member.userId === sessionData?.user.id) {
       return true;
-    } else if (sessionData?.user.id === 'clh8vfdfq0000mj085tgdm0or') { //ganesh access
+    } else if (sessionData?.user.role === 'Admin') { //admin access
       return true;
     } else{
       return false;

@@ -483,7 +483,7 @@ export const projectsRouter = createTRPCRouter({
       const isMemberFound = project?.members.some((member) => {
         if (member.userId === ctx.session?.user.id) {
           return true;
-        } else if (ctx.session.user.id === 'clh8vfdfq0000mj085tgdm0or') { //ganesh access
+        } else if (ctx.session.user.role === 'Admin') { //ganesh access
           return true;
         } else{
           return false;
