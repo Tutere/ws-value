@@ -301,7 +301,7 @@ export default function ProjectForm() {
             </div>
 
             <InputSection
-              label="Name"
+              label="Project Title"
               methods={methods}
               infoContent="Name of this project"
               methodsField="name"
