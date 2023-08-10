@@ -92,7 +92,7 @@ export function EmailConfirmation <T extends FieldValues>(
       </div>
       <ul style="margin-top: 0px; padding-top: 0px;">
         <li>Contributors: ${activity.projectMembers?.map(pm => pm.user.name).join(", ")}</li>
-        <li>Stakeholders: ${activity.activity.stakeholders === "" ? activity.activity.stakeholders : "N/A"}</li>
+        <li>Stakeholders: ${activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders }</li>
         <li>Description: ${activity.activity.description}</li>
         <li>Value Statement: ${activity.activity.valueCreated}</li>
         <li style="white-space: pre-wrap;">Additional Comments: ${activity.activity.reportComments ? activity.activity.reportComments.replace(/\n/g, '<br>') : ""}</li>
