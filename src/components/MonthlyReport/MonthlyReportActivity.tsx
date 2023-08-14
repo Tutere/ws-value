@@ -69,7 +69,7 @@ export function MonthlyReportActivity<T extends FieldValues>(
       // methodsActivityTracker.reset();
     })}
     >
-    <div className= {props.hidden === true ? "hidden" :"mb-5 ml-5 w-3/4"}>  
+    <div className= {props.hidden === true ? "hidden" :"mb-5 ml-5 w-4/5"}>  
         <Link className="hover:underline"  href={"/activity/" + props.activity.activity.id} 
         rel="noopener noreferrer" 
         target="_blank">

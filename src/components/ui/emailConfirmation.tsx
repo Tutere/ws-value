@@ -17,6 +17,7 @@ import { User } from "next-auth";
 import { FieldValues } from "react-hook-form";
 import { activityStatesAtom } from "~/pages/monthlyReport";
 import { useAtom } from "jotai";
+import { generalCommentsAtom } from "~/pages/monthlyReport";
 
 
 interface EmailProps<T extends FieldValues> {
@@ -55,7 +56,10 @@ export function EmailConfirmation <T extends FieldValues>(
   const [activitiyStates, setArrayAtom1] = useAtom(activityStatesAtom);
   const [isOpen, setIsOpen] = useState(false);
 
+  const [generalComments, setGeneralComments] = useAtom(generalCommentsAtom);
+
   const handleSendClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("geenral comments: " + generalComments)
     await sendEmail(e);
     setIsOpen(false);
   };
@@ -143,7 +147,8 @@ const sendEmail = (e: { preventDefault: () => void; }) => {
     user_name: sessionData?.user.name,
     user_email: currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "" ,
     activitiesCompleted: activitiesForEmail,
-    projectsCompleted: projectsForEmail,
+    projectsCompleted: projectsForEmail.length === 0? "N/A" : projectsForEmail,
+    generalComments:generalComments.length === 0? "N/A" : generalComments,
   },
    'ZyIRYHSvCLfZ4nSsl')
     .then((result) => {

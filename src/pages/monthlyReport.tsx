@@ -6,13 +6,17 @@ import { useEffect } from 'react';
 import { DateRange } from "react-day-picker";
 import { MonthlyReportCompleteProject } from "~/components/MonthlyReport/MonthlyReportCompletedProject";
 import { MonthlyReportProject } from "~/components/MonthlyReport/MonthlyReportProject";
+import { Textarea } from "~/components/ui/TextArea";
+import { TextAreaSection } from "~/components/ui/TextAreaSection";
 import { DatePicker } from "~/components/ui/datePicker";
 import { EmailConfirmation } from "~/components/ui/emailConfirmation";
+import { InfoIcon } from "~/components/ui/infoIcon";
 import { LoadingPage } from "~/components/ui/loading";
 import { api } from "~/utils/api";
 import { cn } from "~/utils/cn";
 
-export const activityStatesAtom = atom<any[][]>([])
+export const activityStatesAtom = atom<any[][]>([]);
+export const generalCommentsAtom = atom<string>("");
 
 export default function MonthlyReport({
   className,
@@ -143,6 +147,9 @@ export default function MonthlyReport({
   console.log(activitiyStates);
 
 
+  //state for general comments
+  const [generalComments, setGeneralComments] = useAtom(generalCommentsAtom);
+
   if (isLoading) {
     return (
       <LoadingPage></LoadingPage>
@@ -176,16 +183,36 @@ export default function MonthlyReport({
             
         </div>
       {/* --------------------------------PROJECTS COMPLETED-------------------------------- */}
-
-        <div className="flex-1 ">
+            {/* uses tailwindconfig extension to set height */}
+        <div className="flex-1">
+          <div className="min-h-300px mb-20">
           <h1 className="text-3xl font-bold mb-12 underline" >Projects Completed</h1>
           
-          {projectsInDateRange && projectsInDateRange.map((project) => {
+          {/* {projectsInDateRange && projectsInDateRange.map((project) => {
 
               return (
                 <MonthlyReportCompleteProject project={project}></MonthlyReportCompleteProject>
               )
-          })}
+          })} */}
+
+            {projectsInDateRange.length === 0? (
+              <p>No Projects Completed During This Time Period</p> 
+            ) : ( projectsInDateRange.map((project) => (
+              <MonthlyReportCompleteProject project={project}></MonthlyReportCompleteProject>
+              ))
+            )}
+          </div> 
+          <div className="flex-[1] border-t-2">
+            <h1 className="text-3xl font-bold mb-12 underline mt-5" >General Comments</h1>
+            <div className="flex items-center">
+            <Textarea
+              className="mr-4 whitespace-pre-wrap resize h-40 w-3/4"
+              placeholder="Enter general comments for monthly report here. For example: goals for next month, current blockers, help needed, overall progress or thoughts etc"
+              onChange={(e) => setGeneralComments(e.target.value)}
+            />
+            <InfoIcon content="These comments will be added to your monthly report but not saved" />
+        </div>
+          </div>
         </div>
       </div>
     </div>
