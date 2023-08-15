@@ -23,7 +23,7 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       minHeight: {
-        '200px': '200px',
+        '120px': '120px',
        },
     },
   },

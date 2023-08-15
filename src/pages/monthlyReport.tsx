@@ -185,7 +185,7 @@ export default function MonthlyReport({
       {/* --------------------------------PROJECTS COMPLETED-------------------------------- */}
             {/* uses tailwindconfig extension to set height */}
         <div className="flex-1">
-          <div className="min-h-200px mb-20">
+          <div className="min-h-120px mb-20">
           <h1 className="text-3xl font-bold mb-12 underline" >Projects Completed</h1>
           
           {/* {projectsInDateRange && projectsInDateRange.map((project) => {
