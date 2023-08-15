@@ -173,7 +173,7 @@ export default function MonthlyReport({
       <div className="flex flex-row m-8 gap-10">
         <div className="flex-[1] border-r-2">
           
-            <h1 className="text-3xl font-bold mb-12 underline" >Activities Worked On (by project)</h1>
+            <h1 className="mb-12 underline text-4xl font-extrabold leading-none tracking-tight text-gray-900" >Activities Worked On (by project)</h1>
             
             {projectsWithActivitiesInRange && projectsWithActivitiesInRange.map((project, index) => {
                 return (
@@ -186,7 +186,7 @@ export default function MonthlyReport({
             {/* uses tailwindconfig extension to set height */}
         <div className="flex-1">
           <div className="min-h-120px mb-20">
-          <h1 className="text-3xl font-bold mb-12 underline" >Projects Completed</h1>
+          <h1 className="mb-12 underline text-4xl font-extrabold leading-none tracking-tight text-gray-900" >Projects Completed</h1>
           
           {/* {projectsInDateRange && projectsInDateRange.map((project) => {
 
@@ -203,7 +203,7 @@ export default function MonthlyReport({
             )}
           </div> 
           <div className="flex-[1] border-t-2">
-            <h1 className="text-3xl font-bold mb-12 underline mt-5" >General Comments</h1>
+            <h1 className="mb-12 underline mt-5 text-4xl font-extrabold leading-none tracking-tight text-gray-900" >General Comments</h1>
             <div className="flex items-center">
             <Textarea
               className="mr-4 whitespace-pre-wrap resize h-40 w-3/4"
