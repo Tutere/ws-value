@@ -140,7 +140,7 @@ export function MonthlyReportActivity<T extends FieldValues>(
         </button>
       </>
     )}
-    <div className="mt-5">
+    <div className="mt-2">
       <RemoveDialog 
       setHidden={props.toggleHidden} 
       />
