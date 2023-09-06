@@ -139,7 +139,7 @@ export default function MonthlyReport({
   const [activitiyStates, setArrayAtom1] = useAtom(activityStatesAtom);
 
   useEffect(() => {
-    if (statesArray.length === projectsWithActivitiesInRange.length && statesArray.length > 1) {
+    if (statesArray.length === projectsWithActivitiesInRange.length && statesArray.length >= 1) {
       setArrayAtom1(statesArray);
       console.log(activitiyStates);
     }

@@ -73,7 +73,7 @@ export function EmailConfirmation <T extends FieldValues>(
   const sessionData = useSession().data;
 
   const activitiesForEmail = props.projectsWithActivitiesInRange.map((project, projectIndex) => {
-    if (activitiyStates.length > 0) {
+    if (activitiyStates.length > 0 && activitiyStates.length === props.projectsWithActivitiesInRange.length) {
     let allActivitiesHidden = true;
     project.activitiesInRange.forEach((element, activityIndex) => {
       if (activitiyStates[projectIndex]![activityIndex] === false) {
