@@ -142,6 +142,8 @@ export default function MonthlyReport({
     if (statesArray.length === projectsWithActivitiesInRange.length && statesArray.length >= 1) {
       setArrayAtom1(statesArray);
       console.log(activitiyStates);
+    } else {
+      setArrayAtom1([]);
     }
   }, [statesArray.length, projectsWithActivitiesInRange.length, setArrayAtom1]);
   console.log(activitiyStates);
@@ -165,7 +167,7 @@ export default function MonthlyReport({
         <DatePicker date={date} setDate={setDate} />
         <EmailConfirmation 
           projectsWithActivitiesInRange={projectsWithActivitiesInRange}
-          projectsInDateRange={projectsInDateRange} ></EmailConfirmation>
+          projectsInDateRange={projectsInDateRange} ></EmailConfirmation> 
       </div>
 
 
