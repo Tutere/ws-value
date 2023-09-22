@@ -19,7 +19,11 @@ interface MonthlyReportProjectProps<T extends FieldValues> {
     };
     activitiesInRange: {
         activity: Activity & {
-            members: ActivityMember[];
+          members: (ActivityMember & {
+            members: (ProjectMember & {
+              user:User;
+            });
+          })[];
         };
         projectMembers: (ProjectMember & {
             user: User;
@@ -53,7 +57,7 @@ export function MonthlyReportProject<T extends FieldValues>(
 
   const areAllActivitiesHidden = hiddenActivities.every((hidden) => hidden);
   console.log("Activities Hidden: " + areAllActivitiesHidden)
-  console.log(activitiyStates);
+  // console.log(activitiyStates);
   
   return (
     <div className={areAllActivitiesHidden? "hidden" : ""}> 

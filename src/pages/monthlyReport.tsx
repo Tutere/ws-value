@@ -35,12 +35,20 @@ export default function MonthlyReport({
 
 
   // get all projects and their activities
-  const allProjectsAndActivities: { project: Project & { Activity: (Activity & { members: ActivityMember[]; })[]; members: (ProjectMember & { user: User; })[]; }; activities: { activity: Activity & { members: ActivityMember[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[]; }[] = [];
+  const allProjectsAndActivities: { project: Project & { Activity: (Activity & { members: ActivityMember[]; })[]; members: (ProjectMember & { user: User; })[]; }; activities: { activity: Activity & { members: (ActivityMember & {
+    members: (ProjectMember & {
+      user:User;
+    });
+  })[];}; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[]; }[] = [];
   
 
   //add all activities to each project
   projects && projects.map((project) => {
-    const activities: { activity: Activity & { members: ActivityMember[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[] = [];
+    const activities: { activity: Activity & { members: (ActivityMember & {
+      members: (ProjectMember & {
+        user:User;
+      });
+    })[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[] = [];
     
     project.Activity.forEach(activity => {
     const projectMembersOfActivity: any[] = []
@@ -68,7 +76,11 @@ export default function MonthlyReport({
   //setup for all activities and projects in date range
 
   const projectsInDateRange: (Project & { Activity: Activity[]; members: (ProjectMember & { user: User; })[]; })[] = [];
-  const projectsWithActivitiesInRange: { project: Project & { Activity: (Activity & { members: ActivityMember[]; })[]; members: (ProjectMember & { user: User; })[]; }; activitiesInRange: { activity: Activity & { members: ActivityMember[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[]; }[] = [];
+  const projectsWithActivitiesInRange: { project: Project & { Activity: (Activity & { members: ActivityMember[]; })[]; members: (ProjectMember & { user: User; })[]; }; activitiesInRange: { activity: Activity & { members: (ActivityMember & {
+    members: (ProjectMember & {
+      user:User;
+    });
+  })[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[]; }[] = [];
 
   projects && projects.map((project) => {
 
@@ -85,7 +97,11 @@ export default function MonthlyReport({
   })
   
   allProjectsAndActivities && allProjectsAndActivities.map((element) => {
-    const activitiesInRange: { activity: Activity & { members: ActivityMember[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[] = [];
+    const activitiesInRange: { activity: Activity & { members: (ActivityMember & {
+      members: (ProjectMember & {
+        user:User;
+      });
+    })[]; }; projectMembers: (ProjectMember & { user: User; ActivityMember: ActivityMember[]; })[]; }[] = [];
 
     element.activities.forEach(activity => {
     const activityEnd = activity.activity.endDate?.getTime();

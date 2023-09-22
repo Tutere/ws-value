@@ -1,4 +1,4 @@
-import { FindActivityMemberSchema } from "~/schemas/activityMember";
+import { FindActivityMemberSchema, ActivtyCommentSchema } from "~/schemas/activityMember";
 
 import {
     createTRPCRouter,
@@ -60,6 +60,21 @@ import {
       {
         where: {
           id: input.id
+        }
+      }
+    );
+  }),
+
+  activityComments: publicProcedure
+  .input(ActivtyCommentSchema)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.activityMember.update(
+      {
+        where: {
+          id: input.id,
+        },
+        data: {
+          activityComments: input.activityComment,
         }
       }
     );

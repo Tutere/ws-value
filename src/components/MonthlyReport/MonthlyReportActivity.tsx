@@ -4,7 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Activity, ActivityMember, Project, ProjectMember, User } from "@prisma/client";
 import { FieldValues } from "react-hook-form";
 import { useZodForm } from "~/hooks/useZodForm";
-import { ReportCommentSchema } from "~/schemas/activities";
+import { ActivtyCommentSchema } from "~/schemas/activityMember";
 import { api } from "~/utils/api";
 import { Label } from "../ui/Label";
 import { Textarea } from "../ui/TextArea";
@@ -18,7 +18,11 @@ interface MonthlyReportActivtyProps<T extends FieldValues> {
   // children:React.ReactNode;
   activity: {
     activity: Activity & {
-        members: ActivityMember[];
+        members: (ActivityMember & {
+          members: (ProjectMember & {
+            user:User;
+          });
+        })[];
     };
     projectMembers: (ProjectMember & {
         user: User;
@@ -34,10 +38,32 @@ toggleHidden: () => void;
 export function MonthlyReportActivity<T extends FieldValues>(
   props: MonthlyReportActivtyProps<T>
   ){
-  
+    const userId = useSession().data?.user.id
+    console.log(userId);
+    console.log(props.activity)
+
+    function findActivityMemberById(id:string) {
+      for (const am of props.activity.activity.members) {
+        if (am.members.userId === id) {
+          console.log(am.activityComments);
+          return am
+        }
+      }
+      return null
+    }
+
+    // props.activity.activity.members.forEach(element => {
+    //   console.log(element.members.user);
+     
+    // });
+
+    const ActivityMember = findActivityMemberById(userId!);
+
+    
+   
     const utils = api.useContext().projects;
 
-  const mutation = api.activities.reportComments.useMutation(
+  const mutation = api.activitymember.activityComments.useMutation(
     {
       onSuccess: async () => {
         await utils.read.invalidate();
@@ -46,14 +72,14 @@ export function MonthlyReportActivity<T extends FieldValues>(
   );
 
   const methods = useZodForm({
-    schema: ReportCommentSchema,
+    schema: ActivtyCommentSchema,
     defaultValues: {
-      id: props.activity.activity.id, 
+      id: ActivityMember?.id, 
     },
   });
 
   const [commentsSaved, setCommentSaved] = useState(
-    props.activity.activity.reportComments === null || props.activity.activity.reportComments === "" ? false : true
+    ActivityMember?.activityComments === null || ActivityMember?.activityComments === "" ? false : true
   ); //to check if a report comment has already been added
 
   // const [hidden, setHidden] = useState(false);
@@ -98,7 +124,7 @@ export function MonthlyReportActivity<T extends FieldValues>(
       </ul>
     
 
-    {commentsSaved === false || props.activity.activity?.reportComments === ""? (
+    {commentsSaved === false || ActivityMember?.activityComments === ""? (
     <>
     <div className="grid w-full max-w-md items-center gap-1.5">
         <Label htmlFor="reportComment">Optional Comments (for Monthly report):</Label>
@@ -106,8 +132,8 @@ export function MonthlyReportActivity<T extends FieldValues>(
             <Textarea
               className="mr-4 whitespace-pre-wrap resize"
               placeholder=""
-              defaultValue={props.activity.activity.reportComments ?? ""}
-              {...methods.register("reportComment")}
+              defaultValue={ActivityMember?.activityComments ?? ""}
+              {...methods.register("activityComment")}
             />
             <InfoIcon content="These comments will be used for your monthly report" />
         </div>
@@ -127,7 +153,7 @@ export function MonthlyReportActivity<T extends FieldValues>(
     </> 
     ) : (
       <>
-      <p className="whitespace-pre-wrap">Optional Comments (for Monthly report): {props.activity.activity.reportComments}{" "}</p>
+      <p className="whitespace-pre-wrap">Optional Comments (for Monthly report): {ActivityMember?.activityComments}{" "}</p>
        <button
         className={cn (buttonVariants({ variant: "withIcon" }),"mt-2")}
         onClick={() => setCommentSaved(!commentsSaved)}
