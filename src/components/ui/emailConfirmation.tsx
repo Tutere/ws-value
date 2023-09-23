@@ -33,7 +33,11 @@ interface EmailProps<T extends FieldValues> {
     };
     activitiesInRange: {
         activity: Activity & {
-            members: ActivityMember[];
+          members: (ActivityMember & {
+            members: (ProjectMember & {
+              user:User;
+            });
+          })[];
         };
         projectMembers: (ProjectMember & {
             user: User;
@@ -63,6 +67,23 @@ export function EmailConfirmation <T extends FieldValues>(
     await sendEmail(e);
     setIsOpen(false);
   };
+
+  function findActivityMemberById(id:string, activity: Activity & {
+    members: (ActivityMember & {
+      members: (ProjectMember & {
+        user:User;
+      });
+    })[];
+  }) { //check this strucutre of activity
+    for (const am of activity.members) {
+      if (am.members.userId === id) {
+        // console.log(am.activityComments);
+        return am
+      }
+    }
+    return null
+  }
+  
   
   const currentUser = api.users.currentUser.useQuery(undefined,{
     // suspense:true,
@@ -71,6 +92,7 @@ export function EmailConfirmation <T extends FieldValues>(
   const email = currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "";
 
   const sessionData = useSession().data;
+  const userId = useSession().data?.user.id
 
   const activitiesForEmail = props.projectsWithActivitiesInRange.map((project, projectIndex) => {
     if (activitiyStates.length > 0 && activitiyStates.length === props.projectsWithActivitiesInRange.length) {
@@ -81,7 +103,10 @@ export function EmailConfirmation <T extends FieldValues>(
       }
     })
     const activities = project.activitiesInRange.filter((activity, activityIndex) => !activitiyStates[projectIndex]![activityIndex])
-    .map(activity => `
+    .map(activity => {
+      let ActivityMember = findActivityMemberById(userId!, activity.activity);
+
+      return `
       <div style="display: flex; align-items: center; margin-bottom: 0px; padding-bottom: 0px; margin-left: 20px;">
         <p style="margin-right: 5px;">${project.project.icon}</p>
         <p style="margin-right: 5px;"><b>${activity.activity.name}</b></p>
@@ -99,9 +124,10 @@ export function EmailConfirmation <T extends FieldValues>(
         <li>Stakeholders: ${activity.activity.stakeholders === "" ? "N/A" : activity.activity.stakeholders }</li>
         <li>Description: ${activity.activity.description}</li>
         <li>Value Statement: ${activity.activity.valueCreated}</li>
-        <li style="white-space: pre-wrap;">Additional Comments: ${activity.activity.reportComments ? activity.activity.reportComments.replace(/\n/g, '<br>') : ""}</li>
+        <li style="white-space: pre-wrap;">Additional Comments: ${ActivityMember?.activityComments ? ActivityMember.activityComments.replace(/\n/g, '<br>') : ""}</li>
       </ul>
-    `).join('');
+    `;
+    }).join('');
   
     return `
       <div style="margin-bottom: 30px;">

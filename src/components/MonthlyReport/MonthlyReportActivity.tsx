@@ -39,13 +39,13 @@ export function MonthlyReportActivity<T extends FieldValues>(
   props: MonthlyReportActivtyProps<T>
   ){
     const userId = useSession().data?.user.id
-    console.log(userId);
-    console.log(props.activity)
+    // console.log(userId);
+    // console.log(props.activity)
 
     function findActivityMemberById(id:string) {
       for (const am of props.activity.activity.members) {
         if (am.members.userId === id) {
-          console.log(am.activityComments);
+          // console.log(am.activityComments);
           return am
         }
       }

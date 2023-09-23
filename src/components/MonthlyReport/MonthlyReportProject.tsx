@@ -56,7 +56,7 @@ export function MonthlyReportProject<T extends FieldValues>(
   };
 
   const areAllActivitiesHidden = hiddenActivities.every((hidden) => hidden);
-  console.log("Activities Hidden: " + areAllActivitiesHidden)
+  // console.log("Activities Hidden: " + areAllActivitiesHidden)
   // console.log(activitiyStates);
   
   return (
