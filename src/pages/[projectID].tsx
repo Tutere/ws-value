@@ -230,35 +230,63 @@ export default function Project() {
 
       
       <div className="p-8">
-      <h2 className="mt-10 text-2xl font-bold">Project Activities</h2>
-      <div className="flex flex-row flex-wrap gap-5 py-2">
-        {activities &&
-          activities
-          .sort((a, b) => {
-            const aStartDate = a.startDate ? a.startDate.getTime() : new Date(0).getTime();
-            const bStartDate = b.startDate ? b.startDate.getTime() : new Date(0).getTime(); 
-            return bStartDate - aStartDate; // sort the activities array by startDate in descending order
-          })
-          .map((activity) => (
-            <Card activity={activity} projectColour={project.colour}></Card>
-          ))}
-      </div>
+        <h2 className="mt-10 text-2xl font-bold">Ongoing Activities</h2>
+        <div className="flex flex-row flex-wrap gap-5 py-2">
+          {activities &&
+            activities
+            .sort((a, b) => {
+              const aStartDate = a.startDate ? a.startDate.getTime() : new Date(0).getTime();
+              const bStartDate = b.startDate ? b.startDate.getTime() : new Date(0).getTime(); 
+              return bStartDate - aStartDate; // sort the activities array by startDate in descending order
+            })
+            .map((activity) => {
+              if (activity.endDate === null) {
+                return (
+                <Card activity={activity} projectColour={project.colour}></Card>
+                );
+              }
+            })}
+             {activities && activities.every(activity => activity.endDate !== null) && (
+              <p>No ongoing activities</p>
+            )}
+        </div>
 
 
-      <Link href={"/newActivity/" + id } onClick={() => setLoading(true)} className={project.status=="Complete"? "pointer-events-none":""} >
-        <Button type="submit" variant={project?.status=="Active"?"withIcon":"subtle"} className={project.status=="Active"?"mt-5 text-green-600":"mt-5"}>
-        <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path clipRule="evenodd" fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"></path>
-      </svg>
-        Add New Activity
-        </Button>
-      </Link>
+          <Link href={"/newActivity/" + id } onClick={() => setLoading(true)} className={project.status=="Complete"? "pointer-events-none":""} >
+          <Button type="submit" variant={project?.status=="Active"?"withIcon":"subtle"} className={project.status=="Active"?"mt-5 text-green-600":"mt-5"}>
+          <svg fill="currentColor" className="w-4 h-4 mr-2 fill-current"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path clipRule="evenodd" fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"></path>
+          </svg>
+          Add New Activity
+          </Button>
+          </Link>
+
+          <h2 className="mt-10 text-2xl font-bold">Completed Activities</h2>
+          <div className="flex flex-row flex-wrap gap-5 py-2">
+            {activities &&
+              activities
+              .sort((a, b) => {
+                const aStartDate = a.startDate ? a.startDate.getTime() : new Date(0).getTime();
+                const bStartDate = b.startDate ? b.startDate.getTime() : new Date(0).getTime(); 
+                return bStartDate - aStartDate; // sort the activities array by startDate in descending order
+              })
+              .map((activity) => {
+                if (activity.endDate !== null) {
+                  return (
+                  <Card activity={activity} projectColour={project.colour}></Card>
+                  );
+                } 
+              })}
+              {activities && activities.every(activity => activity.endDate === null) && (
+              <p>No completed activities</p>
+            )}
+          </div>
 
           <h2 className="mt-10 mb-5 text-2xl font-bold">Value Created for this Project</h2>
           <div>
             <p>TO BE COMPLETED</p>
           </div>
-        </div>
+      </div>
         
         </div>
 
