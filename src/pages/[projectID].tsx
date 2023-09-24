@@ -230,7 +230,9 @@ export default function Project() {
 
       
       <div className="p-8">
-        <h2 className="mt-10 text-2xl font-bold">Ongoing Activities</h2>
+        <h2 className="mt-10 text-2xl font-bold">
+          Ongoing Activities <span className="text-base font-normal">(Sorted by Start Date Desc Order)</span>
+        </h2>
         <div className="flex flex-row flex-wrap gap-5 py-2">
           {activities &&
             activities
@@ -261,7 +263,9 @@ export default function Project() {
           </Button>
           </Link>
 
-          <h2 className="mt-10 text-2xl font-bold">Completed Activities</h2>
+          <h2 className="mt-10 text-2xl font-bold">
+            Completed Activities <span className="text-base font-normal">(Sorted by Start Date Desc Order)</span>
+            </h2>
           <div className="flex flex-row flex-wrap gap-5 py-2">
             {activities &&
               activities
