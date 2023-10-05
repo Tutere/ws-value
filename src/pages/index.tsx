@@ -16,7 +16,6 @@ const Home: NextPage = () => {
     },
   });
 
-//test comment
 
   if (isLoading) {
     return (
