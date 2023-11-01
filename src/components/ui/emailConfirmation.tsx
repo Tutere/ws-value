@@ -168,7 +168,7 @@ const sendEmail = (e: { preventDefault: () => void; }) => {
   e.preventDefault();
   setEmailSending(true);
 
-  emailjs.send('service_0yn0tdg', 'template_i1cq8tc', 
+  emailjs.send('service_bdlh1wm', 'template_i1cq8tc', 
   {
     user_name: sessionData?.user.name,
     user_email: currentUser?.workEmail?.includes("@") ? currentUser.workEmail : currentUser?.email?? "" ,
