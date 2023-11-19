@@ -15,7 +15,6 @@ const Home: NextPage = () => {
       console.error(error);
     },
   });
-//test
 
   if (isLoading) {
     return (
